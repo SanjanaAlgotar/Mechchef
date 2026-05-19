@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account – MechChef</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #faf9f7;
+  --bg2: #ffffff;
+  --bg3: #f3f1ee;
+  --border: #e8e4df;
+  --accent: #ff6b35;
+  --accent2: #ffb347;
+  --text: #1a1a1a;
+  --text2: #666;
+  --text3: #aaa;
+  --green: #16a34a;
+  --red: #dc2626;
+  --blue: #2563eb;
+  --radius: 14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* NAV */
+nav {
+  background: white; border-bottom: 1px solid var(--border);
+  padding: 0 24px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.nav-logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); }
+.nav-logo span { font-size: 22px; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-link { font-size: 13px; color: var(--text2); text-decoration: none; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); transition: all 0.15s; }
+.nav-link:hover { border-color: var(--accent); color: var(--accent); }
+.cart-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; background: var(--accent); color: white;
+  border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none;
+  transition: opacity 0.15s;
+}
+.cart-btn:hover { opacity: 0.85; }
+
+/* LAYOUT */
+.dash-wrap { max-width: 1060px; margin: 0 auto; padding: 28px 20px; display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: start; }
+
+/* SIDEBAR */
+.sidebar { position: sticky; top: 80px; }
+.profile-card {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 22px 18px; margin-bottom: 14px; text-align: center;
+}
+.profile-avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
+  margin: 0 auto 12px;
+}
+.profile-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; margin-bottom: 3px; }
+.profile-email { font-size: 12px; color: var(--text2); margin-bottom: 14px; }
+.profile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pstat { background: var(--bg3); border-radius: 8px; padding: 10px 8px; text-align: center; }
+.pstat-num { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--accent); }
+.pstat-label { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+.sidebar-nav { background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.snav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; cursor: pointer; transition: all 0.15s;
+  font-size: 13.5px; color: var(--text2); border-bottom: 1px solid var(--border);
+  position: relative; border-left: 3px solid transparent;
+}
+.snav-item:last-child { border-bottom: none; }
+.snav-item:hover { background: var(--bg3); color: var(--text); }
+.snav-item.active { color: var(--accent); background: #fff8f5; border-left-color: var(--accent); }
+.snav-icon { font-size: 17px; }
+.snav-badge { margin-left: auto; background: var(--accent); color: white; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; }
+
+/* MAIN CONTENT */
+.main-content { min-width: 0; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* CARDS */
+.card { background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+.card-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.card-body { padding: 20px 22px; }
+.card-action { font-size: 13px; color: var(--accent); cursor: pointer; background: none; border: none; font-family: inherit; }
+.card-action:hover { text-decoration: underline; }
+
+/* OVERVIEW STATS */
+.overview-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.ostat {
+  background: white; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px; text-align: center;
+}
+.ostat-val { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
+.ostat-label { font-size: 12px; color: var(--text2); }
+
+/* ACTIVE ORDER */
+.active-order-card {
+  background: linear-gradient(135deg, #fff8f5, #fff3e8);
+  border: 2px solid var(--accent); border-radius: var(--radius);
+  padding: 20px; margin-bottom: 20px;
+}
+.ao-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.ao-id { font-size: 12px; color: var(--text2); }
+.ao-status { font-size: 13px; font-weight: 600; color: var(--accent); background: rgba(255,107,53,0.1); padding: 4px 12px; border-radius: 20px; }
+.order-progress { display: flex; gap: 0; margin-bottom: 10px; }
+.op-step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; position: relative; }
+.op-step::after { content:''; position:absolute; left:50%; top:14px; width:100%; height:2px; background:var(--border); z-index:0; }
+.op-step:last-child::after { display: none; }
+.op-step.done::after { background: var(--green); }
+.op-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; font-size: 12px; z-index: 1; }
+.op-step.done .op-dot { background: var(--green); border-color: var(--green); color: white; }
+.op-step.active .op-dot { background: var(--accent); border-color: var(--accent); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0.3)}50%{box-shadow:0 0 0 8px rgba(255,107,53,0)}}
+.op-label { font-size: 9px; color: var(--text2); text-align: center; }
+.ao-meals { font-size: 13px; color: var(--text2); }
+.ao-meals strong { color: var(--text); }
+.reorder-btn { padding: 7px 14px; background: var(--accent); color: white; border: none; border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 500; cursor: pointer; }
+
+/* ORDER HISTORY */
+.order-item {
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.order-item:last-child { border-bottom: none; }
+.order-emoji { width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg,#ffedd5,#fed7aa); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink:0; }
+.order-info { flex: 1; }
+.order-name { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+.order-meta { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.order-actions { display: flex; gap: 8px; }
+.btn-sm { padding: 5px 12px; border-radius: 7px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; border: 1px solid var(--border); background: white; color: var(--text); transition: all 0.15s; }
+.btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm.accent { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-sm.accent:hover { opacity: 0.85; }
+.order-right { text-align: right; flex-shrink: 0; }
+.order-amount { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.status-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+.status-pill.delivered { background: rgba(22,163,74,0.1); color: var(--green); }
+.status-pill.preparing { background: rgba(37,99,235,0.1); color: var(--blue); }
+.status-pill.pending { background: rgba(255,107,53,0.1); color: var(--accent); }
+.status-pill.cancelled { background: rgba(220,38,38,0.1); color: var(--red); }
+
+/* PROFILE FORM */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-row { display: flex; flex-direction: column; gap: 6px; }
+.form-row.full { grid-column: 1/-1; }
+.form-label { font-size: 12px; color: var(--text2); font-weight: 500; }
+.form-input { padding: 10px 14px; border: 1px solid var(--border); border-radius: 9px; font-family: inherit; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.15s; background: white; }
+.form-input:focus { border-color: var(--accent); }
+.save-btn { padding: 11px 24px; background: var(--accent); color: white; border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: opacity 0.15s; margin-top: 8px; }
+.save-btn:hover { opacity: 0.85; }
+
+/* SAVED ADDRESSES */
+.address-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.addr-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; position: relative; }
+.addr-card.default { border-color: var(--accent); }
+.addr-type { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.addr-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.addr-default-badge { font-size: 10px; background: rgba(255,107,53,0.1); color: var(--accent); padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+.addr-actions { display: flex; gap: 6px; margin-top: 10px; }
+.add-addr-card { border: 2px dashed var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.15s; min-height: 100px; }
+.add-addr-card:hover { border-color: var(--accent); color: var(--accent); }
+
+/* PAYMENT METHODS */
+.payment-list { display: flex; flex-direction: column; gap: 10px; }
+.pay-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+.pay-card.default { border-color: var(--accent); background: #fff8f5; }
+.card-icon { font-size: 28px; }
+.card-details { flex: 1; }
+.card-type { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.card-num { font-size: 12px; color: var(--text2); }
+.card-exp { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.default-badge { font-size: 10px; background: rgba(255,107,53,0.1); color: var(--accent); padding: 2px 8px; border-radius: 20px; }
+.remove-card-btn { color: var(--text3); background: none; border: none; cursor: pointer; font-size: 16px; padding: 4px; transition: color 0.15s; }
+.remove-card-btn:hover { color: var(--red); }
+.add-pay-btn { width: 100%; padding: 12px; border: 2px dashed var(--border); background: none; border-radius: 12px; color: var(--text2); font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.add-pay-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* FAVOURITES */
+.fav-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.fav-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: all 0.15s; }
+.fav-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.fav-img { height: 90px; background: linear-gradient(135deg,#ffedd5,#fed7aa); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+.fav-body { padding: 12px 14px; }
+.fav-name { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+.fav-cook { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+.fav-footer { display: flex; align-items: center; justify-content: space-between; }
+.fav-price { font-size: 14px; font-weight: 600; color: var(--accent); }
+.fav-remove { color: var(--text3); background: none; border: none; cursor: pointer; font-size: 16px; transition: color 0.15s; }
+.fav-remove:hover { color: var(--red); }
+
+/* NOTIFICATIONS */
+.notif-item { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.notif-item:last-child { border-bottom: none; }
+.notif-item.unread { background: rgba(255,107,53,0.03); margin: 0 -22px; padding: 14px 22px; }
+.notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 6px; flex-shrink: 0; }
+.notif-dot.read { background: var(--border); }
+.notif-icon { font-size: 20px; flex-shrink: 0; }
+.notif-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.notif-text strong { color: var(--text); }
+.notif-time { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.notif-toggle { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.toggle-switch { width: 42px; height: 24px; background: var(--border); border-radius: 12px; position: relative; cursor: pointer; transition: background 0.2s; }
+.toggle-switch.on { background: var(--accent); }
+.toggle-knob { width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.2s; }
+.toggle-switch.on .toggle-knob { transform: translateX(18px); }
+
+/* SUBSCRIPTION */
+.sub-card { border: 2px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; transition: border-color 0.15s; }
+.sub-card.recommended { border-color: var(--accent); }
+.sub-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+.sub-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; }
+.sub-price { font-size: 20px; font-weight: 700; color: var(--accent); }
+.sub-period { font-size: 12px; color: var(--text2); }
+.sub-badge { font-size: 10px; background: var(--accent); color: white; padding: 3px 10px; border-radius: 20px; }
+.sub-features { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.sub-features li { font-size: 13px; color: var(--text2); display: flex; align-items: center; gap: 8px; }
+.sub-features li::before { content: '✓'; color: var(--green); font-weight: 700; font-size: 12px; }
+.sub-btn { width: 100%; padding: 11px; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; border: none; }
+.sub-btn.primary { background: var(--accent); color: white; }
+.sub-btn.outline { background: white; color: var(--text); border: 2px solid var(--border); }
+.sub-btn:hover { opacity: 0.85; }
+
+/* REVIEWS */
+.review-form { background: var(--bg3); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.stars { display: flex; gap: 4px; margin-bottom: 12px; }
+.star { font-size: 24px; cursor: pointer; filter: grayscale(1); transition: filter 0.1s; }
+.star.active { filter: none; }
+
+/* TOAST */
+.toast { position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:white;padding:12px 18px;border-radius:10px;font-size:13px;z-index:999;transform:translateY(80px);opacity:0;transition:all 0.3s; }
+.toast.show { transform:translateY(0);opacity:1; }
+
+@media (max-width:768px) {
+  .dash-wrap { grid-template-columns:1fr; }
+  .sidebar { position:static; }
+  .form-grid,.address-grid,.fav-grid,.overview-stats { grid-template-columns:1fr; }
+  .profile-stats { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span>🍽</span> MechChef</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-link">Browse Meals</a>
+    <a href="cart.html" class="cart-btn">🛒 Basket</a>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="profile-card">
+      <div class="profile-avatar" id="dash-avatar">JM</div>
+      <div class="profile-name" id="dash-name">James Mitchell</div>
+      <div class="profile-email" id="dash-email">james@example.com</div>
+      <div class="profile-stats">
+        <div class="pstat"><div class="pstat-num" id="stat-orders">24</div><div class="pstat-label">Orders</div></div>
+        <div class="pstat"><div class="pstat-num" id="stat-spent">£287</div><div class="pstat-label">Spent</div></div>
+      </div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="snav-item active" onclick="showTab('overview', this)">
+        <span class="snav-icon">🏠</span> Overview
+      </div>
+      <div class="snav-item" onclick="showTab('orders', this)">
+        <span class="snav-icon">📦</span> My Orders
+        <span class="snav-badge" id="active-badge">1</span>
+      </div>
+      <div class="snav-item" onclick="showTab('profile', this)">
+        <span class="snav-icon">👤</span> My Profile
+      </div>
+      <div class="snav-item" onclick="showTab('addresses', this)">
+        <span class="snav-icon">📍</span> Saved Addresses
+      </div>
+      <div class="snav-item" onclick="showTab('payments', this)">
+        <span class="snav-icon">💳</span> Payment Methods
+      </div>
+      <div class="snav-item" onclick="showTab('favourites', this)">
+        <span class="snav-icon">❤️</span> Favourites
+      </div>
+      <div class="snav-item" onclick="showTab('subscriptions', this)">
+        <span class="snav-icon">⭐</span> Subscriptions
+      </div>
+      <div class="snav-item" onclick="showTab('notifications', this)">
+        <span class="snav-icon">🔔</span> Notifications
+        <span class="snav-badge">3</span>
+      </div>
+      <div class="snav-item" onclick="logout()" style="color:var(--red);">
+        <span class="snav-icon">↩</span> Log Out
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <!-- OVERVIEW -->
+    <div class="section active" id="tab-overview">
+      <div class="overview-stats">
+        <div class="ostat"><div class="ostat-val" id="ov-orders">24</div><div class="ostat-label">Total Orders</div></div>
+        <div class="ostat"><div class="ostat-val" id="ov-spent">£287</div><div class="ostat-label">Total Spent</div></div>
+        <div class="ostat"><div class="ostat-val">⭐ 4.8</div><div class="ostat-label">Avg Rating Given</div></div>
+      </div>
+
+      <!-- Active Order -->
+      <div class="active-order-card">
+        <div class="ao-header">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:3px;">🛵 Order in Progress</div>
+            <div class="ao-id">#MC-0047 · Ordered 15 mins ago · Delivery 12:45–13:00</div>
+          </div>
+          <div class="ao-status">👩‍🍳 Preparing</div>
+        </div>
+        <div class="order-progress">
+          <div class="op-step done"><div class="op-dot">✓</div><div class="op-label">Confirmed</div></div>
+          <div class="op-step active"><div class="op-dot">👩‍🍳</div><div class="op-label">Preparing</div></div>
+          <div class="op-step"><div class="op-dot">🛵</div><div class="op-label">Picked Up</div></div>
+          <div class="op-step"><div class="op-dot">📍</div><div class="op-label">On Way</div></div>
+          <div class="op-step"><div class="op-dot">🏠</div><div class="op-label">Delivered</div></div>
+        </div>
+        <div class="ao-meals" style="margin-top:12px;">
+          <strong>1× Butter Chicken</strong> + <strong>1× Dal Makhani</strong> by Priya Sharma · £21.97
+        </div>
+      </div>
+
+      <!-- Recent Orders -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📦 Recent Orders</div>
+          <button class="card-action" onclick="showTab('orders', document.querySelectorAll('.snav-item')[1])">View all</button>
+        </div>
+        <div class="card-body" id="ov-recent-orders"></div>
+      </div>
+
+      <!-- Favourite Meals Quick Access -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-header">
+          <div class="card-title">❤️ Your Favourites</div>
+          <button class="card-action" onclick="showTab('favourites', document.querySelectorAll('.snav-item')[6])">View all</button>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;">
+            <div style="flex-shrink:0;background:var(--bg3);border-radius:10px;padding:10px 14px;text-align:center;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#ffedd5'" onmouseout="this.style.background='var(--bg3)'">
+              <div style="font-size:24px;margin-bottom:4px;">🍛</div>
+              <div style="font-size:12px;font-weight:500;">Butter Chicken</div>
+              <div style="font-size:11px;color:var(--text2);">£10.99</div>
+            </div>
+            <div style="flex-shrink:0;background:var(--bg3);border-radius:10px;padding:10px 14px;text-align:center;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#ffedd5'" onmouseout="this.style.background='var(--bg3)'">
+              <div style="font-size:24px;margin-bottom:4px;">🫕</div>
+              <div style="font-size:12px;font-weight:500;">Dal Makhani</div>
+              <div style="font-size:11px;color:var(--text2);">£8.99</div>
+            </div>
+            <div style="flex-shrink:0;background:var(--bg3);border-radius:10px;padding:10px 14px;text-align:center;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#ffedd5'" onmouseout="this.style.background='var(--bg3)'">
+              <div style="font-size:24px;margin-bottom:4px;">🍗</div>
+              <div style="font-size:12px;font-weight:500;">Jerk Chicken</div>
+              <div style="font-size:11px;color:var(--text2);">£12.50</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY ORDERS -->
+    <div class="section" id="tab-orders">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📦 My Orders</div>
+          <select onchange="filterOrderHistory(this.value)" style="font-family:'DM Sans',sans-serif;font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:7px;background:white;outline:none;cursor:pointer;">
+            <option value="all">All Orders</option>
+            <option value="active">Active</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="card-body" id="orders-history-list"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="section" id="tab-profile">
+      <div class="card">
+        <div class="card-header"><div class="card-title">👤 Personal Details</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-row"><label class="form-label">First Name</label><input class="form-input" id="fn" value="James"></div>
+            <div class="form-row"><label class="form-label">Last Name</label><input class="form-input" id="ln" value="Mitchell"></div>
+            <div class="form-row full"><label class="form-label">Email Address</label><input class="form-input" id="email" type="email" value="james@example.com"></div>
+            <div class="form-row full"><label class="form-label">Mobile Number</label><input class="form-input" id="phone" type="tel" value="+44 7700 900000"></div>
+            <div class="form-row full"><label class="form-label">Date of Birth</label><input class="form-input" type="date" value="1990-05-15"></div>
+          </div>
+          <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">🔒 Change Password</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-row full"><label class="form-label">Current Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+            <div class="form-row"><label class="form-label">New Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+            <div class="form-row"><label class="form-label">Confirm New Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+          </div>
+          <button class="save-btn" onclick="showToast('Password updated!')">Update Password</button>
+        </div>
+      </div>
+
+      <div class="card" style="border-color:var(--red);">
+        <div class="card-header"><div class="card-title" style="color:var(--red);">⚠️ Danger Zone</div></div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Once you delete your account, all your data will be permanently removed. This cannot be undone.</p>
+          <button onclick="confirmDelete()" style="padding:9px 18px;background:none;border:1px solid var(--red);color:var(--red);border-radius:9px;font-family:inherit;font-size:13px;cursor:pointer;">Delete My Account</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADDRESSES -->
+    <div class="section" id="tab-addresses">
+      <div class="card">
+        <div class="card-header"><div class="card-title">📍 Saved Addresses</div></div>
+        <div class="card-body">
+          <div class="address-grid">
+            <div class="addr-card default">
+              <div class="addr-default-badge">✓ Default</div>
+              <div class="addr-type">🏠 Home</div>
+              <div class="addr-text">42 Harrow View<br>Harrow, HA1 2AB<br>London</div>
+              <div class="addr-actions">
+                <button class="btn-sm" onclick="showToast('Address updated!')">Edit</button>
+                <button class="btn-sm">Set Default</button>
+              </div>
+            </div>
+            <div class="addr-card">
+              <div class="addr-type">💼 Work</div>
+              <div class="addr-text">15 Station Road<br>Newham, E15 1AX<br>London</div>
+              <div class="addr-actions">
+                <button class="btn-sm" onclick="showToast('Address updated!')">Edit</button>
+                <button class="btn-sm" onclick="showToast('Set as default!')">Set Default</button>
+                <button class="btn-sm" style="color:var(--red);border-color:var(--red);">Remove</button>
+              </div>
+            </div>
+            <div class="add-addr-card" onclick="showToast('Add address form coming soon!')">
+              <div style="font-size:24px;">➕</div>
+              <div style="font-size:13px;color:var(--text2);">Add New Address</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="section" id="tab-payments">
+      <div class="card">
+        <div class="card-header"><div class="card-title">💳 Payment Methods</div></div>
+        <div class="card-body">
+          <div class="payment-list">
+            <div class="pay-card default">
+              <div class="card-icon">💳</div>
+              <div class="card-details">
+                <div class="card-type">Visa ending in 4821</div>
+                <div class="card-num">•••• •••• •••• 4821</div>
+                <div class="card-exp">Expires 09/27</div>
+              </div>
+              <div class="default-badge">Default</div>
+            </div>
+            <div class="pay-card">
+              <div class="card-icon">💳</div>
+              <div class="card-details">
+                <div class="card-type">Mastercard ending in 7390</div>
+                <div class="card-num">•••• •••• •••• 7390</div>
+                <div class="card-exp">Expires 03/26</div>
+              </div>
+              <button class="btn-sm" onclick="showToast('Set as default!')">Set Default</button>
+              <button class="remove-card-btn" title="Remove">✕</button>
+            </div>
+            <div class="pay-card" style="background:#f5f5f5;">
+              <div class="card-icon">🍎</div>
+              <div class="card-details">
+                <div class="card-type">Apple Pay</div>
+                <div class="card-num">Connected</div>
+              </div>
+              <div class="default-badge" style="background:rgba(0,0,0,0.06);color:var(--text2);">Ready</div>
+            </div>
+          </div>
+          <button class="add-pay-btn" style="margin-top:12px;" onclick="showToast('Add card form coming soon!')">+ Add New Card</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAVOURITES -->
+    <div class="section" id="tab-favourites">
+      <div class="card">
+        <div class="card-header"><div class="card-title">❤️ Favourite Meals</div></div>
+        <div class="card-body">
+          <div class="fav-grid" id="fav-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBSCRIPTIONS -->
+    <div class="section" id="tab-subscriptions">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header"><div class="card-title">⭐ Your Plan</div></div>
+        <div class="card-body">
+          <div style="background:var(--bg3);border-radius:10px;padding:14px;display:flex;align-items:center;gap:14px;">
+            <div style="font-size:32px;">🆓</div>
+            <div>
+              <div style="font-weight:600;margin-bottom:3px;">Free Plan</div>
+              <div style="font-size:13px;color:var(--text2);">Standard delivery · No perks</div>
+            </div>
+            <button class="save-btn" style="margin-top:0;margin-left:auto;padding:8px 16px;font-size:13px;">Upgrade</button>
+          </div>
+        </div>
+      </div>
+      <div class="sub-card">
+        <div class="sub-header">
+          <div><div class="sub-name">MechChef Plus</div><div style="font-size:12px;color:var(--text2);margin-top:3px;">For regular customers</div></div>
+          <div style="text-align:right;"><div class="sub-price">£4.99</div><div class="sub-period">/month</div></div>
+        </div>
+        <ul class="sub-features">
+          <li>Free delivery on all orders</li>
+          <li>Priority order queue</li>
+          <li>10% off every order</li>
+          <li>Early access to new cooks</li>
+          <li>Monthly surprise meal box</li>
+        </ul>
+        <button class="sub-btn primary" onclick="showToast('Redirecting to checkout...')">Get Plus – £4.99/mo</button>
+      </div>
+      <div class="sub-card recommended">
+        <div class="sub-header">
+          <div>
+            <div class="sub-badge" style="margin-bottom:6px;">Most Popular</div>
+            <div class="sub-name">MechChef Pro</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:3px;">For food lovers</div>
+          </div>
+          <div style="text-align:right;"><div class="sub-price">£9.99</div><div class="sub-period">/month</div></div>
+        </div>
+        <ul class="sub-features">
+          <li>Everything in Plus</li>
+          <li>Unlimited free delivery</li>
+          <li>20% off every order</li>
+          <li>Dedicated support</li>
+          <li>Exclusive cook sessions & events</li>
+          <li>Refer & earn credits</li>
+        </ul>
+        <button class="sub-btn primary" onclick="showToast('Redirecting to checkout...')">Get Pro – £9.99/mo</button>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="section" id="tab-notifications">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header"><div class="card-title">🔔 Notification Settings</div></div>
+        <div class="card-body">
+          <div class="notif-toggle"><span>Order status updates</span><div class="toggle-switch on" onclick="toggleSwitch(this)"><div class="toggle-knob"></div></div></div>
+          <div class="notif-toggle"><span>New meals from favourite cooks</span><div class="toggle-switch on" onclick="toggleSwitch(this)"><div class="toggle-knob"></div></div></div>
+          <div class="notif-toggle"><span>Promotional offers & discounts</span><div class="toggle-switch" onclick="toggleSwitch(this)"><div class="toggle-knob"></div></div></div>
+          <div class="notif-toggle"><span>Weekly digest</span><div class="toggle-switch on" onclick="toggleSwitch(this)"><div class="toggle-knob"></div></div></div>
+          <div class="notif-toggle" style="border-bottom:none;"><span>SMS notifications</span><div class="toggle-switch on" onclick="toggleSwitch(this)"><div class="toggle-knob"></div></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Recent Notifications</div><button class="card-action" onclick="showToast('All marked as read!')">Mark all read</button></div>
+        <div class="card-body">
+          <div class="notif-item unread">
+            <div class="notif-dot"></div>
+            <div class="notif-icon">👩‍🍳</div>
+            <div>
+              <div class="notif-text"><strong>Priya Sharma</strong> is preparing your order. Estimated delivery 12:45–13:00.</div>
+              <div class="notif-time">10 mins ago</div>
+            </div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-dot"></div>
+            <div class="notif-icon">🎟</div>
+            <div>
+              <div class="notif-text">Use code <strong>MECH20</strong> for 20% off your next order. Valid today only!</div>
+              <div class="notif-time">2 hours ago</div>
+            </div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-dot"></div>
+            <div class="notif-icon">🍛</div>
+            <div>
+              <div class="notif-text"><strong>Fatima Hussain</strong> added a new meal: Special Eid Biryani – only 10 portions available!</div>
+              <div class="notif-time">Yesterday</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-dot read"></div>
+            <div class="notif-icon">✅</div>
+            <div>
+              <div class="notif-text">Order <strong>#MC-0046</strong> delivered. Hope you enjoyed your meal!</div>
+              <div class="notif-time">2 days ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main-content -->
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://ccatfstzthkwridxwzfg.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_B2MAOdQRfp8Zf9HR1GIhUA_VFmUax0-';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Demo data
+const demoOrders = [
+  { id:'MC-0047', emoji:'🍛', name:'Butter Chicken + Dal Makhani', cook:'Priya Sharma', date:'Today, 12:30', amount:'£21.97', status:'preparing' },
+  { id:'MC-0046', emoji:'🍗', name:'Jerk Chicken & Rice', cook:'Amara Thomas', date:'17 May 2026', amount:'£12.50', status:'delivered' },
+  { id:'MC-0044', emoji:'🥟', name:'Dim Sum Basket (6 pieces)', cook:'Wei Liu', date:'14 May 2026', amount:'£9.99', status:'delivered' },
+  { id:'MC-0041', emoji:'🫕', name:'Dal Makhani & Garlic Naan', cook:'Priya Sharma', date:'10 May 2026', amount:'£8.99', status:'delivered' },
+  { id:'MC-0039', emoji:'🥗', name:'Quinoa Mezze Bowl', cook:'Sofia Papadaki', date:'5 May 2026', amount:'£11.99', status:'cancelled' },
+];
+
+const demoFavs = [
+  { emoji:'🍛', name:'Butter Chicken & Basmati', cook:'Priya Sharma', price:'£10.99' },
+  { emoji:'🫕', name:'Dal Makhani & Garlic Naan', cook:'Priya Sharma', price:'£8.99' },
+  { emoji:'🍗', name:'Jerk Chicken & Rice', cook:'Amara Thomas', price:'£12.50' },
+  { emoji:'🥟', name:'Dim Sum Basket', cook:'Wei Liu', price:'£9.99' },
+];
+
+// Auth & profile
+async function loadProfile() {
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { window.location.href = 'auth.html'; return; }
+    const { data } = await db.from('profiles').select('*').eq('id', session.user.id).single();
+    if (data) {
+      const name = data.full_name || session.user.email?.split('@')[0] || 'Customer';
+      const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('dash-avatar').textContent = initials;
+      document.getElementById('dash-name').textContent = name;
+      document.getElementById('dash-email').textContent = session.user.email;
+      if (document.getElementById('fn')) document.getElementById('fn').value = name.split(' ')[0] || '';
+      if (document.getElementById('ln')) document.getElementById('ln').value = name.split(' ')[1] || '';
+      if (document.getElementById('email')) document.getElementById('email').value = session.user.email;
+    }
+    loadOrderHistory();
+  } catch(e) {
+    // Demo mode
+    renderOrderHistory(demoOrders);
+    renderRecentOrders();
+    renderFavourites();
+  }
+}
+
+async function loadOrderHistory() {
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    const { data } = await db.from('orders').select('*').eq('customer_id', session.user.id).order('created_at', {ascending:false});
+    if (data && data.length) {
+      const mapped = data.map(o => ({
+        id: 'MC-' + o.id?.toString().slice(-4),
+        emoji: '🍛',
+        name: Array.isArray(o.items) ? o.items.map(i=>i.name).join(', ') : 'Order items',
+        cook: 'Home Cook',
+        date: new Date(o.created_at).toLocaleDateString('en-GB'),
+        amount: '£' + parseFloat(o.total_amount||0).toFixed(2),
+        status: o.status || 'pending'
+      }));
+      renderOrderHistory(mapped);
+      document.getElementById('stat-orders').textContent = data.length;
+      document.getElementById('ov-orders').textContent = data.length;
+      const spent = data.reduce((s,o)=>s+parseFloat(o.total_amount||0),0);
+      document.getElementById('stat-spent').textContent = '£'+Math.round(spent);
+      document.getElementById('ov-spent').textContent = '£'+Math.round(spent);
+    } else {
+      renderOrderHistory(demoOrders);
+    }
+  } catch(e) {
+    renderOrderHistory(demoOrders);
+  }
+  renderRecentOrders();
+  renderFavourites();
+}
+
+function renderOrderHistory(orders, filter='all') {
+  const el = document.getElementById('orders-history-list');
+  const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+  if (!filtered.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3);">No orders found</div>'; return; }
+  el.innerHTML = filtered.map(o => `
+    <div class="order-item">
+      <div class="order-emoji">${o.emoji}</div>
+      <div class="order-info">
+        <div class="order-name">${o.name}</div>
+        <div class="order-meta">by ${o.cook} · ${o.date}</div>
+        <div class="order-actions">
+          ${o.status === 'delivered' ? `<button class="btn-sm accent" onclick="reorder('${o.id}')">🔄 Reorder</button><button class="btn-sm" onclick="showReviewModal('${o.id}')">⭐ Review</button>` : ''}
+          ${o.status === 'preparing' || o.status === 'pending' ? `<button class="btn-sm accent">📍 Track</button><button class="btn-sm" style="color:var(--red);">Cancel</button>` : ''}
+          ${o.status === 'cancelled' ? `<button class="btn-sm" onclick="reorder('${o.id}')">🔄 Reorder</button>` : ''}
+        </div>
+      </div>
+      <div class="order-right">
+        <div class="order-amount">${o.amount}</div>
+        <span class="status-pill ${o.status}">${o.status}</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderRecentOrders() {
+  const el = document.getElementById('ov-recent-orders');
+  el.innerHTML = demoOrders.slice(0,3).map(o => `
+    <div class="order-item">
+      <div class="order-emoji">${o.emoji}</div>
+      <div class="order-info">
+        <div class="order-name">${o.name}</div>
+        <div class="order-meta">${o.cook} · ${o.date}</div>
+        ${o.status === 'delivered' ? `<div class="order-actions"><button class="btn-sm accent" onclick="reorder('${o.id}')">🔄 Reorder</button></div>` : ''}
+      </div>
+      <div class="order-right">
+        <div class="order-amount">${o.amount}</div>
+        <span class="status-pill ${o.status}">${o.status}</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderFavourites() {
+  document.getElementById('fav-grid').innerHTML = demoFavs.map((f,i) => `
+    <div class="fav-card">
+      <div class="fav-img">${f.emoji}</div>
+      <div class="fav-body">
+        <div class="fav-name">${f.name}</div>
+        <div class="fav-cook">by ${f.cook}</div>
+        <div class="fav-footer">
+          <div class="fav-price">${f.price}</div>
+          <button class="fav-remove" onclick="removeFav(${i})" title="Remove from favourites">💔</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterOrderHistory(val) { renderOrderHistory(demoOrders, val); }
+
+function reorder(id) {
+  showToast('Items added to basket!');
+  setTimeout(() => window.location.href = 'cart.html', 1000);
+}
+
+function removeFav(i) {
+  demoFavs.splice(i,1);
+  renderFavourites();
+  showToast('Removed from favourites');
+}
+
+// Nav tabs
+function showTab(name, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.snav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// Profile actions
+async function saveProfile() {
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    await db.from('profiles').update({
+      full_name: document.getElementById('fn').value + ' ' + document.getElementById('ln').value,
+    }).eq('id', session.user.id);
+  } catch(e) {}
+  showToast('Profile saved!');
+}
+
+function confirmDelete() {
+  if (confirm('Are you sure? This cannot be undone.')) { showToast('Account deletion request submitted.', true); }
+}
+
+// Toggles
+function toggleSwitch(el) { el.classList.toggle('on'); }
+
+// Logout
+async function logout() {
+  try { await db.auth.signOut(); } catch(e) {}
+  window.location.href = 'auth.html';
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✅ ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Init — uncomment for real auth
+// loadProfile();
+// Demo init without auth:
+renderOrderHistory(demoOrders);
+renderRecentOrders();
+renderFavourites();
+</script>
+</body>
+</html>
