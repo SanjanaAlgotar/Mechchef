@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MechChef – Home Cooked Food, Delivered | UK</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8472B;--red-dark:#a8391f;--red-light:#fdf2ee;
+  --accent:#C8472B;--accent-dark:#a8391f;--accent-light:#fdf2ee;
+  --gold:#D4A843;--gold-light:#fdf7eb;
+  --dark:#1a1a18;--dark2:#2e2e2b;--dark3:#5c5c56;
+  --surface:#faf9f7;--surface2:#f2f0eb;
+  --green:#2d7d5a;--green-light:#e8f5ee;
+  --amber:#D4A843;--border:#e5e2da;--muted:#7a7a70;
+  --white:#fff;--text:#1a1a18;
+  --cream:#faf9f7;--warm:#f5f2ec;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);background:var(--white);overflow-x:hidden}
+h1,h2,h3,.display{font-family:'Playfair Display',Georgia,serif}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:99px}
+
+.topbar{background:var(--dark);color:#e8e4dc;text-align:center;padding:9px 16px;font-size:12px;font-weight:500;letter-spacing:.5px;font-family:'DM Sans',sans-serif}
+.topbar span{background:var(--gold);color:var(--dark);border-radius:4px;padding:2px 9px;margin-left:8px;font-size:11px;font-weight:700;letter-spacing:.3px}
+
+nav{background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 1px 0 var(--border)}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-icon{width:38px;height:38px;background:var(--dark);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-text{font-size:20px;font-weight:700;color:var(--dark);letter-spacing:-.5px;font-family:'Playfair Display',serif}
+.logo-text span{color:var(--red)}
+.nav-center{display:flex;gap:2px}
+.nav-link{font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;padding:7px 15px;border-radius:8px;cursor:pointer;border:none;background:transparent;transition:all .15s;font-family:'DM Sans',sans-serif}
+.nav-link:hover,.nav-link.active{color:var(--dark);background:var(--surface2)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.loc-btn{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:500;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:7px 13px;cursor:pointer;background:var(--white);transition:all .15s;font-family:'DM Sans',sans-serif}
+.loc-btn:hover{border-color:var(--dark);color:var(--dark)}
+.cart-bubble{position:relative;width:40px;height:40px;border-radius:10px;background:var(--dark);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:background .15s}
+.cart-bubble:hover{background:var(--dark2)}
+.cart-num{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border-radius:50%;width:19px;height:19px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;display:none}
+.btn{border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.1px;font-family:'DM Sans',sans-serif}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--dark);color:var(--dark)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-dark)}
+.btn-dark{background:var(--dark);color:#fff}
+.btn-dark:hover{background:var(--dark2)}
+.btn-outline-red{background:transparent;border:2px solid var(--red);color:var(--red)}
+.btn-outline-red:hover{background:var(--red);color:#fff}
+
+.page{display:none}
+.page.active{display:block;animation:fadein .22s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{position:relative;min-height:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:72px 24px 56px;overflow:hidden;background:var(--cream);border-bottom:1px solid var(--border)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 0%,rgba(200,71,43,0.06) 0%,transparent 60%),radial-gradient(ellipse at 10% 100%,rgba(212,168,67,0.08) 0%,transparent 50%);pointer-events:none}
+.hero-bg,.hero-dots{display:none}
+.hero-content{position:relative;z-index:1;max-width:740px}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--border);border-radius:50px;padding:7px 18px;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:24px;letter-spacing:.4px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.hero h1{font-size:58px;font-weight:900;line-height:1.06;letter-spacing:-2px;color:var(--dark);margin-bottom:20px;font-family:'Playfair Display',serif}
+.hero h1 .hl{color:var(--dark)}
+.hero h1 .ul{position:relative;display:inline-block;color:var(--red)}
+.hero h1 .ul::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:3px;background:var(--gold);border-radius:2px}
+.hero-sub{font-size:17px;color:var(--muted);max-width:500px;margin:0 auto 32px;line-height:1.7;font-weight:400}
+.hero-search{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:8px;display:flex;gap:6px;max-width:620px;width:100%;margin:0 auto 20px;box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.hs-input{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:10px;padding:11px 16px}
+.hs-input input,.hs-input select{background:transparent;border:none;outline:none;color:var(--text);font-size:14px;font-weight:500;width:100%;font-family:'DM Sans',sans-serif}
+.hs-input input::placeholder{color:var(--muted)}
+.hs-input select option{background:var(--white);color:var(--text)}
+.hs-input .icon{font-size:16px;flex-shrink:0}
+.hs-div{width:1px;background:var(--border);margin:8px 0}
+.hs-btn{background:var(--dark);color:#fff;border:none;border-radius:10px;padding:13px 28px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s;font-family:'DM Sans',sans-serif;letter-spacing:.2px}
+.hs-btn:hover{background:var(--dark2)}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.hero-tag{background:var(--white);border:1px solid var(--border);border-radius:50px;padding:7px 18px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500}
+.hero-tag:hover{background:var(--dark);border-color:var(--dark);color:#fff}
+.hero-stats{margin-top:40px;padding:18px 32px;background:var(--dark);border-radius:14px;display:inline-flex;justify-content:center;align-items:center;gap:16px}
+.hstat{text-align:center}
+.hstat strong{display:block;font-size:17px;font-weight:700;color:#fff;font-family:'DM Sans',sans-serif}
+.hstat span{font-size:12px;color:rgba(255,255,255,.5);font-weight:400}
+
+.sec{padding:64px 40px}
+.sec-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px}
+.sec-hd h2{font-size:28px;font-weight:700;letter-spacing:-.5px}
+.sec-hd p{font-size:14px;color:var(--muted);margin-top:4px;font-weight:400}
+.sec-hd a{font-size:13px;font-weight:600;color:var(--red);text-decoration:none;cursor:pointer;white-space:nowrap}
+.sec-hd a:hover{text-decoration:underline}
+.sec-alt{background:var(--cream)}
+.sec-dark{background:var(--warm)}
+
+.cscroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.cscroll::-webkit-scrollbar{display:none}
+.c-pill{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:14px 20px;cursor:pointer;transition:all .15s;min-width:88px}
+.c-pill:hover,.c-pill.on{background:var(--dark);border-color:var(--dark)}
+.c-pill-img{width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--surface2)}
+.c-pill-img img{width:100%;height:100%;object-fit:cover;display:block}
+.c-pill .em{font-size:28px}
+.c-pill .nm{font-size:12px;font-weight:600;color:var(--text)}
+.c-pill .cnt{font-size:10px;color:var(--muted)}
+.c-pill.on .nm,.c-pill:hover .nm{color:#fff}
+.c-pill.on .cnt,.c-pill:hover .cnt{color:rgba(255,255,255,.6)}
+
+.fbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.fpill{background:var(--white);border:1.5px solid var(--border);border-radius:50px;padding:7px 18px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s}
+.fpill:hover,.fpill.on{background:var(--dark);border-color:var(--dark);color:#fff}
+
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.mcard{background:var(--white);border-radius:20px;border:1.5px solid var(--border);overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative}
+.mcard:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(0,0,0,.10)}
+.mcard-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:60px;position:relative}
+.mcard-badge{position:absolute;top:10px;left:10px;font-size:10px;font-weight:700;padding:4px 10px;border-radius:50px;letter-spacing:.3px}
+.badge-hot{background:var(--dark);color:#fff}
+.badge-new{background:var(--gold);color:var(--dark)}
+.badge-special{background:var(--red);color:#fff}
+.mcard-fav{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.92);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:transform .15s}
+.mcard-fav:hover{transform:scale(1.2)}
+.mcard-body{padding:18px}
+.mcard-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.mtag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:50px;background:var(--surface2);color:var(--muted)}
+.mtag.v{background:var(--green-light);color:var(--green)}
+.mcard-name{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3;font-family:'Playfair Display',serif}
+.mcard-cook{font-size:12px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:4px}
+.mcard-foot{display:flex;align-items:center;justify-content:space-between}
+.mcard-price{font-size:22px;font-weight:700;color:var(--dark);letter-spacing:-.5px;font-family:'Playfair Display',serif}
+.mcard-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.mcard-rating{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:3px}
+.add-circle{width:34px;height:34px;border-radius:50%;background:var(--dark);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:300;line-height:1;transition:background .15s,transform .15s}
+.add-circle:hover{background:var(--red);transform:scale(1.1)}
+
+.ckgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.ckcard{background:var(--white);border-radius:20px;border:1.5px solid var(--border);overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.ckcard:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.08)}
+.ckcard-top{height:110px;display:flex;align-items:center;justify-content:center;font-size:54px;position:relative}
+.ck-verified{position:absolute;bottom:8px;right:12px;background:var(--green);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:50px;letter-spacing:.3px}
+.ckcard-body{padding:16px}
+.ck-name{font-size:15px;font-weight:700;font-family:'Playfair Display',serif}
+.ck-meta{font-size:12px;color:var(--muted);margin:3px 0 10px}
+.ck-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;text-align:center}
+.ckstat strong{display:block;font-size:15px;font-weight:700;color:var(--text)}
+.ckstat span{font-size:10px;color:var(--muted);font-weight:500}
+
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.how-card{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:32px 24px;text-align:center;transition:border-color .15s,box-shadow .15s}
+.how-card:hover{border-color:var(--dark);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.how-num{width:48px;height:48px;border-radius:14px;background:var(--dark);color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-family:'Playfair Display',serif}
+.how-card h4{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:10px;font-family:'Playfair Display',serif}
+.how-card p{font-size:13px;color:var(--muted);line-height:1.7}
+
+.prof-hero{background:var(--surface);padding:40px 32px;color:var(--text);border-bottom:1px solid var(--border)}
+.prof-top{display:flex;gap:24px;align-items:flex-start;max-width:860px;margin:0 auto}
+.prof-av{width:100px;height:100px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:54px;flex-shrink:0;border:3px solid rgba(255,255,255,.1)}
+.prof-info h1{font-size:28px;font-weight:900;margin-bottom:4px}
+.prof-info .sub{color:rgba(255,255,255,.5);font-size:14px;margin-bottom:12px}
+.prof-pills{display:flex;gap:8px;flex-wrap:wrap}
+.ppill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50px;font-size:12px;font-weight:600;padding:4px 14px;color:rgba(255,255,255,.8)}
+.ppill.hl{background:rgba(230,57,70,.2);border-color:rgba(230,57,70,.3);color:#f87171}
+.prof-bio{max-width:860px;margin:20px auto 0;font-size:14px;color:rgba(255,255,255,.5);line-height:1.7}
+.prof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:860px;margin:0 auto;padding:0 32px 32px}
+.pst{background:var(--white);border-radius:14px;padding:16px;text-align:center;border:1.5px solid var(--border)}
+.pst strong{display:block;font-size:24px;font-weight:900;color:var(--dark)}
+.pst span{font-size:12px;color:var(--muted);font-weight:500}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(2px)}
+.overlay.on{opacity:1;pointer-events:all}
+.cart-panel{position:fixed;right:0;top:0;height:100%;width:400px;background:var(--white);z-index:400;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,.15)}
+.cart-panel.on{transform:translateX(0)}
+.cp-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cp-hd h3{font-size:18px;font-weight:800}
+.cp-hd button{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.cp-hd button:hover{background:#f5f5f5}
+.cp-body{flex:1;overflow-y:auto;padding:16px 24px}
+.cp-empty{text-align:center;padding:64px 0}
+.cp-empty div{font-size:56px;margin-bottom:14px}
+.cp-empty p{font-size:14px;color:var(--muted);line-height:1.6}
+.ci{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
+.ci-em{width:52px;height:52px;border-radius:12px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.ci-inf{flex:1}
+.ci-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.ci-sub{font-size:11px;color:var(--muted)}
+.ci-ctrl{display:flex;align-items:center;gap:8px;margin-top:8px}
+.qbtn{width:26px;height:26px;border-radius:8px;background:#f0ede8;border:none;cursor:pointer;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.qbtn:hover{background:var(--accent-light);color:var(--accent-dark)}
+.ci-price{font-size:15px;font-weight:800;color:var(--dark)}
+.cp-foot{padding:20px 24px;border-top:1px solid var(--border)}
+.cp-row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+.cp-total{display:flex;justify-content:space-between;font-size:17px;font-weight:800;margin:14px 0 16px}
+.cp-cta{width:100%;padding:14px;font-size:15px;font-weight:800;border-radius:12px}
+
+.modal-wrap{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;pointer-events:none;opacity:0;transition:opacity .2s}
+.modal-wrap.on{opacity:1;pointer-events:all}
+.modal-wrap .modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px)}
+.mbox{position:relative;z-index:1;background:var(--white);border-radius:24px;width:100%;max-width:480px;overflow:hidden;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.25)}
+.mbox-close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.5);border:none;border-radius:50%;width:32px;height:32px;color:#fff;cursor:pointer;font-size:16px;z-index:2;display:flex;align-items:center;justify-content:center}
+.mbox-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative}
+.mbox-body{padding:24px}
+.mbox-body h2{font-size:22px;font-weight:900;margin-bottom:4px}
+.mbox-cook{font-size:13px;color:var(--muted);margin-bottom:10px}
+.mbox-desc{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.mbox-bottom{border-top:1px solid var(--border);padding-top:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.mbox-price{font-size:28px;font-weight:900;color:var(--dark)}
+.qty-row{display:flex;align-items:center;gap:12px}
+.qty-row button{width:36px;height:36px;border-radius:10px;background:#f0ede8;border:none;cursor:pointer;font-size:20px;font-weight:700;transition:background .15s}
+.qty-row button:hover{background:var(--accent-light);color:var(--accent-dark)}
+.qty-row span{font-size:20px;font-weight:900;min-width:28px;text-align:center}
+.mbox-add{width:100%;margin-top:16px;padding:14px;font-size:15px;font-weight:800;border-radius:12px}
+
+.co-wrap{max-width:760px;margin:0 auto;padding:36px 20px}
+.co-title{font-size:26px;font-weight:900;margin-bottom:24px;letter-spacing:-.5px}
+.co-card{background:var(--white);border-radius:18px;border:1.5px solid var(--border);padding:24px;margin-bottom:16px}
+.co-card h3{font-size:15px;font-weight:800;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.fg label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.6px;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;outline:none;font-family:'DM Sans',sans-serif;background:var(--white);transition:border-color .15s;color:var(--text)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--dark)}
+.fgrow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.slot{border:1.5px solid var(--border);border-radius:10px;padding:11px 8px;text-align:center;cursor:pointer;font-size:12px;font-weight:700;transition:all .15s;color:var(--muted)}
+.slot:hover,.slot.on{background:var(--accent-light);border-color:var(--accent);color:var(--accent-dark)}
+.pay-methods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.payopt{border:1.5px solid var(--border);border-radius:10px;padding:10px;text-align:center;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);transition:all .15s}
+.payopt:hover,.payopt.on{border-color:var(--accent);color:var(--accent-dark);background:var(--accent-light)}
+.osi{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.osi-em{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.osi-name{flex:1;font-size:13px;font-weight:600}
+.osi-price{font-size:14px;font-weight:800;color:var(--dark)}
+.promo-row{display:flex;gap:8px;margin-bottom:8px}
+.promo-row input{flex:1}
+
+.success-wrap{max-width:600px;margin:0 auto;padding:64px 24px;text-align:center}
+.success-anim{width:90px;height:90px;border-radius:50%;background:var(--green-light);border:3px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 24px;animation:bounce .6s ease}
+@keyframes bounce{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.success-wrap h2{font-size:32px;font-weight:900;margin-bottom:10px}
+.success-wrap p{font-size:15px;color:var(--muted);max-width:380px;margin:0 auto 32px;line-height:1.7}
+.track-bar{display:flex;align-items:flex-start;justify-content:center;gap:0;margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto}
+.ts{flex:1;text-align:center;position:relative}
+.ts:not(:last-child)::after{content:'';position:absolute;top:18px;left:50%;width:100%;height:2.5px;background:#e0ddd8;z-index:0}
+.ts.done:not(:last-child)::after{background:var(--green)}
+.ts-dot{width:38px;height:38px;border-radius:12px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:17px;position:relative;z-index:1;background:#f0ede8;border:2px solid #e0ddd8}
+.ts.done .ts-dot{background:var(--green);border-color:var(--green)}
+.ts-lbl{font-size:11px;font-weight:600;color:var(--muted)}
+.ts.done .ts-lbl{color:var(--green)}
+.success-info{background:var(--white);border-radius:16px;border:1.5px solid var(--border);padding:20px;margin-bottom:28px;text-align:left}
+.success-info div{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border)}
+.success-info div:last-child{border:none;font-weight:700;font-size:15px}
+
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;border-radius:50px;padding:13px 28px;font-size:13px;font-weight:700;z-index:999;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 30px rgba(0,0,0,.25);white-space:nowrap;pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+footer{background:var(--dark);color:rgba(255,255,255,.5);padding:64px 40px 28px;border-top:1px solid rgba(255,255,255,.08)}
+.ft-grid{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:32px;margin-bottom:48px}
+.ft-logo{font-size:22px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif}
+.ft-logo .icon{width:34px;height:34px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ft-desc{font-size:13px;line-height:1.8;margin-bottom:20px;color:rgba(255,255,255,.45)}
+.ft-social{display:flex;gap:8px}
+.ftsoc{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:all .15s}
+.ftsoc:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.2)}
+.ft-col h5{font-size:11px;font-weight:600;color:rgba(255,255,255,.9);letter-spacing:.6px;text-transform:uppercase;margin-bottom:16px}
+.ft-col a{display:block;font-size:13px;color:rgba(255,255,255,.45);margin-bottom:10px;text-decoration:none;cursor:pointer;transition:color .15s}
+.ft-col a:hover{color:#fff}
+.ft-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:24px;display:flex;justify-content:space-between;font-size:12px;flex-wrap:wrap;gap:8px;color:rgba(255,255,255,.3)}
+.app-btns{display:flex;gap:8px;margin-top:16px}
+.app-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 16px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:all .15s}
+.app-btn:hover{background:rgba(255,255,255,.14)}
+.app-btn span{font-size:11px;color:rgba(255,255,255,.5);display:block}
+.app-btn strong{font-size:13px;color:#fff;display:block}
+
+/* UK-specific badge */
+.uk-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:5px 14px;font-size:11px;color:rgba(255,255,255,.7);margin-bottom:18px}
+
+/* LOYALTY BAR */
+.loyalty-bar{background:var(--warm);border-bottom:1px solid var(--border);padding:10px 40px;display:flex;align-items:center;justify-content:center;gap:16px}
+.lb-left{display:flex;align-items:center;gap:12px}
+.lb-crown{font-size:20px}
+.lb-info{font-size:12px;color:var(--muted)}
+.lb-info strong{color:var(--dark);font-size:13px}
+.lb-track{flex:1;max-width:200px}
+.lb-prog{height:6px;background:var(--border);border-radius:10px;overflow:hidden;margin-top:4px}
+.lb-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:10px;transition:width .4s}
+.lb-right{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.lb-pts{font-size:18px;font-weight:700;color:var(--gold)}
+
+/* LIVE TRACKING PAGE */
+.track-wrap{max-width:680px;margin:0 auto;padding:36px 20px}
+.track-hero{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;color:var(--text);margin-bottom:20px;text-align:center}
+.track-order-id{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:4px}
+.track-status-big{font-size:26px;font-weight:900;margin-bottom:4px}
+.track-eta{font-size:15px;color:rgba(255,255,255,.6)}
+.track-eta span{color:var(--amber);font-weight:700}
+.track-map{height:180px;background:linear-gradient(135deg,#1a2535,#0f1f35);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:16px 0;position:relative;overflow:hidden;font-size:13px;color:rgba(255,255,255,.3)}
+.map-pin{position:absolute;font-size:28px;animation:mapbounce 1.2s ease-in-out infinite}
+@keyframes mapbounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.map-pulse{position:absolute;width:60px;height:60px;border-radius:50%;border:2px solid rgba(230,57,70,.4);animation:pulse-ring 1.5s ease-out infinite}
+@keyframes pulse-ring{0%{transform:scale(.8);opacity:1}100%{transform:scale(2);opacity:0}}
+.track-steps{display:flex;align-items:flex-start;gap:0;margin:20px 0}
+.tst{flex:1;text-align:center}
+.tst:not(:last-child)::after{content:'';position:absolute;top:19px;left:50%;width:100%;height:3px;background:#e0ddd8;z-index:0}
+.tst.done:not(:last-child)::after{background:var(--green)}
+.tst.active:not(:last-child)::after{background:linear-gradient(90deg,var(--green),#e0ddd8)}
+.tst-dot{width:40px;height:40px;border-radius:12px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:18px;position:relative;z-index:1;background:#f0ede8;border:2px solid #e0ddd8}
+.tst.done .tst-dot{background:var(--green);border-color:var(--green)}
+.tst.active .tst-dot{background:var(--red);border-color:var(--red);animation:pulse-dot .8s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,.4)}50%{box-shadow:0 0 0 8px rgba(230,57,70,0)}}
+.tst-lbl{font-size:11px;font-weight:600;color:var(--muted)}
+.tst.done .tst-lbl,.tst.active .tst-lbl{color:var(--red)}
+.track-card{background:var(--white);border-radius:16px;border:1.5px solid var(--border);padding:20px;margin-bottom:14px}
+.track-card h4{font-size:14px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.courier-row{display:flex;align-items:center;gap:14px}
+.courier-av{width:52px;height:52px;border-radius:14px;background:#fdecea;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.courier-name{font-size:15px;font-weight:800}
+.courier-sub{font-size:12px;color:var(--muted);margin:2px 0 8px}
+.courier-actions{display:flex;gap:8px;margin-left:auto}
+.cta-btn{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .15s}
+.cta-btn:hover{border-color:var(--accent);background:var(--accent-light)}
+
+/* REVIEWS SECTION */
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.rev-card{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:20px}
+.rev-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rev-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rev-name{font-size:13px;font-weight:700}
+.rev-date{font-size:11px;color:var(--muted)}
+.rev-stars{color:var(--amber);font-size:14px;letter-spacing:1px;margin-bottom:8px}
+.rev-text{font-size:13px;color:var(--muted);line-height:1.6}
+.rev-meal{font-size:11px;font-weight:600;color:var(--accent-dark);margin-top:8px}
+.rev-summary{background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:24px;margin-bottom:24px;display:flex;gap:32px;align-items:center}
+.rev-big{text-align:center;min-width:100px}
+.rev-big-num{font-size:52px;font-weight:900;color:var(--dark);line-height:1}
+.rev-big-stars{font-size:18px;color:var(--amber);margin:4px 0}
+.rev-big-sub{font-size:12px;color:var(--muted)}
+.rev-bars{flex:1}
+.rbar{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:12px;color:var(--muted)}
+.rbar-fill{flex:1;height:6px;background:#f0ede8;border-radius:10px;overflow:hidden}
+.rbar-inner{height:100%;background:var(--amber);border-radius:10px}
+
+/* BECOME A COOK PAGE */
+.cook-hero{background:var(--dark);padding:72px 40px;text-align:center;color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.cook-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,67,0.12) 0%,transparent 60%);pointer-events:none}
+.earn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.earn-card{background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:28px 24px;text-align:center;transition:border-color .15s,box-shadow .15s}
+.earn-card:hover{border-color:var(--dark);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.earn-card .ico{font-size:36px;margin-bottom:14px}
+.earn-card h4{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:6px;font-family:'Playfair Display',serif}
+.earn-card p{font-size:13px;color:var(--muted);line-height:1.65}
+.apply-card{background:var(--white);border-radius:20px;max-width:680px;margin:0 auto;padding:32px}
+.step-row{display:flex;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.step-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.step-num{width:40px;height:40px;border-radius:12px;background:var(--dark);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif}
+.step-info h4{font-size:14px;font-weight:700;margin-bottom:3px}
+.step-info p{font-size:13px;color:var(--muted);line-height:1.55}
+.launch-banner{background:var(--gold-light);border:1px solid rgba(212,168,67,0.3);border-radius:16px;padding:22px 28px;margin:24px 0;text-align:center}
+.launch-banner strong{display:block;font-size:19px;font-weight:700;color:var(--dark);margin-bottom:6px;font-family:'Playfair Display',serif}
+.launch-banner p{font-size:14px;color:var(--muted);line-height:1.6}
+.ckcard-soon .ckcard-top{background:var(--surface2)!important;font-size:40px}
+.ck-soon-txt{font-size:12px;color:var(--muted);line-height:1.55;margin-top:8px}
+.ckcard-soon{cursor:default}
+.ckcard-soon:hover{transform:none;box-shadow:none}
+.apply-form{background:var(--white);border-radius:20px;border:1.5px solid var(--border);padding:32px;margin-top:20px}
+.apply-form h3{font-size:20px;font-weight:700;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);font-family:'Playfair Display',serif;color:var(--dark)}
+.checkbox-row{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.checkbox-row input{margin-top:2px;accent-color:var(--red)}
+
+/* SEARCH HIGHLIGHT */
+.search-bar-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:14px 32px;position:sticky;top:64px;z-index:100;display:flex;gap:10px;align-items:center}
+.sb-input{flex:1;display:flex;align-items:center;gap:8px;border:1.5px solid var(--border);border-radius:10px;padding:9px 14px;font-size:14px;transition:border-color .15s;background:var(--white)}
+.sb-input:focus-within{border-color:var(--accent)}
+.sb-input input{border:none;outline:none;flex:1;font-size:14px;font-family:inherit;background:transparent}
+.sort-sel{border:1.5px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;font-family:inherit;color:var(--text);background:var(--white);cursor:pointer;outline:none}
+.sort-sel:focus{border-color:var(--accent)}
+
+/* NOTIFICATION BADGE */
+.notif-dot{width:8px;height:8px;background:var(--red);border-radius:50%;display:inline-block;margin-left:4px;animation:pulse-dot .8s ease-in-out infinite}
+
+/* REVIEW MODAL */
+.rev-modal{max-width:460px}
+.star-pick{display:flex;gap:6px;font-size:32px;cursor:pointer;margin:12px 0}
+.star-pick span{transition:transform .1s;line-height:1}
+.star-pick span:hover{transform:scale(1.2)}
+
+@media(max-width:768px){
+  nav .nav-center{display:none}
+  .hero h1{font-size:34px}
+  .hero-stats{gap:20px;flex-wrap:wrap}
+  .how-grid{grid-template-columns:1fr 1fr}
+  .ft-grid{grid-template-columns:1fr 1fr}
+  .co-wrap{padding:20px 12px}
+  .fgrow{grid-template-columns:1fr}
+  .cart-panel{width:100%}
+  .pay-methods{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="loyalty-bar">
+  <div class="lb-info"><strong>MechChef UK</strong> — London's first pre-order home cook tiffin marketplace</div>
+</div>
+
+<nav>
+  <a class="logo" onclick="go('home')">
+    <div class="logo-icon">🍽</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <div class="nav-center">
+    <button class="nav-link active" id="nl-home" onclick="go('home')">Home</button>
+    <button class="nav-link" id="nl-browse" onclick="go('browse')">Browse Meals</button>
+    <button class="nav-link" id="nl-cooks" onclick="go('cooks')">Find Cooks</button>
+    <button class="nav-link" id="nl-how" onclick="go('how')">How It Works</button>
+    <button class="nav-link" id="nl-reviews" onclick="go('reviews')">Reviews</button>
+    <button class="nav-link" id="nl-cook" onclick="go('become-cook')">Cook with us 🍳</button>
+  </div>
+  <div class="nav-right">
+    <button class="loc-btn" onclick="toast('📍 Location: Harrow, London')">📍 Harrow, London</button>
+    <button class="cart-bubble" onclick="toggleCart()" aria-label="Open basket">🛒<span class="cart-num" id="cn">0</span></button>
+    <div id="nav-auth" style="display:flex;align-items:center;gap:8px">
+      <button class="btn btn-ghost" onclick="window.location.href='auth.html'">Log in</button>
+<button class="btn btn-red" onclick="window.location.href='auth.html'">Sign up free</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-dots"></div>
+    <div class="hero-content">
+      <div class="uk-badge">🇬🇧 Serving Harrow & Newham, London</div>
+      <div class="hero-pill">🔥 Freshly made by real home cooks near you</div>
+      <h1>Home cooked tiffins from<br><span class="ul hl">real kitchens</span><br>across London</h1>
+      <p class="hero-sub">Skip the takeaways. Order fresh home-cooked South Asian meals from verified home cooks in Harrow & Newham.</p>
+      <div class="hero-search">
+        <div class="hs-input">
+          <span class="icon">📍</span>
+          <input type="text" id="h-zip" placeholder="Enter your postcode (e.g. E1 6RF)…"/>
+        </div>
+        <div class="hs-div"></div>
+        <div class="hs-input" style="min-width:130px">
+          <span class="icon">🍽</span>
+          <select id="h-cuisine">
+            <option value="">All Cuisines</option>
+            <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option>
+            <option>Caribbean</option><option>Italian</option><option>Chinese</option>
+            <option>Turkish</option><option>Mediterranean</option><option>Thai</option><option>British</option>
+          </select>
+        </div>
+        <button class="hs-btn" onclick="heroSearch()">Find Food →</button>
+      </div>
+      <div class="hero-tags">
+        <span class="hero-tag" onclick="setCuisine('Indian');go('browse')">🍛 Indian</span>
+        <span class="hero-tag" onclick="setCuisine('Pakistani');go('browse')">🫕 Pakistani</span>
+        <span class="hero-tag" onclick="setCuisine('Caribbean');go('browse')">🍗 Caribbean</span>
+        <span class="hero-tag" onclick="setCuisine('Chinese');go('browse')">🥟 Chinese</span>
+        <span class="hero-tag" onclick="setCuisine('Turkish');go('browse')">🥙 Turkish</span>
+        <span class="hero-tag" onclick="setCuisine('Italian');go('browse')">🍕 Italian</span>
+        <span class="hero-tag" onclick="setCuisine('Mediterranean');go('browse')">🥗 Mediterranean</span>
+        <span class="hero-tag" onclick="setDiet('Vegan');go('browse')">🌿 Vegan</span>
+        <span class="hero-tag" onclick="setDiet('Halal');go('browse')">☪️ Halal</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><strong>Launching Soon</strong><span>in Harrow & Newham</span></div>
+    </div>
+  </div>
+
+  <div class="sec sec-alt">
+    <div class="sec-hd"><div><h2>Browse by cuisine</h2><p>What are you craving today?</p></div><a onclick="go('browse')">View all →</a></div>
+    <div class="cscroll" id="home-cs"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><div><h2>🔥 Today's specials</h2><p>Fresh meals available for delivery right now</p></div><a onclick="go('browse')">See all meals →</a></div>
+    <div class="mgrid" id="home-meals"></div>
+  </div>
+
+  <div class="sec sec-alt">
+    <div class="sec-hd"><div><h2>Home cooks</h2><p id="cooks-subhd">Verified home cooks in Harrow &amp; Newham</p></div><a onclick="go('cooks')">View all →</a></div>
+    <div class="ckgrid" id="home-cooks"></div>
+  </div>
+
+  <div class="sec sec-dark">
+    <div class="sec-hd" style="margin-bottom:32px"><div><h2>How MechChef works</h2><p>Fresh food in 3 simple steps</p></div></div>
+    <div class="how-grid">
+      <div class="how-card"><div class="how-num">1</div><h4>Browse & Pre-order</h4><p>Choose your meal from verified home cooks in Harrow & Newham.</p></div>
+      <div class="how-card"><div class="how-num">2</div><h4>Cook Prepares Fresh</h4><p>Your order is freshly made to order by a local home cook.</p></div>
+      <div class="how-card"><div class="how-num">3</div><h4>Delivered to your door</h4><p>Hot, fresh, home-cooked food delivered straight to you.</p></div>
+    </div>
+  </div>
+
+  <div class="sec sec-alt">
+    <div class="sec-hd"><div><h2>💬 What our customers say</h2></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:22px">
+        <div style="color:var(--amber);font-size:15px;margin-bottom:12px">★★★★★</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:16px">"Amara's jollof rice is better than anything I've had in a restaurant. It genuinely tastes like home cooking — because it is! I order every single week now."</p>
+        <div style="display:flex;align-items:center;gap:10px"><div style="width:38px;height:38px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#1d4ed8">JM</div><div><div style="font-size:13px;font-weight:700">James M.</div><div style="font-size:11px;color:var(--muted)">Hackney, London · Verified Customer</div></div></div>
+      </div>
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:22px">
+        <div style="color:var(--amber);font-size:15px;margin-bottom:12px">★★★★★</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:16px">"As a busy professional I never have time to cook properly. MechChef lets me eat healthy, affordable, real food every day. Brilliant concept, brilliant execution."</p>
+        <div style="display:flex;align-items:center;gap:10px"><div style="width:38px;height:38px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#166534">SK</div><div><div style="font-size:13px;font-weight:700">Sophie K.</div><div style="font-size:11px;color:var(--muted)">Didsbury, Manchester · Verified Customer</div></div></div>
+      </div>
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:22px">
+        <div style="color:var(--amber);font-size:15px;margin-bottom:12px">★★★★★</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:16px">"My whole family has switched from Deliveroo to MechChef. We're saving loads and the food quality is absolutely incredible. Love supporting local home cooks!"</p>
+        <div style="display:flex;align-items:center;gap:10px"><div style="width:38px;height:38px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#92400e">RP</div><div><div style="font-size:13px;font-weight:700">Raj P.</div><div style="font-size:11px;color:var(--muted)">Moseley, Birmingham · Verified Customer</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--dark);padding:72px 40px;text-align:center;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(212,168,67,0.1) 0%,transparent 60%);pointer-events:none"></div>
+    <div style="max-width:560px;margin:0 auto;position:relative;z-index:1">
+      <h2 style="font-size:36px;font-weight:700;color:#fff;letter-spacing:-.5px;margin-bottom:12px;font-family:'Playfair Display',serif">Ready to taste the difference?</h2>
+      <p style="font-size:15px;color:rgba(255,255,255,.6);margin-bottom:32px;line-height:1.7">Launching Soon in Harrow & Newham — pre-order home-cooked tiffins from verified home cooks.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-red" style="font-weight:700;padding:14px 32px;font-size:14px" onclick="go('browse')">Browse Meals →</button>
+        <button class="btn" style="background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);color:#fff;font-weight:700;padding:14px 32px;font-size:14px" onclick="go('become-cook')">Join Cook Waitlist</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BROWSE -->
+<div class="page" id="page-browse">
+  <div class="sec">
+    <h2 style="font-size:26px;font-weight:900;letter-spacing:-.5px;margin-bottom:20px">Browse All Meals</h2>
+    <div class="cscroll" id="browse-cs" style="margin-bottom:16px"></div>
+    <div class="fbar" id="browse-fbar"></div>
+    <div class="mgrid" id="browse-meals"></div>
+    <div id="no-results" style="display:none;text-align:center;padding:64px 0">
+      <div style="font-size:56px;margin-bottom:16px">🍽</div>
+      <p style="font-size:15px;color:var(--muted)">No meals match your filters.<br>Try a different cuisine or dietary option.</p>
+    </div>
+  </div>
+</div>
+
+<!-- COOKS -->
+<div class="page" id="page-cooks">
+  <div class="sec">
+    <h2 style="font-size:26px;font-weight:900;letter-spacing:-.5px;margin-bottom:6px">Home Cooks</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:24px">Coming Soon — Join our waitlist in Harrow & Newham</p>
+    <div class="ckgrid" id="all-cooks"></div>
+  </div>
+</div>
+
+<!-- COOK PROFILE -->
+<div class="page" id="page-profile">
+  <div class="prof-hero"><div id="phero"></div></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:0 32px;transform:translateY(-24px)" id="pstats"></div>
+  <div class="sec" style="padding-top:8px">
+    <div class="sec-hd"><div><h2 id="pmtitle">Menu</h2></div></div>
+    <div class="mgrid" id="profile-meals"></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="page" id="page-how">
+  <div class="sec" style="min-height:100vh;background:var(--white)">
+    <div style="max-width:860px;margin:0 auto">
+      <h2 style="font-size:32px;font-weight:900;color:var(--dark);text-align:center;margin-bottom:8px">How MechChef Works</h2>
+      <p style="text-align:center;color:var(--muted);font-size:15px;margin-bottom:36px">Fresh home-cooked food in 3 simple steps</p>
+      <div class="how-grid" style="margin-bottom:40px">
+        <div class="how-card"><div class="how-num">1</div><h4>Browse & Pre-order</h4><p>Choose your meal from verified home cooks in Harrow & Newham.</p></div>
+        <div class="how-card"><div class="how-num">2</div><h4>Cook Prepares Fresh</h4><p>Your order is freshly made to order by a local home cook.</p></div>
+        <div class="how-card"><div class="how-num">3</div><h4>Delivered to your door</h4><p>Hot, fresh, home-cooked food delivered straight to you.</p></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px">
+        <h3 style="font-size:20px;font-weight:800;color:var(--dark);margin-bottom:20px">🍳 Want to earn cooking for others?</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:24px">
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px"><div style="font-size:26px;margin-bottom:8px">📋</div><div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:4px">Apply Online</div><div style="font-size:12px;color:var(--muted)">Short application with your food hygiene certificate</div></div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px"><div style="font-size:26px;margin-bottom:8px">✅</div><div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:4px">Get Verified</div><div style="font-size:12px;color:var(--muted)">Pass our Food Standards Agency-aligned safety checks</div></div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px"><div style="font-size:26px;margin-bottom:8px">📸</div><div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:4px">List Your Meals</div><div style="font-size:12px;color:var(--muted)">Upload your menu with photos, descriptions & pricing in £</div></div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px"><div style="font-size:26px;margin-bottom:8px">💷</div><div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:4px">Start Earning</div><div style="font-size:12px;color:var(--muted)">Launching Soon in Harrow & Newham</div></div>
+        </div>
+        <button class="btn btn-red" style="padding:13px 28px;font-size:14px" onclick="go('become-cook')">Join cook waitlist →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT -->
+<div class="page" id="page-checkout">
+  <div class="co-wrap">
+    <div class="co-title">Checkout</div>
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:start">
+      <div>
+        <div class="co-card">
+          <h3>📦 Delivery Details</h3>
+          <div class="fgrow">
+            <div class="fg"><label>First Name</label><input type="text" placeholder="James"/></div>
+            <div class="fg"><label>Last Name</label><input type="text" placeholder="Smith"/></div>
+          </div>
+          <div class="fg"><label>Address Line 1</label><input type="text" placeholder="14 Brick Lane"/></div>
+          <div class="fg"><label>Address Line 2 (Optional)</label><input type="text" placeholder="Flat 3B"/></div>
+          <div class="fgrow">
+            <div class="fg"><label>Town / City</label><input type="text" placeholder="London"/></div>
+            <div class="fg"><label>Postcode</label><input type="text" placeholder="E1 6RF" maxlength="8" style="text-transform:uppercase"/></div>
+          </div>
+          <div class="fg"><label>Mobile Number</label><input type="tel" placeholder="+44 7700 900000"/></div>
+          <div class="fg"><label>Delivery Instructions (Optional)</label><textarea rows="2" placeholder="E.g. Leave at door, ring bell, safe place…" style="resize:none"></textarea></div>
+        </div>
+        <div class="co-card">
+          <h3>🕐 Choose Delivery Time</h3>
+          <div class="slots" id="coslots"></div>
+        </div>
+        <div class="co-card">
+          <h3>💳 Payment Method</h3>
+          <div class="pay-methods">
+            <div class="payopt on" onclick="selPay(this)">💳 Card</div>
+            <div class="payopt" onclick="selPay(this)">🍎 Apple Pay</div>
+            <div class="payopt" onclick="selPay(this)">🅿️ PayPal</div>
+            <div class="payopt" onclick="selPay(this)">🏦 Klarna</div>
+          </div>
+          <div class="fg"><label>Card Number</label><input type="text" placeholder="4242 4242 4242 4242" maxlength="19"/></div>
+          <div class="fgrow">
+            <div class="fg"><label>Expiry Date</label><input type="text" placeholder="MM / YY" maxlength="7"/></div>
+            <div class="fg"><label>CVV</label><input type="text" placeholder="123" maxlength="4"/></div>
+          </div>
+          <div class="fg"><label>Name on Card</label><input type="text" placeholder="James Smith"/></div>
+        </div>
+      </div>
+      <div>
+        <div class="co-card" style="position:sticky;top:80px">
+          <h3>🧾 Order Summary</h3>
+          <div id="co-items"></div>
+          <div style="margin-top:12px">
+            <div class="promo-row">
+              <div class="fg" style="flex:1;margin:0"><input type="text" id="promo-inp" placeholder="Promo code (e.g. MECH20)"/></div>
+              <button class="btn btn-dark btn-sm" style="align-self:flex-end;padding:11px 16px" onclick="applyPromo()">Apply</button>
+            </div>
+          </div>
+          <div style="margin-top:14px">
+            <div class="cp-row"><span>Subtotal</span><span id="co-sub">£0.00</span></div>
+            <div class="cp-row"><span>Delivery fee</span><span>£1.99</span></div>
+            <div class="cp-row" id="co-disc-row" style="display:none;color:var(--green)"><span>🎉 Promo (MECH20)</span><span id="co-disc">-£0.00</span></div>
+            <div class="cp-row"><span>VAT (20%)</span><span id="co-tax">£0.00</span></div>
+            <div class="cp-total"><span>Total</span><span id="co-total">£0.00</span></div>
+            <button class="btn btn-red cp-cta" onclick="placeOrder()">Place Order 🎉</button>
+            <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">🔒 Secure checkout · 256-bit SSL · All prices include VAT</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="page" id="page-success">
+  <div class="success-wrap">
+    <div class="success-anim">✅</div>
+    <h2>Order Confirmed!</h2>
+    <p>Your home-cooked meal is being lovingly prepared. You'll receive a text update as your order progresses.</p>
+    <div class="track-bar">
+      <div class="ts done"><div class="ts-dot">✅</div><div class="ts-lbl">Confirmed</div></div>
+      <div class="ts done"><div class="ts-dot">👩‍🍳</div><div class="ts-lbl">Preparing</div></div>
+      <div class="ts"><div class="ts-dot">🛵</div><div class="ts-lbl">Picked Up</div></div>
+      <div class="ts"><div class="ts-dot">📍</div><div class="ts-lbl">On the Way</div></div>
+      <div class="ts"><div class="ts-dot">🏠</div><div class="ts-lbl">Delivered</div></div>
+    </div>
+    <div class="success-info" id="succ-info"></div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-red" style="padding:13px 28px" onclick="go('browse')">Order More Food</button>
+      <button class="btn btn-ghost" style="padding:13px 28px" onclick="go('track')">📍 Track My Order</button>
+      <button class="btn btn-ghost" style="padding:13px 28px" onclick="go('home')">Back to Home</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- LIVE ORDER TRACKING -->
+<div class="page" id="page-track">
+  <div class="track-wrap">
+    <div class="track-hero">
+      <div class="track-order-id">Order #MC-4821 · Placed 10 mins ago</div>
+      <div class="track-status-big">👩‍🍳 Being Prepared</div>
+      <div class="track-eta">Estimated delivery: <span>12:45 – 13:00</span></div>
+      <div class="track-map">
+        <div class="map-pulse"></div>
+        <div class="map-pin" style="top:40%;left:50%">🛵</div>
+        <span style="position:absolute;bottom:12px;right:14px;font-size:11px;background:rgba(255,255,255,.08);padding:4px 10px;border-radius:20px">Live Map · Coming Soon</span>
+      </div>
+    </div>
+    <div style="position:relative">
+      <div class="track-steps">
+        <div class="tst done" style="position:relative"><div class="tst-dot">✅</div><div class="tst-lbl">Confirmed</div></div>
+        <div class="tst active" style="position:relative"><div class="tst-dot">👩‍🍳</div><div class="tst-lbl">Preparing</div></div>
+        <div class="tst" style="position:relative"><div class="tst-dot">🛵</div><div class="tst-lbl">Picked Up</div></div>
+        <div class="tst" style="position:relative"><div class="tst-dot">📍</div><div class="tst-lbl">On the Way</div></div>
+        <div class="tst" style="position:relative"><div class="tst-dot">🏠</div><div class="tst-lbl">Delivered</div></div>
+      </div>
+    </div>
+    <div class="track-card">
+      <h4>🛵 Courier Details</h4>
+      <div class="courier-row">
+        <div class="courier-av">🧑‍🦱</div>
+        <div>
+          <div class="courier-name">Arjun Patel</div>
+          <div class="courier-sub">⭐ 4.8 · 1,240 deliveries · Honda PCX 125</div>
+          <div style="font-size:12px;color:var(--muted)">Registration: LN22 XYZ</div>
+        </div>
+        <div class="courier-actions">
+          <button class="cta-btn" onclick="toast('📞 Calling Arjun...')">📞</button>
+          <button class="cta-btn" onclick="toast('💬 Chat coming soon!')">💬</button>
+        </div>
+      </div>
+    </div>
+    <div class="track-card">
+      <h4>🧾 Your Order</h4>
+      <div class="osi"><div class="osi-em">🍛</div><div class="osi-name">1× Butter Chicken & Basmati Rice</div><div class="osi-price">£10.99</div></div>
+      <div class="osi"><div class="osi-em">🍲</div><div class="osi-name">1× Dal Makhani & Garlic Naan</div><div class="osi-price">£8.99</div></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)"><span>Total Paid</span><span style="color:var(--red)">£22.97</span></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-ghost" style="flex:1;padding:12px" onclick="toast('Issue reported. Support will contact you shortly.')">⚠️ Report Issue</button>
+      <button class="btn btn-red" style="flex:1;padding:12px" onclick="go('success')">✅ Mark as Received</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS PAGE -->
+<div class="page" id="page-reviews">
+  <div class="sec">
+    <div class="sec-hd"><div><h2>Customer Reviews</h2><p>What our food lovers are saying</p></div>
+      <button class="btn btn-red" onclick="openRevModal()">✍️ Write a Review</button>
+    </div>
+    <div class="rev-summary" style="justify-content:center;text-align:center;padding:32px">
+      <div>
+        <div style="font-size:28px;font-weight:900;color:var(--accent-dark)">Launching Soon</div>
+        <div style="font-size:15px;color:var(--muted);margin-top:8px">in Harrow & Newham — reviews open when we launch</div>
+      </div>
+    </div>
+    <div class="rev-grid">
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#fdecea">👩🏽</div><div><div class="rev-name">Sarah M. · London</div><div class="rev-date">2 days ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Priya's butter chicken is absolutely incredible. Tastes exactly like my mum's home cooking in India. Arrived piping hot, packaging was perfect. Will 100% order every week!</div><div class="rev-meal">🍛 Butter Chicken · Chef Priya Sharma</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#fef3c7">👨🏾</div><div><div class="rev-name">James K. · Manchester</div><div class="rev-date">4 days ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Wei's dim sum is genuinely better than any restaurant in Chinatown. Fresh, perfectly folded, the dipping sauce is incredible. Highly recommend the prawn har gow!</div><div class="rev-meal">🥟 Dim Sum Basket · Chef Wei Liu</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#e6f7f0">👩🏼</div><div><div class="rev-name">Emma T. · Birmingham</div><div class="rev-date">1 week ago</div></div></div><div class="rev-stars">★★★★☆</div><div class="rev-text">Fatima's biryani is the real deal — saffron-scented, perfectly spiced, generous portions. Only reason for 4 stars is it was 10 mins late but the food made up for it!</div><div class="rev-meal">🍚 Chicken Biryani · Chef Fatima Hussain</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#eff6ff">👨🏻</div><div><div class="rev-name">Daniel R. · Brighton</div><div class="rev-date">1 week ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Sofia's mezze bowl is the best lunch I've had in years. Fresh, vibrant, filling. The tahini dressing alone is worth the price. Perfect for anyone eating plant-based.</div><div class="rev-meal">🥗 Quinoa Mezze Bowl · Chef Sofia Papadaki</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#fdf6ec">👩🏽</div><div><div class="rev-name">Layla A. · London</div><div class="rev-date">2 weeks ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Amara's jerk chicken transported me straight to Jamaica. The rice and peas were perfect. Love that MechChef supports women home cooks building real businesses. Superb!</div><div class="rev-meal">🍗 Jerk Chicken · Chef Amara Thomas</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#fefce8">👨🏿</div><div><div class="rev-name">Marcus B. · London</div><div class="rev-date">2 weeks ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Emma's Sunday roast is the only one that gets close to my nan's. Proper crispy roasties, fluffy Yorkshire pudding, amazing gravy. Sold out every weekend for good reason!</div><div class="rev-meal">🍗 Sunday Roast · Chef Emma Clarke</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BECOME A COOK PAGE -->
+<div class="page" id="page-become-cook">
+  <div class="cook-hero" style="position:relative">
+    <div style="max-width:720px;margin:0 auto;position:relative;z-index:1">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:7px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.8);margin-bottom:24px;letter-spacing:.4px">🇬🇧 Harrow & Newham launch</div>
+      <h1 style="font-size:52px;font-weight:900;line-height:1.08;margin-bottom:18px;color:#fff;font-family:'Playfair Display',serif">Cook from home.<br><span style="color:var(--gold)">Earn on your terms</span></h1>
+      <p style="font-size:17px;color:rgba(255,255,255,.65);max-width:520px;margin:0 auto 28px;line-height:1.7;font-weight:400">Register your interest to cook on MechChef. We're onboarding verified home cooks in Harrow & Newham — set your hours, share your recipes, and earn from your kitchen.</p>
+      <div class="launch-banner" style="max-width:560px;margin:0 auto">
+        <strong>Launching Soon in Harrow & Newham</strong>
+        <p>Join our cook waitlist today. No fees to register — we'll be in touch when we open your area.</p>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:860px;margin:0 auto;padding:40px 20px">
+    <div class="earn-grid">
+      <div class="earn-card"><div class="ico">⏰</div><h4>Your Hours, Your Rules</h4><p>Cook when it suits you. Morning, afternoon, evening — you decide when your kitchen is open.</p></div>
+      <div class="earn-card"><div class="ico">🏠</div><h4>Cook from Home</h4><p>No restaurant needed. Just your home kitchen, your recipes, and your passion for great food.</p></div>
+      <div class="earn-card"><div class="ico">💷</div><h4>Weekly Payouts</h4><p>Earnings sent to your bank every Monday. No waiting, no chasing — straight into your account.</p></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-top:8px">
+      <div>
+        <h3 style="font-size:20px;font-weight:900;margin-bottom:20px">How to get started</h3>
+        <div class="step-row"><div class="step-num">1</div><div class="step-info"><h4>Apply Online (5 mins)</h4><p>Fill in your details, tell us about your cooking style and the cuisines you specialise in.</p></div></div>
+        <div class="step-row"><div class="step-num">2</div><div class="step-info"><h4>Food Safety Check</h4><p>Upload your Level 2 Food Hygiene Certificate (or get one free via our partner portal).</p></div></div>
+        <div class="step-row"><div class="step-num">3</div><div class="step-info"><h4>Kitchen Verification</h4><p>A brief virtual review of your kitchen setup — takes under 15 minutes via video call.</p></div></div>
+        <div class="step-row"><div class="step-num">4</div><div class="step-info"><h4>List Your Dishes</h4><p>Add your menu, photos, prices, and delivery zones. We help you write great descriptions.</p></div></div>
+        <div class="step-row"><div class="step-num">5</div><div class="step-info"><h4>Start Cooking & Earning</h4><p>Go live and start receiving orders. Your first order typically arrives within 48 hours.</p></div></div>
+      </div>
+      <div class="apply-form">
+        <h3>Cook registration interest</h3>
+        <div class="fg"><label>Full Name</label><input type="text" id="cook-name" placeholder="e.g. Priya Sharma"/></div>
+        <div class="fg"><label>Email Address</label><input type="email" id="cook-email" placeholder="you@email.com"/></div>
+        <div class="fg"><label>Mobile Number</label><input type="tel" id="cook-phone" placeholder="+44 7700 900000"/></div>
+        <div class="fg"><label>Area</label><select id="cook-area"><option>Harrow</option><option>Newham</option><option>Both / Either</option></select></div>
+        <div class="fg"><label>Cuisine Speciality</label><select id="cook-cuisine"><option>Indian</option><option>Pakistani</option><option>Bangladeshi</option><option>Caribbean</option><option>Italian</option><option>Chinese</option><option>Turkish</option><option>Thai</option><option>Mediterranean</option><option>British</option><option>Other</option></select></div>
+        <div class="fg"><label>Years of Cooking Experience</label><select><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
+        <div class="checkbox-row"><input type="checkbox" id="hygiene-check"><label for="hygiene-check">I hold a Level 2 Food Hygiene Certificate (or will obtain one)</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="terms-check"><label for="terms-check">I agree to MechChef's Cook Terms & Conditions and Community Standards</label></div>
+        <button class="btn btn-red" style="width:100%;padding:14px;font-size:15px;margin-top:8px" onclick="submitCookInterest()">Join cook waitlist →</button>
+        <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">Launching Soon in Harrow & Newham · No fees to register</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart">
+  <div class="cp-hd">
+    <h3>🛒 Your Basket</h3>
+    <button onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cp-body" id="cp-body"></div>
+  <div id="cp-foot" style="display:none">
+    <div class="cp-foot">
+      <div class="cp-row"><span>Subtotal</span><span id="cp-sub">£0.00</span></div>
+      <div class="cp-row"><span>Delivery fee</span><span>£1.99</span></div>
+      <div class="cp-total"><span>Total (inc. VAT)</span><span id="cp-tot">£0.00</span></div>
+      <button class="btn btn-red cp-cta" onclick="goCheckout()">Go to Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEAL MODAL -->
+<div class="modal-wrap" id="mwrap">
+  <div class="modal-bg" onclick="closeModal()"></div>
+  <div class="mbox">
+    <button class="mbox-close" onclick="closeModal()">✕</button>
+    <div class="mbox-img" id="mimg"></div>
+    <div class="mbox-body">
+      <h2 id="mname"></h2>
+      <div class="mbox-cook" id="mcook"></div>
+      <div class="mcard-tags" id="mtags"></div>
+      <div class="mbox-desc" id="mdesc"></div>
+      <div class="mbox-bottom">
+        <div class="mbox-price" id="mprice"></div>
+        <div class="qty-row">
+          <button onclick="mQty(-1)">−</button>
+          <span id="mqty">1</span>
+          <button onclick="mQty(1)">+</button>
+        </div>
+      </div>
+      <button class="btn btn-red mbox-add" onclick="addFromModal()">Add to Basket →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast-el"></div>
+
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><div class="icon">🍽</div>MechChef</div>
+      <div class="ft-desc">MechChef is launching in Harrow and Newham — London's first pre-order home cook tiffin marketplace. Fresh, affordable South Asian meals from verified home cooks, delivered to your door.</div>
+      <div class="ft-social">
+        <div class="ftsoc">𝕏</div>
+        <div class="ftsoc">📘</div>
+        <div class="ftsoc">📸</div>
+        <div class="ftsoc">▶️</div>
+      </div>
+      <div class="app-btns">
+        <div class="app-btn"><span>Download on the</span><strong>App Store</strong></div>
+        <div class="app-btn"><span>Get it on</span><strong>Google Play</strong></div>
+      </div>
+    </div>
+    <div class="ft-col"><h5>For Customers</h5><a>Browse Meals</a><a>Find Cooks</a><a>Subscription Plans</a><a>Gift Vouchers</a><a>Help & Support</a><a>Track Your Order</a></div>
+    <div class="ft-col"><h5>For Cooks</h5><a>Become a Cook</a><a>Cook Dashboard</a><a>Earnings & Payouts</a><a>Food Hygiene Guidance</a><a>Cook Community</a></div>
+    <div class="ft-col"><h5>Company</h5><a>About MechChef</a><a>Blog & Recipes</a><a>Careers</a><a>Press</a><a>Privacy Policy</a><a>Terms & Conditions</a></div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2025 MechChef Ltd. Launch areas: Harrow & Newham, London</span>
+    <span>🇬🇧 Pre-order home-cooked tiffins · Delivery fee £1.99</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// #region agent log
+const DBG_ENDPOINT='http://127.0.0.1:7892/ingest/79f439f6-1282-4e6e-a953-7719d45bbba8';
+const DBG_SID='037680';
+function dbgLog(hypothesisId,location,message,data,runId='post-fix'){
+  fetch(DBG_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':DBG_SID},body:JSON.stringify({sessionId:DBG_SID,runId,hypothesisId,location,message,data,timestamp:Date.now()})}).catch(()=>{});
+}
+// #endregion
+const CUISINES=[
+  {n:'All',img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=120&h=120&fit=crop',c:null},
+  {n:'Indian',img:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=120&h=120&fit=crop',c:280},
+  {n:'Pakistani',img:'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=120&h=120&fit=crop',c:190},
+  {n:'Caribbean',img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=120&h=120&fit=crop',c:130},
+  {n:'Italian',img:'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=120&h=120&fit=crop',c:160},
+  {n:'Chinese',img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=120&h=120&fit=crop',c:175},
+  {n:'Turkish',img:'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=120&h=120&fit=crop',c:110},
+  {n:'Mediterranean',img:'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=120&h=120&fit=crop',c:95},
+  {n:'Thai',img:'https://images.unsplash.com/photo-1562565652-a0d8f0c59eb4?w=120&h=120&fit=crop',c:85},
+  {n:'British',img:'https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=120&h=120&fit=crop',c:70},
+  {n:'Bangladeshi',img:'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=120&h=120&fit=crop',c:120},
+];
+const DIETS=['All','Vegan','Vegetarian','Halal','Gluten Free','Under £10','Bestsellers'];
+const MEALS=[
+  {id:1,n:'Butter Chicken & Basmati Rice',cook:'Coming Soon',cid:1,cui:'Indian',img:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop',p:8.50,tags:['Halal','Non-Veg'],desc:'Tender chicken in a rich, creamy tomato-butter sauce slow-cooked with aromatic spices. Served with fragrant basmati rice.',badge:'Bestseller',badgeC:'badge-hot'},
+  {id:2,n:'Jerk Chicken & Rice & Peas',cook:'Coming Soon',cid:2,cui:'Caribbean',img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop',p:9.00,tags:['Gluten Free','Non-Veg'],desc:'Authentic Jamaican jerk chicken marinated overnight in Scotch bonnet, allspice and thyme. Served with coconut rice and kidney beans.',badge:'Popular',badgeC:'badge-hot'},
+  {id:3,n:'Homemade Lasagne al Forno',cook:'Coming Soon',cid:3,cui:'Italian',img:'https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=600&h=400&fit=crop',p:7.50,tags:['Non-Veg'],desc:'Classic Italian lasagne layered with slow-cooked beef ragù, béchamel sauce, and three cheeses.',badge:'New',badgeC:'badge-new'},
+  {id:4,n:'Steamed Dim Sum Basket (12 pcs)',cook:'Coming Soon',cid:4,cui:'Chinese',img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&h=400&fit=crop',p:6.50,tags:['Non-Veg'],desc:'Hand-folded pork and prawn dim sum dumplings with ginger and spring onion. Steamed fresh.',badge:'Popular',badgeC:'badge-hot'},
+  {id:5,n:'Dal Makhani & Garlic Naan',cook:'Coming Soon',cid:1,cui:'Indian',img:'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&h=400&fit=crop',p:7.00,tags:['Vegetarian','Halal'],desc:'Slow-cooked black lentils in a creamy tomato-butter sauce. Served with freshly baked garlic naan.'},
+  {id:6,n:'Adana Lamb Kebab Wrap',cook:'Coming Soon',cid:5,cui:'Turkish',img:'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600&h=400&fit=crop',p:8.00,tags:['Halal','Non-Veg'],desc:'Hand-minced lamb and beef adana kebab with sumac onions, roasted peppers and garlic yoghurt in a warm lavash wrap.',badge:"Today's Special",badgeC:'badge-special'},
+  {id:7,n:'Dum Chicken Biryani',cook:'Coming Soon',cid:6,cui:'Pakistani',img:'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&h=400&fit=crop',p:9.50,tags:['Halal','Non-Veg'],desc:'Slow-cooked dum biryani with fragrant basmati, saffron, and tender chicken. Served with raita.',badge:'Bestseller',badgeC:'badge-hot'},
+  {id:8,n:'Pad Thai with Silken Tofu',cook:'Coming Soon',cid:7,cui:'Thai',img:'https://images.unsplash.com/photo-1562565652-a0d8f0c59eb4?w=600&h=400&fit=crop',p:6.99,tags:['Vegan','Gluten Free'],desc:'Classic street-style pad thai with rice noodles, silken tofu, bean sprouts, and roasted peanuts.'},
+  {id:9,n:'Slow-Cooked Lamb Karahi',cook:'Coming Soon',cid:6,cui:'Pakistani',img:'https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?w=600&h=400&fit=crop',p:10.00,tags:['Halal','Non-Veg'],desc:'Tender lamb cooked in a cast-iron karahi with tomatoes, green chillies, ginger, and whole spices.',badge:"Chef's Pick",badgeC:'badge-hot'},
+  {id:10,n:'Classic Sunday Roast Chicken',cook:'Coming Soon',cid:8,cui:'British',img:'https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=600&h=400&fit=crop',p:9.99,tags:['Non-Veg'],desc:'Traditional British Sunday roast with free-range chicken, roasties, Yorkshire pudding, seasonal veg, and gravy.',badge:'Weekend Special',badgeC:'badge-special'},
+  {id:11,n:'Wood-Fired Margherita Pizza',cook:'Coming Soon',cid:3,cui:'Italian',img:'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop',p:7.99,tags:['Vegetarian'],desc:'48-hour fermented dough with San Marzano tomato sauce, fresh mozzarella, and torn basil.'},
+  {id:12,n:'Lemon Herb Mezze Bowl',cook:'Coming Soon',cid:9,cui:'Mediterranean',img:'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=600&h=400&fit=crop',p:6.50,tags:['Vegan','Gluten Free'],desc:'Organic quinoa with roasted courgette, aubergine, olives, and a lemon-herb tahini dressing.',badge:'New',badgeC:'badge-new'}
+];
+const COOK_PLACEHOLDERS=[
+  {id:1,area:'Harrow'},{id:2,area:'Newham'},{id:3,area:'Harrow'},
+  {id:4,area:'Newham'},{id:5,area:'Harrow'},{id:6,area:'Newham'}
+];
+
+let cart=[],activeCui='All',activeDiet='All',curMeal=null,mqtyV=1,promoOn=false;
+
+const fmt=n=>`£${n.toFixed(2)}`;
+
+// ── Supabase Setup ──
+const SUPABASE_URL  = 'https://ccatfstzthkwridxwzfg.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_B2MAOdQRfp8Zf9HR1GIhUA_VFmUax0-';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ── Customer login check ──
+let currentUser = null;
+
+async function initAuth() {
+  const { data: { user } } = await db.auth.getUser();
+  currentUser = user;
+  const role = user?.user_metadata?.role;
+
+  if (user) {
+    const name = user.user_metadata?.full_name || user.email.split('@')[0];
+
+    // Hide login/signup buttons, show user name + account button
+    document.getElementById('nav-auth').innerHTML = `
+      <span style="font-size:13px;font-weight:600;color:var(--text)">👋 Hi, ${name}</span>
+      <button class="btn btn-ghost" onclick="window.location.href='customer-dashboard.html'" style="font-size:12px;padding:7px 14px">My Account</button>
+      <button class="btn btn-ghost" onclick="signOut()" style="font-size:12px;padding:7px 14px">Log out</button>
+    `;
+
+    // Hide "Cook with us" nav for customers
+    if (role === 'customer') {
+      const cookNav = document.getElementById('nl-cook');
+      if (cookNav) cookNav.style.display = 'none';
+      // Hide become-cook sections
+      document.querySelectorAll('.become-cook-hide').forEach(el => el.style.display = 'none');
+    }
+
+    // If cook logged in redirect to cook dashboard
+    if (role === 'cook') window.location.href = 'cook-dashboard.html';
+    if (role === 'admin') window.location.href = 'admin.html';
+  }
+}
+
+async function signOut() {
+  await db.auth.signOut();
+  window.location.reload();
+}
+
+// ── Load meals from Supabase (approved only) ──
+async function loadMealsFromSupabase() {
+  try {
+    const { data, error } = await db
+      .from('meals')
+      .select('*')
+      .eq('status', 'approved');
+    if (error || !data || data.length === 0) return; // fallback to hardcoded MEALS
+    // Map Supabase data to MEALS format
+    MEALS.length = 0;
+    data.forEach(m => {
+      MEALS.push({
+        id: m.id,
+        n: m.name,
+        cook: m.cook_name || 'Local Chef',
+        cid: m.cook_id,
+        cui: m.cuisine || 'Indian',
+        img: m.image_url || 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop',
+        p: parseFloat(m.price),
+        tags: m.tags || [],
+        desc: m.description || '',
+        badge: m.badge || '',
+        badgeC: m.badge_color || 'badge-hot'
+      });
+    });
+    renderHomeMeals();
+    renderBrowse();
+  } catch(e) {
+    console.log('Supabase meals load failed, using demo data', e);
+  }
+}
+
+window.onload=async ()=>{
+  // #region agent log
+  try{
+    buildCuisines('home-cs',true);buildCuisines('browse-cs',false);
+    buildFilters();renderHomeMeals();renderHomeCooks();
+    renderBrowse();renderAllCooks();buildSlots();renderCart();
+    dbgLog('H5','mechchef_website_v2.html:onload','init ok',{meals:MEALS.length,cooks:COOK_PLACEHOLDERS.length,homeMeals:document.getElementById('home-meals')?.children.length});
+  }catch(e){
+    dbgLog('H5','mechchef_website_v2.html:onload','init failed',{error:e.message});
+    throw e;
+  }
+  // #endregion
+  await initAuth();
+  await loadMealsFromSupabase();
+  await loadCooksFromSupabase();
+};
+
+function buildCuisines(id,limited){
+  const el=document.getElementById(id);
+  const list=limited?CUISINES.slice(0,9):CUISINES;
+  el.innerHTML=list.map(c=>`<div class="c-pill ${c.n===activeCui&&id==='browse-cs'?'on':''}" onclick="setCuisineClick('${c.n}','${id}')">
+    <div class="c-pill-img"><img src="${c.img}" alt="${c.n}" loading="lazy"/></div>
+    <div class="nm">${c.n}</div>${c.c?`<div class="cnt">Coming Soon</div>`:''}
+  </div>`).join('');
+}
+function setCuisineClick(n,from){if(from==='home-cs'){setCuisine(n);go('browse');return;}setCuisine(n);buildCuisines('browse-cs',false);renderBrowse();}
+function setCuisine(n){activeCui=n;buildCuisines('browse-cs',false);}
+
+function buildFilters(){
+  document.getElementById('browse-fbar').innerHTML=DIETS.map(d=>`<div class="fpill ${d===activeDiet?'on':''}" onclick="setDiet('${d}')">${d}</div>`).join('');
+}
+function setDiet(d){activeDiet=d;buildFilters();renderBrowse();}
+
+function mCard(m){
+  const vT=['Vegan','Vegetarian','Gluten Free'];
+  return `<div class="mcard" onclick="openModal(${m.id})">
+    <div class="mcard-img" style="background:#f0ede8;overflow:hidden;padding:0">
+      ${m.badge?`<div class="mcard-badge ${m.badgeC||'badge-hot'}">${m.badge}</div>`:''}
+      <button class="mcard-fav" onclick="event.stopPropagation();toast('❤️ Saved to favourites!')">🤍</button>
+      <img src="${m.img}" alt="${m.n}" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+    </div>
+    <div class="mcard-body">
+      <div class="mcard-tags">${m.tags.map(t=>`<span class="mtag ${vT.includes(t)?'v':''}">${t}</span>`).join('')}</div>
+      <div class="mcard-name">${m.n}</div>
+      <div class="mcard-cook">🍳 ${m.cook} · Harrow & Newham</div>
+      <div class="mcard-foot">
+        <div class="mcard-price">${fmt(m.p)}</div>
+        <div class="mcard-meta">
+          <div class="mcard-rating" style="font-size:11px;color:var(--muted)">Pre-order</div>
+          <button class="add-circle" onclick="event.stopPropagation();quickAdd(${m.id})" aria-label="Add to basket">+</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderHomeMeals(){document.getElementById('home-meals').innerHTML=MEALS.slice(0,8).map(mCard).join('');}
+function renderBrowse(){
+  let f=[...MEALS];
+  if(activeCui!=='All')f=f.filter(m=>m.cui===activeCui);
+  if(activeDiet==='Vegan')f=f.filter(m=>m.tags.includes('Vegan'));
+  else if(activeDiet==='Vegetarian')f=f.filter(m=>m.tags.includes('Vegetarian')||m.tags.includes('Vegan'));
+  else if(activeDiet==='Halal')f=f.filter(m=>m.tags.includes('Halal'));
+  else if(activeDiet==='Gluten Free')f=f.filter(m=>m.tags.includes('Gluten Free'));
+  else if(activeDiet==='Under £10')f=f.filter(m=>m.p<=10);
+  else if(activeDiet==='Bestsellers')f=f.filter(m=>m.badge==='Bestseller'||m.badge==='Popular');
+  const el=document.getElementById('browse-meals'),nr=document.getElementById('no-results');
+  if(!f.length){el.innerHTML='';nr.style.display='block';}
+  else{nr.style.display='none';el.innerHTML=f.map(mCard).join('');}
+}
+
+function ckCard(c){
+  const initials = (c.full_name||'Chef').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  const cuisine = c.cuisine || 'Home Cook';
+  const area = c.area || 'London';
+  return `<div class="ckcard" onclick="filterByCook('${c.id}','${(c.full_name||'Chef').replace(/'/g,"\\'")}')">
+    <div class="ckcard-top" style="background:linear-gradient(135deg,#ffedd5,#fed7aa);font-size:32px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;color:var(--red);">${initials}</div>
+    <div class="ckcard-body">
+      <div class="ck-name">${c.full_name || 'Home Chef'}</div>
+      <div class="ck-meta">${cuisine} · ${area}</div>
+      ${c.bio ? `<p class="ck-soon-txt" style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${c.bio.slice(0,80)}${c.bio.length>80?'...':''}</p>` : ''}
+      <button class="btn btn-red" style="width:100%;margin-top:12px;padding:10px;font-size:13px" onclick="event.stopPropagation();filterByCook('${c.id}','${(c.full_name||'Chef').replace(/'/g,"\\'")}')">View Meals →</button>
+    </div>
+  </div>`;
+}
+
+function filterByCook(cookId, cookName) {
+  // Filter meals by this cook and go to browse
+  activeCui = 'All'; activeDiet = 'All';
+  const filtered = MEALS.filter(m => String(m.cid) === String(cookId));
+  const el = document.getElementById('browse-meals');
+  const nr = document.getElementById('no-results');
+  go('browse');
+  setTimeout(() => {
+    if (!filtered.length) { el.innerHTML=''; nr.style.display='block'; }
+    else { nr.style.display='none'; el.innerHTML=filtered.map(mCard).join(''); }
+    // Update heading
+    const hd = document.querySelector('#page-browse .sec-hd h2');
+    if (hd) hd.textContent = `🍳 ${cookName}'s Meals`;
+  }, 50);
+}
+
+async function loadCooksFromSupabase() {
+  try {
+    const { data, error } = await db.from('profiles').select('*').eq('role', 'cook');
+    if (error || !data || !data.length) return;
+    const cookCards = data.map(c => ckCard({
+      id: c.id,
+      full_name: c.full_name,
+      bio: c.bio || '',
+      cuisine: c.cuisine || '',
+      area: c.address || 'London'
+    }));
+    document.getElementById('home-cooks').innerHTML = cookCards.slice(0,4).join('');
+    document.getElementById('all-cooks').innerHTML = cookCards.join('');
+    // Update section heading
+    const hd = document.getElementById('cooks-subhd');
+    if (hd && data.length) hd.textContent = `${data.length} home cook${data.length>1?'s':''} ready to cook for you`;
+  } catch(e) {
+    console.log('Cooks load failed:', e);
+    renderHomeCooks(); renderAllCooks();
+  }
+}
+
+function renderHomeCooks(){document.getElementById('home-cooks').innerHTML=COOK_PLACEHOLDERS.slice(0,4).map(c=>ckCard({id:c.id,full_name:'Coming Soon',area:c.area,bio:'Verified home cooks joining soon.'})).join('');}
+function renderAllCooks(){document.getElementById('all-cooks').innerHTML=COOK_PLACEHOLDERS.map(c=>ckCard({id:c.id,full_name:'Coming Soon',area:c.area,bio:'Verified home cooks joining soon.'})).join('');}
+
+function openProfile(id){go('become-cook');}
+
+function openModal(id){
+  curMeal=MEALS.find(m=>m.id===id);mqtyV=1;
+  const m=curMeal,vT=['Vegan','Vegetarian','Gluten Free'];
+  document.getElementById('mimg').style.background='#f0ede8';
+  document.getElementById('mimg').style.padding='0';
+  document.getElementById('mimg').innerHTML=`${m.badge?`<div class="mcard-badge ${m.badgeC||'badge-hot'}" style="position:absolute;top:12px;left:12px;z-index:2">${m.badge}</div>`:''}<img src="${m.img}" alt="${m.n}" style="width:100%;height:100%;object-fit:cover;display:block"/>`;
+  document.getElementById('mname').textContent=m.n;
+  document.getElementById('mcook').textContent=`by ${m.cook} · ${m.cui}`;
+  document.getElementById('mtags').innerHTML=m.tags.map(t=>`<span class="mtag ${vT.includes(t)?'v':''}">${t}</span>`).join('');
+  document.getElementById('mdesc').textContent=m.desc;
+  document.getElementById('mprice').textContent=fmt(m.p);
+  document.getElementById('mqty').textContent=1;
+  document.getElementById('mwrap').classList.add('on');
+}
+function closeModal(){document.getElementById('mwrap').classList.remove('on');}
+function mQty(d){mqtyV=Math.max(1,mqtyV+d);document.getElementById('mqty').textContent=mqtyV;}
+function addFromModal(){addToCart(curMeal,mqtyV);closeModal();}
+
+function quickAdd(id){addToCart(MEALS.find(m=>m.id===id),1);}
+function addToCart(meal,qty){
+  const ex=cart.find(i=>i.id===meal.id);
+  if(ex)ex.qty+=qty;else cart.push({...meal,qty});
+  renderCart();toast(`✅ Added ${meal.n.split(' ').slice(0,4).join(' ')}…`);
+}
+function changeQty(id,d){
+  const i=cart.findIndex(x=>x.id===id);
+  if(i<0)return;cart[i].qty+=d;
+  if(cart[i].qty<=0)cart.splice(i,1);
+  renderCart();
+}
+function renderCart(){
+  const sub=cart.reduce((s,i)=>s+i.p*i.qty,0);
+  const cnt=cart.reduce((s,i)=>s+i.qty,0);
+  const cn=document.getElementById('cn');
+  cn.textContent=cnt;cn.style.display=cnt?'flex':'none';
+  const body=document.getElementById('cp-body'),foot=document.getElementById('cp-foot');
+  if(!cart.length){
+    body.innerHTML=`<div class="cp-empty"><div>🛒</div><p>Your basket is empty.<br>Browse meals and add something delicious!</p></div>`;
+    foot.style.display='none';return;
+  }
+  body.innerHTML=cart.map(i=>`<div class="ci">
+    <div class="ci-em">${i.e}</div>
+    <div class="ci-inf">
+      <div class="ci-name">${i.n}</div>
+      <div class="ci-sub">by ${i.cook}</div>
+      <div class="ci-ctrl">
+        <button class="qbtn" onclick="changeQty(${i.id},-1)">−</button>
+        <span style="font-size:14px;font-weight:700;min-width:20px;text-align:center">${i.qty}</span>
+        <button class="qbtn" onclick="changeQty(${i.id},1)">+</button>
+      </div>
+    </div>
+    <div class="ci-price">${fmt(i.p*i.qty)}</div>
+  </div>`).join('');
+  foot.style.display='block';
+  document.getElementById('cp-sub').textContent=fmt(sub);
+  document.getElementById('cp-tot').textContent=fmt(sub+1.99);
+}
+function toggleCart(){
+  document.getElementById('cart').classList.toggle('on');
+  document.getElementById('overlay').classList.toggle('on');
+}
+
+function goCheckout(){toggleCart();buildCoSummary();go('checkout');}
+function buildCoSummary(){
+  document.getElementById('co-items').innerHTML=cart.map(i=>`<div class="osi">
+    <div class="osi-em">${i.e}</div>
+    <div class="osi-name">${i.qty}× ${i.n}</div>
+    <div class="osi-price">${fmt(i.p*i.qty)}</div>
+  </div>`).join('');
+  updateCoTotals();
+}
+function updateCoTotals(){
+  const sub=cart.reduce((s,i)=>s+i.p*i.qty,0);
+  const disc=promoOn?sub*.2:0;
+  const vat=(sub-disc)*.2;
+  const tot=sub-disc+1.99+vat;
+  document.getElementById('co-sub').textContent=fmt(sub);
+  document.getElementById('co-tax').textContent=fmt(vat);
+  document.getElementById('co-disc').textContent=`-${fmt(sub*.2)}`;
+  document.getElementById('co-total').textContent=fmt(tot);
+  document.getElementById('co-disc-row').style.display=promoOn?'flex':'none';
+}
+function applyPromo(){
+  const v=document.getElementById('promo-inp').value.trim().toUpperCase();
+  if(v==='MECH20'&&!promoOn){promoOn=true;updateCoTotals();toast('🎉 20% discount applied!');}
+  else if(promoOn)toast('Promo already applied!');
+  else toast('❌ Invalid code. Try MECH20');
+}
+function selPay(el){document.querySelectorAll('.payopt').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
+async function placeOrder(){
+  const sub=cart.reduce((s,i)=>s+i.p*i.qty,0);
+  const disc=promoOn?sub*.2:0;const vat=(sub-disc)*.2;const tot=sub-disc+1.99+vat;
+  const slot=document.querySelector('.slot.on')?.textContent||'12:00 \u2013 13:00';
+
+  // Disable button to prevent double click
+  const btn=document.querySelector('.cp-cta');
+  if(btn){btn.disabled=true;btn.textContent='Placing order...';}
+
+  try {
+    const { data: { user } } = await db.auth.getUser();
+
+    if(!user){
+      if(btn){btn.disabled=false;btn.textContent='Place Order \uD83C\uDF89';}
+      toast('Please log in to place an order!');
+      setTimeout(()=>window.location.href='auth.html',1500);
+      return;
+    }
+
+    const cookId=cart[0]?.cid||null;
+    const orderData={
+      customer_id: user.id,
+      cook_id: cookId,
+      items: cart.map(i=>({id:i.id,name:i.n,qty:i.qty,price:i.p,cook:i.cook,cook_id:i.cid})),
+      total: parseFloat(tot.toFixed(2)),
+      subtotal: parseFloat(sub.toFixed(2)),
+      delivery_fee: 1.99,
+      vat: parseFloat(vat.toFixed(2)),
+      slot: slot,
+      status: 'pending',
+      promo: promoOn?'MECH20':null
+    };
+
+    const { error } = await db.from('orders').insert(orderData);
+    if(error){
+      console.error('Order save error:',error);
+      if(btn){btn.disabled=false;btn.textContent='Place Order \uD83C\uDF89';}
+      toast('\u274C Order failed: '+(error.message||'Please try again'));
+      return;
+    }
+    console.log('Order saved to Supabase OK');
+  } catch(e){
+    console.error('Order save failed:',e);
+    if(btn){btn.disabled=false;btn.textContent='Place Order \uD83C\uDF89';}
+    toast('\u274C Something went wrong. Please try again.');
+    return;
+  }
+
+  document.getElementById('succ-info').innerHTML=`
+    <div><span>Subtotal</span><span>${fmt(sub)}</span></div>
+    ${promoOn?`<div style="color:var(--green)"><span>Promo (MECH20)</span><span>-${fmt(sub*.2)}</span></div>`:''}
+    <div><span>Delivery fee</span><span>\u00A31.99</span></div>
+    <div><span>VAT (20%)</span><span>${fmt(vat)}</span></div>
+    <div><span>Total Paid</span><span>${fmt(tot)}</span></div>
+    <div><span>Delivery Slot</span><span>${slot}</span></div>`;
+  cart=[];promoOn=false;renderCart();go('success');
+}
+function buildSlots(){
+  const s=['11:00 – 12:00','12:00 – 13:00','13:00 – 14:00','17:00 – 18:00','18:00 – 19:00','19:00 – 20:00'];
+  document.getElementById('coslots').innerHTML=s.map((x,i)=>`<div class="slot${i===0?' on':''}" onclick="selSlot(this)">${x}</div>`).join('');
+}
+function selSlot(el){document.querySelectorAll('.slot').forEach(s=>s.classList.remove('on'));el.classList.add('on');}
+function heroSearch(){const cui=document.getElementById('h-cuisine').value;if(cui)setCuisine(cui);go('browse');renderBrowse();}
+
+function go(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  const pageEl=document.getElementById('page-'+p);
+  if(!pageEl){dbgLog('H5','mechchef_website_v2.html:go','missing page',{p});return;}
+  pageEl.classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
+  const navKey=p==='become-cook'?'cook':p;
+  const nl=document.getElementById('nl-'+navKey);
+  if(nl)nl.classList.add('active');
+  // #region agent log
+  dbgLog('H2','mechchef_website_v2.html:go','navigation',{p,navKey,navFound:!!nl});
+  // #endregion
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+let tt;
+function submitCookInterest(){
+  const name=document.getElementById('cook-name')?.value.trim();
+  const email=document.getElementById('cook-email')?.value.trim();
+  if(!name||!email){toast('Please enter your name and email');return;}
+  toast('🎉 Thanks! You\'re on the cook waitlist for Harrow & Newham.');
+}
+function toast(msg){
+  const el=document.getElementById('toast-el');
+  el.textContent=msg;el.classList.add('on');
+  clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),2600);
+}
+
+// Search & sort
+function searchMeals(q){
+  const s=q.toLowerCase().trim();
+  let f=[...MEALS];
+  if(activeCui!=='All')f=f.filter(m=>m.cui===activeCui);
+  if(activeDiet!=='All'){
+    if(activeDiet==='Vegan')f=f.filter(m=>m.tags.includes('Vegan'));
+    else if(activeDiet==='Vegetarian')f=f.filter(m=>m.tags.includes('Vegetarian')||m.tags.includes('Vegan'));
+    else if(activeDiet==='Halal')f=f.filter(m=>m.tags.includes('Halal'));
+    else if(activeDiet==='Gluten Free')f=f.filter(m=>m.tags.includes('Gluten Free'));
+    else if(activeDiet==='Under £10')f=f.filter(m=>m.p<=10);
+    else if(activeDiet==='Bestsellers')f=f.filter(m=>m.badge==='Bestseller'||m.badge==='Popular');
+  }
+  if(s)f=f.filter(m=>m.n.toLowerCase().includes(s)||m.cook.toLowerCase().includes(s)||m.cui.toLowerCase().includes(s)||m.tags.some(t=>t.toLowerCase().includes(s)));
+  const el=document.getElementById('browse-meals'),nr=document.getElementById('no-results');
+  if(!f.length){el.innerHTML='';nr.style.display='block';}
+  else{nr.style.display='none';el.innerHTML=f.map(mCard).join('');}
+}
+function sortMeals(v){
+  let f=[...MEALS];
+  if(activeCui!=='All')f=f.filter(m=>m.cui===activeCui);
+  if(v==='price-asc')f.sort((a,b)=>a.p-b.p);
+  else if(v==='price-desc')f.sort((a,b)=>b.p-a.p);
+  else if(v==='rating')f.sort((a,b)=>a.n.localeCompare(b.n));
+  else if(v==='popular')f.sort((a,b)=>a.p-b.p);
+  // #region agent log
+  dbgLog('H1','mechchef_website_v2.html:sortMeals','sorted',{v,count:f.length,first:f[0]?.n});
+  // #endregion
+  document.getElementById('browse-meals').innerHTML=f.map(mCard).join('');
+}
+
+// Review modal
+function openRevModal(){
+  document.getElementById('rev-modal-wrap').classList.add('on');
+}
+function closeRevModal(){
+  document.getElementById('rev-modal-wrap').classList.remove('on');
+}
+function setRevStar(n){
+  document.querySelectorAll('.star-pick span').forEach((s,i)=>{ s.textContent=i<n?'★':'☆'; });
+  document.getElementById('rev-star-val').value=n;
+}
+function submitReview(){
+  const txt=document.getElementById('rev-text-inp').value.trim();
+  if(!txt){toast('Please write your review first!');return;}
+  closeRevModal();
+  toast('🎉 Review submitted! Thank you for your feedback.');
+}
+
+renderCart();
+</script>
+
+<!-- REVIEW MODAL -->
+<div class="modal-wrap" id="rev-modal-wrap">
+  <div class="modal-bg" onclick="closeRevModal()"></div>
+  <div class="mbox rev-modal">
+    <button class="mbox-close" onclick="closeRevModal()">✕</button>
+    <div class="mbox-body" style="padding-top:28px">
+      <h2>Write a Review</h2>
+      <div class="mbox-cook">Share your experience with the MechChef community</div>
+      <div style="margin:14px 0">
+        <label style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Your Rating</label>
+        <div class="star-pick" id="star-pick">
+          <span onclick="setRevStar(1)">☆</span>
+          <span onclick="setRevStar(2)">☆</span>
+          <span onclick="setRevStar(3)">☆</span>
+          <span onclick="setRevStar(4)">☆</span>
+          <span onclick="setRevStar(5)">☆</span>
+        </div>
+        <input type="hidden" id="rev-star-val" value="0">
+      </div>
+      <div class="fg"><label>Which dish did you order?</label><select><option>Butter Chicken & Basmati Rice</option><option>Jerk Chicken & Rice & Peas</option><option>Homemade Lasagne</option><option>Dim Sum Basket</option><option>Chicken Biryani</option><option>Other</option></select></div>
+      <div class="fg"><label>Your Review</label><textarea id="rev-text-inp" rows="4" placeholder="Tell others what you loved about the meal, cook, and delivery…" style="resize:none;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;font-family:inherit;width:100%;outline:none"></textarea></div>
+      <button class="btn btn-red" style="width:100%;padding:14px;font-size:15px;margin-top:8px" onclick="submitReview()">Submit Review ✍️</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
