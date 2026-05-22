@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MechChef – Cook Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8472B;--red-dark:#a8391f;--red-light:#fdf2ee;
+  --gold:#D4A843;--gold-light:#fdf7eb;
+  --dark:#1a1a18;--dark2:#2e2e2b;--dark3:#5c5c56;
+  --surface:#faf9f7;--surface2:#f2f0eb;
+  --green:#2d7d5a;--green-light:#e8f5ee;
+  --border:#e5e2da;--muted:#7a7a70;
+  --white:#fff;--text:#1a1a18;
+  --cream:#faf9f7;
+}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);background:var(--cream);min-height:100vh;display:flex}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--dark);min-height:100vh;display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100}
+.sidebar-logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo-text{font-size:20px;font-weight:700;color:#fff;font-family:'Playfair Display',serif}
+.logo-text span{color:var(--red)}
+.logo-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.sidebar-nav{padding:16px 0;flex:1}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 20px;font-size:13px;font-weight:500;color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s;border:none;background:transparent;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:rgba(200,71,43,.15);color:#fff;border-right:3px solid var(--red)}
+.nav-icon{font-size:17px;width:20px;text-align:center}
+.sidebar-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.cook-info{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.cook-avatar{width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff}
+.cook-name{font-size:13px;font-weight:600;color:#fff}
+.cook-status{font-size:11px;color:rgba(255,255,255,.4)}
+.btn-logout{width:100%;padding:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:rgba(255,255,255,.6);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-logout:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* MAIN */
+.main{margin-left:240px;flex:1;min-height:100vh}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.topbar h2{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.status-toggle{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500}
+.toggle{position:relative;width:40px;height:22px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:11px;transition:.3s}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+.toggle input:checked + .toggle-slider{background:var(--green)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(18px)}
+.content{padding:28px 32px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;transition:box-shadow .15s}
+.stat-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.stat-icon{font-size:24px;margin-bottom:10px}
+.stat-value{font-size:26px;font-weight:700;letter-spacing:-.5px;margin-bottom:4px}
+.stat-label{font-size:12px;color:var(--muted);font-weight:500}
+.stat-change{font-size:11px;font-weight:600;margin-top:6px}
+.stat-change.up{color:var(--green)}
+.stat-change.down{color:var(--red)}
+
+/* SECTION */
+.section{background:var(--white);border:1px solid var(--border);border-radius:14px;margin-bottom:24px;overflow:hidden}
+.section-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.section-header h3{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.section-body{padding:20px 24px}
+
+/* BUTTONS */
+.btn{border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-dark)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--dark)}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-green{background:var(--green);color:#fff}
+
+/* ORDERS TABLE */
+.orders-table{width:100%;border-collapse:collapse}
+.orders-table th{text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.orders-table td{padding:14px 12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.orders-table tr:last-child td{border-bottom:none}
+.orders-table tr:hover td{background:var(--surface)}
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:50px;font-size:11px;font-weight:700}
+.badge-pending{background:#fff3cd;color:#856404}
+.badge-preparing{background:#cfe2ff;color:#084298}
+.badge-ready{background:var(--green-light);color:var(--green)}
+.badge-delivered{background:var(--surface2);color:var(--muted)}
+
+/* MEALS GRID */
+.meals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.meal-card{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;transition:all .15s}
+.meal-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);border-color:var(--dark)}
+.meal-img{width:100%;height:120px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:40px}
+.meal-info{padding:12px}
+.meal-name{font-size:14px;font-weight:600;margin-bottom:4px}
+.meal-price{font-size:16px;font-weight:700;color:var(--red);margin-bottom:8px}
+.meal-actions{display:flex;gap:6px}
+.meal-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:500;margin-bottom:8px}
+
+/* ADD MEAL FORM */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.on{display:flex}
+.modal{background:var(--white);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:28px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.modal-header h3{font-size:20px;font-weight:700}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px}
+.modal-close:hover{background:var(--surface2)}
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-weight:500;color:var(--text);background:var(--white);outline:none;transition:border-color .15s;font-family:'DM Sans',sans-serif}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--dark)}
+.fg textarea{resize:vertical;min-height:80px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dietary-tags{display:flex;flex-wrap:wrap;gap:8px}
+.diet-tag{padding:6px 14px;border:1.5px solid var(--border);border-radius:50px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;background:var(--white)}
+.diet-tag.on{background:var(--dark);border-color:var(--dark);color:#fff}
+
+/* EARNINGS */
+.earnings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.earning-card{background:var(--surface);border-radius:12px;padding:20px}
+.earning-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px}
+.earning-value{font-size:28px;font-weight:700;letter-spacing:-.5px}
+.earning-sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty h4{font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px}
+.empty p{font-size:13px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--dark);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;display:none;animation:fadein .2s ease}
+.toast.on{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ALERT */
+.alert{border-radius:10px;padding:12px 16px;font-size:13px;font-weight:500;margin-bottom:16px;display:none}
+.alert.on{display:block}
+.alert-error{background:#fff0ed;border:1.5px solid #f5c4b8;color:#8b2a15}
+.alert-success{background:var(--green-light);border:1.5px solid #b3dcc8;color:#1a5c3a}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .main{margin-left:0}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .earnings-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">Mech<span>Chef</span></div>
+    <div class="logo-sub">Cook Dashboard</div>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="showPage('dashboard')"><span class="nav-icon">📊</span> Dashboard</button>
+    <button class="nav-item" onclick="showPage('orders')"><span class="nav-icon">🛒</span> Orders</button>
+    <button class="nav-item" onclick="showPage('meals')"><span class="nav-icon">🍽️</span> My Meals</button>
+    <button class="nav-item" onclick="showPage('earnings')"><span class="nav-icon">💰</span> Earnings</button>
+    <button class="nav-item" onclick="showPage('profile')"><span class="nav-icon">👤</span> Profile</button>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="cook-info">
+      <div class="cook-avatar" id="cook-avatar">C</div>
+      <div>
+        <div class="cook-name" id="cook-name">Loading...</div>
+        <div class="cook-status" id="cook-status-text">● Online</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <h2 id="page-title">Dashboard</h2>
+    <div class="topbar-right">
+      <div class="status-toggle">
+        <span style="font-size:13px;color:var(--muted)">Taking orders</span>
+        <label class="toggle">
+          <input type="checkbox" id="taking-orders" checked onchange="toggleAvailability()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <button class="btn btn-red btn-sm" onclick="openAddMeal()">+ Add Meal</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD PAGE -->
+    <div id="page-dashboard" class="page-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🛒</div>
+          <div class="stat-value" id="stat-orders">0</div>
+          <div class="stat-label">Orders Today</div>
+          <div class="stat-change up" id="stat-orders-change">Loading...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-value" id="stat-earnings">£0</div>
+          <div class="stat-label">Earnings This Week</div>
+          <div class="stat-change up" id="stat-earnings-change">Loading...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-value" id="stat-rating">-</div>
+          <div class="stat-label">Average Rating</div>
+          <div class="stat-change up">from reviews</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🍽️</div>
+          <div class="stat-value" id="stat-meals">0</div>
+          <div class="stat-label">Active Meals</div>
+          <div class="stat-change up" id="stat-meals-change">on your menu</div>
+        </div>
+      </div>
+
+      <!-- RECENT ORDERS -->
+      <div class="section">
+        <div class="section-header">
+          <h3>Recent Orders</h3>
+          <button class="btn btn-ghost btn-sm" onclick="showPage('orders')">View All</button>
+        </div>
+        <div class="section-body">
+          <div id="recent-orders-list">
+            <div class="empty">
+              <div class="empty-icon">🛒</div>
+              <h4>No orders yet</h4>
+              <p>Your orders will appear here once customers start ordering</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS PAGE -->
+    <div id="page-orders" class="page-content" style="display:none">
+      <div class="section">
+        <div class="section-header">
+          <h3>All Orders</h3>
+          <div style="display:flex;gap:8px">
+            <select class="btn btn-ghost btn-sm" id="order-filter" onchange="filterOrders()" style="cursor:pointer">
+              <option value="all">All Orders</option>
+              <option value="pending">Pending</option>
+              <option value="preparing">Preparing</option>
+              <option value="ready">Ready</option>
+              <option value="delivered">Delivered</option>
+            </select>
+          </div>
+        </div>
+        <div class="section-body" style="padding:0">
+          <div id="orders-list">
+            <div class="empty" style="padding:40px">
+              <div class="empty-icon">📦</div>
+              <h4>No orders found</h4>
+              <p>Orders from customers will appear here</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEALS PAGE -->
+    <div id="page-meals" class="page-content" style="display:none">
+      <div class="section">
+        <div class="section-header">
+          <h3>My Meals</h3>
+          <button class="btn btn-red btn-sm" onclick="openAddMeal()">+ Add New Meal</button>
+        </div>
+        <div class="section-body">
+          <div id="meals-list">
+            <div class="empty">
+              <div class="empty-icon">🍽️</div>
+              <h4>No meals yet</h4>
+              <p>Add your first meal to start receiving orders</p>
+              <button class="btn btn-red" style="margin-top:16px" onclick="openAddMeal()">+ Add First Meal</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EARNINGS PAGE -->
+    <div id="page-earnings" class="page-content" style="display:none">
+      <div class="earnings-grid">
+        <div class="earning-card">
+          <div class="earning-label">Total Earnings</div>
+          <div class="earning-value" id="total-earnings">£0.00</div>
+          <div class="earning-sub">All time</div>
+        </div>
+        <div class="earning-card">
+          <div class="earning-label">This Month</div>
+          <div class="earning-value" id="month-earnings">£0.00</div>
+          <div class="earning-sub" id="month-name">May 2025</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><h3>Earnings History</h3></div>
+        <div class="section-body">
+          <div id="earnings-list">
+            <div class="empty">
+              <div class="empty-icon">💰</div>
+              <h4>No earnings yet</h4>
+              <p>Your earnings will appear here after orders are completed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div id="page-profile" class="page-content" style="display:none">
+      <div class="section">
+        <div class="section-header"><h3>Cook Profile</h3></div>
+        <div class="section-body">
+          <div id="alert-profile-error" class="alert alert-error"></div>
+          <div id="alert-profile-success" class="alert alert-success"></div>
+          <div class="fg-row">
+            <div class="fg">
+              <label>First Name</label>
+              <input type="text" id="profile-fname" placeholder="First name"/>
+            </div>
+            <div class="fg">
+              <label>Last Name</label>
+              <input type="text" id="profile-lname" placeholder="Last name"/>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Bio</label>
+            <textarea id="profile-bio" placeholder="Tell customers about yourself and your cooking..."></textarea>
+          </div>
+          <div class="fg-row">
+            <div class="fg">
+              <label>Cuisine Speciality</label>
+              <select id="profile-cuisine">
+                <option value="">Select cuisine</option>
+                <option>Indian</option>
+                <option>Pakistani</option>
+                <option>Caribbean</option>
+                <option>Chinese</option>
+                <option>Italian</option>
+                <option>Turkish</option>
+                <option>Mediterranean</option>
+                <option>Nigerian</option>
+                <option>Bangladeshi</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Delivery Radius (miles)</label>
+              <select id="profile-radius">
+                <option value="1">1 mile</option>
+                <option value="2">2 miles</option>
+                <option value="3" selected>3 miles</option>
+                <option value="5">5 miles</option>
+                <option value="10">10 miles</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Postcode</label>
+            <input type="text" id="profile-postcode" placeholder="e.g. HA1 1AA"/>
+          </div>
+          <button class="btn btn-red" onclick="saveProfile()">Save Profile</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</main>
+
+<!-- ADD MEAL MODAL -->
+<div class="modal-overlay" id="add-meal-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Add New Meal</h3>
+      <button class="modal-close" onclick="closeAddMeal()">✕</button>
+    </div>
+    <div id="alert-meal-error" class="alert alert-error"></div>
+    <div id="alert-meal-success" class="alert alert-success"></div>
+    <div class="fg">
+      <label>Meal Name</label>
+      <input type="text" id="meal-name" placeholder="e.g. Chicken Biryani"/>
+    </div>
+    <div class="fg">
+      <label>Description</label>
+      <textarea id="meal-desc" placeholder="Describe your meal..."></textarea>
+    </div>
+    <div class="fg-row">
+      <div class="fg">
+        <label>Price (£)</label>
+        <input type="number" id="meal-price" placeholder="8.99" min="1" step="0.01"/>
+      </div>
+      <div class="fg">
+        <label>Prep Time (mins)</label>
+        <input type="number" id="meal-prep" placeholder="30" min="10"/>
+      </div>
+    </div>
+    <div class="fg-row">
+      <div class="fg">
+        <label>Category</label>
+        <select id="meal-category">
+          <option value="">Select</option>
+          <option>Breakfast</option>
+          <option>Lunch</option>
+          <option>Dinner</option>
+          <option>Snack</option>
+          <option>Dessert</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Cuisine</label>
+        <select id="meal-cuisine">
+          <option value="">Select</option>
+          <option>Indian</option>
+          <option>Pakistani</option>
+          <option>Caribbean</option>
+          <option>Chinese</option>
+          <option>Italian</option>
+          <option>Turkish</option>
+          <option>Mediterranean</option>
+          <option>Nigerian</option>
+          <option>Bangladeshi</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Dietary Tags</label>
+      <div class="dietary-tags">
+        <span class="diet-tag" onclick="toggleDiet(this,'Halal')">🌙 Halal</span>
+        <span class="diet-tag" onclick="toggleDiet(this,'Vegan')">🌱 Vegan</span>
+        <span class="diet-tag" onclick="toggleDiet(this,'Vegetarian')">🥦 Vegetarian</span>
+        <span class="diet-tag" onclick="toggleDiet(this,'Gluten Free')">🌾 Gluten Free</span>
+        <span class="diet-tag" onclick="toggleDiet(this,'Dairy Free')">🥛 Dairy Free</span>
+        <span class="diet-tag" onclick="toggleDiet(this,'Spicy')">🌶️ Spicy</span>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Meal Emoji (for display)</label>
+      <input type="text" id="meal-emoji" placeholder="🍛" maxlength="2"/>
+    </div>
+    <button class="btn btn-red" style="width:100%;padding:13px;font-size:15px" onclick="saveMeal()" id="save-meal-btn">Save Meal</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Supabase Config ──
+const SUPABASE_URL = 'https://ccatfstzthkwridxwzfg.supabase.co'
+const SUPABASE_ANON_KEY = 'sb_publishable_B2MAOdQRfp8Zf9HR1GIhUA_VFmUax0-'
+
+let sb = null
+let currentUser = null
+let editingMealId = null
+let selectedDiets = []
+let allOrders = []
+let allMeals = []
+
+function initSupabase() {
+  if (sb) return true
+  if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') return false
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  return true
+}
+
+// ── Page Navigation ──
+function showPage(page) {
+  document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none')
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
+  document.getElementById('page-' + page).style.display = 'block'
+  document.querySelector(`[onclick="showPage('${page}')"]`).classList.add('active')
+  const titles = {dashboard:'Dashboard',orders:'Orders',meals:'My Meals',earnings:'Earnings',profile:'Profile'}
+  document.getElementById('page-title').textContent = titles[page] || page
+  if (page === 'orders') loadOrders()
+  if (page === 'meals') loadMeals()
+  if (page === 'earnings') loadEarnings()
+}
+
+// ── Auth Check ──
+async function checkAuth() {
+  if (!initSupabase()) {
+    // Demo mode
+    document.getElementById('cook-name').textContent = 'Demo Cook'
+    document.getElementById('cook-avatar').textContent = 'D'
+    loadDemoData()
+    return
+  }
+  const { data: { session } } = await sb.auth.getSession()
+  if (!session) {
+    window.location.href = 'auth.html'
+    return
+  }
+  currentUser = session.user
+  const meta = currentUser.user_metadata
+  const name = meta?.full_name || meta?.first_name || currentUser.email
+  document.getElementById('cook-name').textContent = name
+  document.getElementById('cook-avatar').textContent = name.charAt(0).toUpperCase()
+  loadDashboard()
+  loadProfile()
+}
+
+// ── Dashboard ──
+async function loadDashboard() {
+  if (!sb || !currentUser) { loadDemoData(); return }
+  try {
+    const today = new Date().toISOString().split('T')[0]
+    const { data: orders } = await sb.from('orders').select('*').eq('cook_id', currentUser.id)
+    const { data: meals } = await sb.from('meals').select('*').eq('cook_id', currentUser.id).eq('is_available', true)
+    allOrders = orders || []
+    allMeals = meals || []
+    const todayOrders = allOrders.filter(o => o.created_at?.startsWith(today))
+    const weekEarnings = allOrders.filter(o => o.status === 'delivered').reduce((s,o) => s + (o.cook_earnings || 0), 0)
+    const ratings = allOrders.filter(o => o.rating).map(o => o.rating)
+    const avgRating = ratings.length ? (ratings.reduce((a,b) => a+b,0)/ratings.length).toFixed(1) : '-'
+    document.getElementById('stat-orders').textContent = todayOrders.length
+    document.getElementById('stat-earnings').textContent = '£' + weekEarnings.toFixed(2)
+    document.getElementById('stat-rating').textContent = avgRating
+    document.getElementById('stat-meals').textContent = allMeals.length
+    renderRecentOrders(allOrders.slice(0,5))
+  } catch(e) { loadDemoData() }
+}
+
+function loadDemoData() {
+  document.getElementById('stat-orders').textContent = '3'
+  document.getElementById('stat-earnings').textContent = '£47.50'
+  document.getElementById('stat-rating').textContent = '4.8'
+  document.getElementById('stat-meals').textContent = '5'
+  document.getElementById('stat-orders-change').textContent = '↑ 2 from yesterday'
+  document.getElementById('stat-earnings-change').textContent = '↑ £12 from last week'
+  const demoOrders = [
+    {id:'#1234',customer:'Sarah J.',meal:'Chicken Biryani',amount:'£9.99',status:'preparing',time:'12:30'},
+    {id:'#1233',customer:'Mike T.',meal:'Dal Makhani',amount:'£7.50',status:'delivered',time:'11:15'},
+    {id:'#1232',customer:'Priya K.',meal:'Palak Paneer',amount:'£8.00',status:'delivered',time:'10:00'},
+  ]
+  renderRecentOrders(demoOrders, true)
+}
+
+function renderRecentOrders(orders, isDemo=false) {
+  const el = document.getElementById('recent-orders-list')
+  if (!orders?.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🛒</div><h4>No orders yet</h4><p>Orders will appear here</p></div>'; return }
+  el.innerHTML = `<table class="orders-table">
+    <thead><tr><th>Order</th><th>Customer</th><th>Meal</th><th>Amount</th><th>Status</th><th>Time</th></tr></thead>
+    <tbody>${orders.map(o => `
+      <tr>
+        <td><strong>${isDemo ? o.id : '#'+o.id?.slice(-4)}</strong></td>
+        <td>${isDemo ? o.customer : (o.customer_name || 'Customer')}</td>
+        <td>${isDemo ? o.meal : (o.meal_name || 'Meal')}</td>
+        <td><strong>${isDemo ? o.amount : '£'+(o.total_amount||0).toFixed(2)}</strong></td>
+        <td>${getBadge(o.status)}</td>
+        <td style="color:var(--muted)">${isDemo ? o.time : new Date(o.created_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</td>
+      </tr>`).join('')}</tbody>
+  </table>`
+}
+
+function getBadge(status) {
+  const map = {pending:'badge-pending',preparing:'badge-preparing',ready:'badge-ready',delivered:'badge-delivered'}
+  return `<span class="badge ${map[status]||'badge-pending'}">${status||'pending'}</span>`
+}
+
+// ── Orders ──
+async function loadOrders() {
+  if (!sb || !currentUser) { renderOrdersDemo(); return }
+  try {
+    const { data } = await sb.from('orders').select('*').eq('cook_id', currentUser.id).order('created_at', {ascending:false})
+    allOrders = data || []
+    renderOrdersTable(allOrders)
+  } catch(e) { renderOrdersDemo() }
+}
+
+function renderOrdersDemo() {
+  const demo = [
+    {id:'1234',customer_name:'Sarah J.',meal_name:'Chicken Biryani',total_amount:9.99,status:'preparing',created_at:new Date().toISOString()},
+    {id:'1233',customer_name:'Mike T.',meal_name:'Dal Makhani',total_amount:7.50,status:'delivered',created_at:new Date(Date.now()-3600000).toISOString()},
+  ]
+  renderOrdersTable(demo)
+}
+
+function renderOrdersTable(orders) {
+  const el = document.getElementById('orders-list')
+  if (!orders?.length) { el.innerHTML = '<div class="empty" style="padding:40px"><div class="empty-icon">📦</div><h4>No orders</h4></div>'; return }
+  el.innerHTML = `<table class="orders-table">
+    <thead><tr><th>Order ID</th><th>Customer</th><th>Meal</th><th>Amount</th><th>Status</th><th>Time</th><th>Action</th></tr></thead>
+    <tbody>${orders.map(o => `
+      <tr>
+        <td><strong>#${o.id?.toString().slice(-4)||'----'}</strong></td>
+        <td>${o.customer_name||'Customer'}</td>
+        <td>${o.meal_name||'Meal'}</td>
+        <td><strong>£${(o.total_amount||0).toFixed(2)}</strong></td>
+        <td>${getBadge(o.status)}</td>
+        <td style="color:var(--muted)">${new Date(o.created_at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</td>
+        <td>${getOrderAction(o)}</td>
+      </tr>`).join('')}</tbody>
+  </table>`
+}
+
+function getOrderAction(o) {
+  if (o.status === 'pending') return `<button class="btn btn-sm btn-green" onclick="updateOrderStatus('${o.id}','preparing')">Accept</button>`
+  if (o.status === 'preparing') return `<button class="btn btn-sm btn-red" onclick="updateOrderStatus('${o.id}','ready')">Mark Ready</button>`
+  return `<span style="color:var(--muted);font-size:12px">${o.status}</span>`
+}
+
+async function updateOrderStatus(id, status) {
+  if (!sb) { showToast('Demo mode: Status updated!'); return }
+  await sb.from('orders').update({status}).eq('id', id)
+  showToast('Order status updated!')
+  loadOrders()
+}
+
+function filterOrders() {
+  const val = document.getElementById('order-filter').value
+  const filtered = val === 'all' ? allOrders : allOrders.filter(o => o.status === val)
+  renderOrdersTable(filtered)
+}
+
+// ── Meals ──
+async function loadMeals() {
+  if (!sb || !currentUser) { renderMealsDemo(); return }
+  try {
+    const { data } = await sb.from('meals').select('*').eq('cook_id', currentUser.id).order('created_at', {ascending:false})
+    allMeals = data || []
+    renderMealsGrid(allMeals)
+  } catch(e) { renderMealsDemo() }
+}
+
+function renderMealsDemo() {
+  const demo = [
+    {id:'1',name:'Chicken Biryani',price:9.99,emoji:'🍛',is_available:true,cuisine:'Indian'},
+    {id:'2',name:'Dal Makhani',price:7.50,emoji:'🥘',is_available:true,cuisine:'Indian'},
+    {id:'3',name:'Palak Paneer',price:8.00,emoji:'🥬',is_available:false,cuisine:'Indian'},
+  ]
+  renderMealsGrid(demo)
+}
+
+function renderMealsGrid(meals) {
+  const el = document.getElementById('meals-list')
+  if (!meals?.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🍽️</div><h4>No meals yet</h4><p>Add your first meal!</p><button class="btn btn-red" style="margin-top:16px" onclick="openAddMeal()">+ Add Meal</button></div>'
+    return
+  }
+  el.innerHTML = `<div class="meals-grid">${meals.map(m => `
+    <div class="meal-card">
+      <div class="meal-img">${m.emoji||'🍽️'}</div>
+      <div class="meal-info">
+        <div class="meal-name">${m.name}</div>
+        <div class="meal-price">£${(m.price||0).toFixed(2)}</div>
+        <div class="meal-toggle">
+          <label class="toggle" style="width:32px;height:18px">
+            <input type="checkbox" ${m.is_available?'checked':''} onchange="toggleMeal('${m.id}',this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+          ${m.is_available ? 'Available' : 'Hidden'}
+        </div>
+        <div class="meal-actions">
+          <button class="btn btn-ghost btn-sm" onclick="editMeal(${JSON.stringify(m).replace(/"/g,'&quot;')})">Edit</button>
+          <button class="btn btn-sm" style="background:#fff0ed;color:var(--red);border:none" onclick="deleteMeal('${m.id}')">Delete</button>
+        </div>
+      </div>
+    </div>`).join('')}</div>`
+}
+
+async function toggleMeal(id, available) {
+  if (!sb) { showToast('Demo mode!'); return }
+  await sb.from('meals').update({is_available: available}).eq('id', id)
+  showToast(available ? 'Meal is now available!' : 'Meal hidden from menu')
+}
+
+async function deleteMeal(id) {
+  if (!confirm('Delete this meal?')) return
+  if (!sb) { showToast('Demo: Meal deleted!'); return }
+  await sb.from('meals').delete().eq('id', id)
+  showToast('Meal deleted!')
+  loadMeals()
+}
+
+function editMeal(meal) {
+  editingMealId = meal.id
+  document.getElementById('modal-title').textContent = 'Edit Meal'
+  document.getElementById('meal-name').value = meal.name || ''
+  document.getElementById('meal-desc').value = meal.description || ''
+  document.getElementById('meal-price').value = meal.price || ''
+  document.getElementById('meal-prep').value = meal.prep_time || ''
+  document.getElementById('meal-category').value = meal.category || ''
+  document.getElementById('meal-cuisine').value = meal.cuisine || ''
+  document.getElementById('meal-emoji').value = meal.emoji || ''
+  selectedDiets = meal.dietary_tags || []
+  document.querySelectorAll('.diet-tag').forEach(t => {
+    t.classList.toggle('on', selectedDiets.includes(t.textContent.trim().replace(/[^\w ]/g,'')))
+  })
+  openAddMeal()
+}
+
+// ── Add/Save Meal ──
+function openAddMeal() {
+  if (!editingMealId) {
+    document.getElementById('modal-title').textContent = 'Add New Meal'
+    document.getElementById('meal-name').value = ''
+    document.getElementById('meal-desc').value = ''
+    document.getElementById('meal-price').value = ''
+    document.getElementById('meal-prep').value = ''
+    document.getElementById('meal-category').value = ''
+    document.getElementById('meal-cuisine').value = ''
+    document.getElementById('meal-emoji').value = ''
+    selectedDiets = []
+    document.querySelectorAll('.diet-tag').forEach(t => t.classList.remove('on'))
+  }
+  document.getElementById('add-meal-modal').classList.add('on')
+}
+
+function closeAddMeal() {
+  document.getElementById('add-meal-modal').classList.remove('on')
+  editingMealId = null
+  document.getElementById('alert-meal-error').classList.remove('on')
+  document.getElementById('alert-meal-success').classList.remove('on')
+}
+
+function toggleDiet(el, tag) {
+  el.classList.toggle('on')
+  if (selectedDiets.includes(tag)) selectedDiets = selectedDiets.filter(d => d !== tag)
+  else selectedDiets.push(tag)
+}
+
+async function saveMeal() {
+  const name = document.getElementById('meal-name').value.trim()
+  const price = parseFloat(document.getElementById('meal-price').value)
+  const category = document.getElementById('meal-category').value
+  const cuisine = document.getElementById('meal-cuisine').value
+
+  if (!name) { showMealError('Please enter a meal name'); return }
+  if (!price || price < 1) { showMealError('Please enter a valid price'); return }
+  if (!category) { showMealError('Please select a category'); return }
+
+  const mealData = {
+    name,
+    description: document.getElementById('meal-desc').value,
+    price,
+    prep_time: parseInt(document.getElementById('meal-prep').value) || 30,
+    category,
+    cuisine,
+    emoji: document.getElementById('meal-emoji').value || '🍽️',
+    dietary_tags: selectedDiets,
+    tags: selectedDiets,
+    is_available: true,
+    cook_id: currentUser?.id || 'demo',
+    cook_name: currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Home Cook',
+    status: editingMealId ? undefined : 'pending'
+  }
+
+  if (!sb) {
+    showMealSuccess('Demo mode: Meal saved!')
+    setTimeout(closeAddMeal, 1500)
+    return
+  }
+
+  document.getElementById('save-meal-btn').textContent = 'Saving...'
+  document.getElementById('save-meal-btn').disabled = true
+
+  try {
+    if (editingMealId) {
+      await sb.from('meals').update(mealData).eq('id', editingMealId)
+      showMealSuccess('Meal updated!')
+    } else {
+      await sb.from('meals').insert([mealData])
+      showMealSuccess('Meal added!')
+    }
+    setTimeout(() => { closeAddMeal(); loadMeals(); loadDashboard() }, 1200)
+  } catch(e) {
+    showMealError('Error saving meal. Please try again.')
+  }
+  document.getElementById('save-meal-btn').textContent = 'Save Meal'
+  document.getElementById('save-meal-btn').disabled = false
+}
+
+function showMealError(msg) {
+  const el = document.getElementById('alert-meal-error')
+  el.textContent = msg
+  el.classList.add('on')
+  document.getElementById('alert-meal-success').classList.remove('on')
+}
+function showMealSuccess(msg) {
+  const el = document.getElementById('alert-meal-success')
+  el.textContent = msg
+  el.classList.add('on')
+  document.getElementById('alert-meal-error').classList.remove('on')
+}
+
+// ── Earnings ──
+async function loadEarnings() {
+  document.getElementById('month-name').textContent = new Date().toLocaleString('en-GB',{month:'long',year:'numeric'})
+  if (!sb || !currentUser) { document.getElementById('total-earnings').textContent = '£47.50'; document.getElementById('month-earnings').textContent = '£47.50'; return }
+  try {
+    const { data } = await sb.from('orders').select('*').eq('cook_id', currentUser.id).eq('status','delivered')
+    const total = (data||[]).reduce((s,o) => s+(o.cook_earnings||0),0)
+    const thisMonth = new Date().getMonth()
+    const monthly = (data||[]).filter(o => new Date(o.created_at).getMonth()===thisMonth).reduce((s,o) => s+(o.cook_earnings||0),0)
+    document.getElementById('total-earnings').textContent = '£'+total.toFixed(2)
+    document.getElementById('month-earnings').textContent = '£'+monthly.toFixed(2)
+    if (data?.length) {
+      document.getElementById('earnings-list').innerHTML = `<table class="orders-table">
+        <thead><tr><th>Date</th><th>Order</th><th>Meal</th><th>Earnings</th></tr></thead>
+        <tbody>${data.map(o => `<tr>
+          <td>${new Date(o.created_at).toLocaleDateString('en-GB')}</td>
+          <td>#${o.id?.toString().slice(-4)}</td>
+          <td>${o.meal_name||'Meal'}</td>
+          <td><strong>£${(o.cook_earnings||0).toFixed(2)}</strong></td>
+        </tr>`).join('')}</tbody>
+      </table>`
+    }
+  } catch(e) {}
+}
+
+// ── Profile ──
+async function loadProfile() {
+  if (!sb || !currentUser) return
+  try {
+    const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single()
+    if (data) {
+      const fullName = (data.full_name || currentUser.user_metadata?.full_name || '').split(' ')
+      document.getElementById('profile-fname').value = fullName[0] || ''
+      document.getElementById('profile-lname').value = fullName.slice(1).join(' ') || ''
+      document.getElementById('profile-bio').value = data.bio || ''
+      document.getElementById('profile-cuisine').value = data.cuisine || ''
+      document.getElementById('profile-radius').value = data.delivery_radius || '3'
+      document.getElementById('profile-postcode').value = data.address || ''
+    } else {
+      // No profile row yet — pre-fill from auth metadata
+      const meta = currentUser.user_metadata
+      const fullName = (meta?.full_name || '').split(' ')
+      document.getElementById('profile-fname').value = fullName[0] || ''
+      document.getElementById('profile-lname').value = fullName.slice(1).join(' ') || ''
+    }
+  } catch(e) { console.warn('loadProfile error:', e) }
+}
+
+async function saveProfile() {
+  const fname = document.getElementById('profile-fname').value.trim()
+  const lname = document.getElementById('profile-lname').value.trim()
+  const bio = document.getElementById('profile-bio').value
+  const cuisine = document.getElementById('profile-cuisine').value
+  const radius = document.getElementById('profile-radius').value
+  const postcode = document.getElementById('profile-postcode').value
+
+  if (!sb) { showProfileSuccess('Demo mode: Profile saved!'); return }
+  try {
+    await sb.from('profiles').upsert({
+      id: currentUser.id,
+      role: 'cook',
+      full_name: `${fname} ${lname}`.trim(),
+      bio,
+      cuisine,
+      delivery_radius: parseInt(radius),
+      address: postcode,
+      phone: ''
+    })
+    // Also update auth metadata so name shows in nav
+    await sb.auth.updateUser({ data: { full_name: `${fname} ${lname}`.trim() } })
+    document.getElementById('cook-name').textContent = `${fname} ${lname}`.trim()
+    showProfileSuccess('Profile saved! Your info is now visible to customers.')
+  } catch(e) { showProfileError('Error saving profile: ' + e.message) }
+}
+
+function showProfileError(msg) {
+  const el = document.getElementById('alert-profile-error')
+  el.textContent = msg; el.classList.add('on')
+  document.getElementById('alert-profile-success').classList.remove('on')
+}
+function showProfileSuccess(msg) {
+  const el = document.getElementById('alert-profile-success')
+  el.textContent = msg; el.classList.add('on')
+  document.getElementById('alert-profile-error').classList.remove('on')
+}
+
+// ── Availability ──
+async function toggleAvailability() {
+  const on = document.getElementById('taking-orders').checked
+  document.getElementById('cook-status-text').textContent = on ? '● Online' : '○ Offline'
+  document.getElementById('cook-status-text').style.color = on ? '#4ade80' : 'rgba(255,255,255,.4)'
+  if (sb && currentUser) {
+    await sb.from('profiles').upsert({id: currentUser.id, role: 'cook', is_taking_orders: on})
+  }
+  showToast(on ? 'You are now taking orders!' : 'You are now offline')
+}
+
+// ── Logout ──
+async function handleLogout() {
+  if (sb) await sb.auth.signOut()
+  window.location.href = 'auth.html'
+}
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.getElementById('toast')
+  t.textContent = msg
+  t.classList.add('on')
+  setTimeout(() => t.classList.remove('on'), 2500)
+}
+
+// ── Init ──
+initSupabase()
+checkAuth()
+</script>
+</body>
+</html>
