@@ -1,0 +1,194 @@
+name: Apply cook profile fix
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index.html
+        shell: python
+        run: |
+          from pathlib import Path
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          replacements = [
+            (""".prof-hero{background:var(--surface);padding:40px 32px;color:var(--text);border-bottom:1px solid var(--border)}
+.prof-top{display:flex;gap:24px;align-items:flex-start;max-width:860px;margin:0 auto}
+.prof-av{width:100px;height:100px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:54px;flex-shrink:0;border:3px solid rgba(255,255,255,.1)}
+.prof-info h1{font-size:28px;font-weight:900;margin-bottom:4px}
+.prof-info .sub{color:rgba(255,255,255,.5);font-size:14px;margin-bottom:12px}
+.prof-pills{display:flex;gap:8px;flex-wrap:wrap}
+.ppill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50px;font-size:12px;font-weight:600;padding:4px 14px;color:rgba(255,255,255,.8)}
+.ppill.hl{background:rgba(230,57,70,.2);border-color:rgba(230,57,70,.3);color:#f87171}
+.prof-bio{max-width:860px;margin:20px auto 0;font-size:14px;color:rgba(255,255,255,.5);line-height:1.7}""",
+             """.prof-hero{background:var(--surface);padding:28px 32px 40px;color:var(--text);border-bottom:1px solid var(--border)}
+.prof-top{display:flex;gap:18px;align-items:center;max-width:860px;margin:0 auto}
+.prof-av{width:78px;height:78px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:38px;flex-shrink:0;border:1.5px solid var(--border);overflow:hidden;background:var(--white)}
+.prof-av img{width:100%;height:100%;object-fit:cover;display:block}
+.prof-info h1{font-size:24px;font-weight:900;margin-bottom:4px}
+.prof-info .sub{color:var(--muted);font-size:13px;margin-bottom:10px}
+.prof-pills{display:flex;gap:8px;flex-wrap:wrap}
+.ppill{background:var(--white);border:1px solid var(--border);border-radius:50px;font-size:12px;font-weight:600;padding:4px 12px;color:var(--dark3)}
+.ppill.hl{background:var(--red-light);border-color:rgba(200,71,43,.25);color:var(--red)}
+.prof-bio{max-width:860px;margin:14px auto 0;font-size:13px;color:var(--muted);line-height:1.65}"""),
+            ("""  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:0 32px;transform:translateY(-24px)" id="pstats"></div>""",
+             """  <div class="prof-stats" id="pstats"></div>"""),
+            ("""const COOK_PLACEHOLDERS=[
+  {id:1,area:'Harrow'},{id:2,area:'Newham'},{id:3,area:'Harrow'},
+  {id:4,area:'Newham'},{id:5,area:'Harrow'},{id:6,area:'Newham'}
+];""",
+             """const COOK_PLACEHOLDERS=[
+  {id:1,area:'Harrow'},{id:2,area:'Newham'},{id:3,area:'Harrow'},
+  {id:4,area:'Newham'},{id:5,area:'Harrow'},{id:6,area:'Newham'}
+];
+let COOKS=COOK_PLACEHOLDERS.map((c,i)=>({
+  id:c.id,
+  full_name:'Home Chef '+(i+1),
+  cuisine:CUISINES[(i%5)+1]?.n||'Home Cook',
+  area:c.area,
+  bio:'Verified local home cook preparing fresh, homestyle meals for MechChef customers.',
+  avatar_url:''
+}));"""),
+            ("""    const cookCards = data.map(c => ckCard({
+      id: c.id,
+      full_name: c.full_name,
+      bio: c.bio || '',
+      cuisine: c.cuisine || '',
+      area: c.address || 'London',
+      avatar_url: c.avatar_url || ''
+    }));""",
+             """    COOKS = data.map(c => ({
+      id: c.id,
+      full_name: c.full_name,
+      bio: c.bio || '',
+      cuisine: c.cuisine || '',
+      area: c.address || 'London',
+      avatar_url: c.avatar_url || ''
+    }));
+    const cookCards = COOKS.map(ckCard);"""),
+            ("""function ckCard(c){
+  const initials=(c.full_name||'Chef').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  const cuisine=c.cuisine||'Home Cook';
+  const area=c.area||c.address||'London';
+  const topContent = c.avatar_url
+    ? `<img src="${c.avatar_url}" alt="${c.full_name}" style="width:100%;height:100%;object-fit:cover">`
+    : `<span style="font-family:'Playfair Display',serif;font-weight:700;color:var(--red);font-size:32px">${initials}</span>`;
+  return `<div class="ckcard" onclick="filterByCook('${c.id}','${(c.full_name||'Chef').replace(/'/g,"\\'")}')">
+    <div class="ckcard-top" style="background:linear-gradient(135deg,#ffedd5,#fed7aa);display:flex;align-items:center;justify-content:center;overflow:hidden">${topContent}</div>
+    <div class="ckcard-body">
+      <div class="ck-name">${c.full_name||'Home Chef'}</div>
+      <div class="ck-meta">${cuisine} · ${area}</div>
+      ${c.bio?`<p class="ck-soon-txt" style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${c.bio.slice(0,80)}${c.bio.length>80?'...':''}</p>`:''}
+      <button class="btn btn-red" style="width:100%;margin-top:12px;padding:10px;font-size:13px" onclick="event.stopPropagation();filterByCook('${c.id}','${(c.full_name||'Chef').replace(/'/g,"\\'")}')">View Meals →</button>
+    </div>
+  </div>`;
+}
+
+function filterByCook(cookId,cookName){
+  activeCui='All';activeDiet='All';
+  const filtered=MEALS.filter(m=>String(m.cid)===String(cookId));
+  const el=document.getElementById('browse-meals');
+  const nr=document.getElementById('no-results');
+  go('browse');
+  setTimeout(()=>{
+    if(!filtered.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)"><div style="font-size:36px;margin-bottom:10px">🍽️</div><p>'+cookName+' has no meals yet</p></div>';nr.style.display='none';}
+    else{nr.style.display='none';el.innerHTML=filtered.map(mCard).join('');}
+    const hd=document.querySelector('#page-browse .sec-hd h2');
+    if(hd)hd.textContent='🍳 '+cookName+"'s Meals";
+  },50);
+}
+function openProfile(id){go('become-cook');}""",
+             """function renderHomeCooks(){document.getElementById('home-cooks').innerHTML=COOKS.slice(0,4).map(ckCard).join('');}
+function renderAllCooks(){document.getElementById('all-cooks').innerHTML=COOKS.map(ckCard).join('');}
+function esc(v){return String(v??'').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]));}
+
+function ckCard(c){
+  const initials=(c.full_name||'Chef').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  const cuisine=c.cuisine||'Home Cook';
+  const area=c.area||c.address||'London';
+  const topContent = c.avatar_url
+    ? `<img src="${esc(c.avatar_url)}" alt="${esc(c.full_name)}" style="width:100%;height:100%;object-fit:cover">`
+    : `<span style="font-family:'Playfair Display',serif;font-weight:700;color:var(--red);font-size:32px">${esc(initials)}</span>`;
+  return `<div class="ckcard" onclick="openProfile('${esc(c.id)}')">
+    <div class="ckcard-top" style="background:linear-gradient(135deg,#ffedd5,#fed7aa);display:flex;align-items:center;justify-content:center;overflow:hidden">${topContent}</div>
+    <div class="ckcard-body">
+      <div class="ck-name">${esc(c.full_name||'Home Chef')}</div>
+      <div class="ck-meta">${esc(cuisine)} · ${esc(area)}</div>
+      ${c.bio?`<p class="ck-soon-txt" style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${esc(c.bio.slice(0,80))}${c.bio.length>80?'...':''}</p>`:''}
+      <button class="btn btn-red" style="width:100%;margin-top:12px;padding:10px;font-size:13px" onclick="event.stopPropagation();filterByCook('${esc(c.id)}')">View Meals →</button>
+    </div>
+  </div>`;
+}
+
+function filterByCook(cookId,cookName){
+  activeCui='All';activeDiet='All';
+  const cook=COOKS.find(c=>String(c.id)===String(cookId));
+  cookName=cookName||cook?.full_name||'This cook';
+  const filtered=MEALS.filter(m=>String(m.cid)===String(cookId));
+  const el=document.getElementById('browse-meals');
+  const nr=document.getElementById('no-results');
+  go('browse');
+  setTimeout(()=>{
+    if(!filtered.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)"><div style="font-size:36px;margin-bottom:10px">🍽️</div><p>'+esc(cookName)+' has no meals yet</p></div>';nr.style.display='none';}
+    else{nr.style.display='none';el.innerHTML=filtered.map(mCard).join('');}
+    const hd=document.querySelector('#page-browse h2');
+    if(hd)hd.textContent='🍳 '+cookName+"'s Meals";
+  },50);
+}
+function openProfile(id){
+  const cook=COOKS.find(c=>String(c.id)===String(id))||COOKS[0];
+  if(!cook){go('cooks');return;}
+  const meals=MEALS.filter(m=>String(m.cid)===String(cook.id));
+  const initials=(cook.full_name||'Chef').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  const av=cook.avatar_url
+    ? `<img src="${esc(cook.avatar_url)}" alt="${esc(cook.full_name)}">`
+    : `<span style="font-family:'Playfair Display',serif;font-weight:800;color:var(--red);font-size:28px">${esc(initials)}</span>`;
+  document.getElementById('phero').innerHTML=`<div class="prof-top">
+    <div class="prof-av">${av}</div>
+    <div class="prof-info">
+      <h1>${esc(cook.full_name||'Home Chef')}</h1>
+      <div class="sub">${esc(cook.cuisine||'Home Cook')} · ${esc(cook.area||cook.address||'London')}</div>
+      <div class="prof-pills">
+        <span class="ppill hl">Verified Cook</span>
+        <span class="ppill">${meals.length} meal${meals.length===1?'':'s'}</span>
+        <span class="ppill">Pre-order</span>
+      </div>
+    </div>
+  </div>
+  <div class="prof-bio">${esc(cook.bio||'Fresh home-cooked meals prepared by a local MechChef cook.')}</div>`;
+  document.getElementById('pstats').innerHTML=[
+    ['4.9','Rating'],
+    [meals.length,'Meals'],
+    ['£1.99','Delivery'],
+    ['Fresh','Made to order']
+  ].map(s=>`<div class="pst"><strong>${esc(s[0])}</strong><span>${esc(s[1])}</span></div>`).join('');
+  document.getElementById('pmtitle').textContent=(cook.full_name||'Cook')+"'s Menu";
+  document.getElementById('profile-meals').innerHTML=meals.length
+    ? meals.map(mCard).join('')
+    : '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div style="font-size:36px;margin-bottom:10px">🍽️</div><p>This cook has no meals yet.</p></div>';
+  go('profile');
+}""")
+          ]
+          for old, new in replacements:
+              if old not in text:
+                  raise SystemExit('Missing expected block: ' + old[:80])
+              text = text.replace(old, new, 1)
+          path.write_text(text, encoding='utf-8')
+      - name: Remove temporary workflow
+        run: rm .github/workflows/apply-cook-profile-fix.yml
+      - name: Commit patched file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/apply-cook-profile-fix.yml
+          git commit -m "Fix cook profile display"
+          git push
