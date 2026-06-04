@@ -1453,9 +1453,9 @@ async function saveMeal(){
   if(photoFile){
     const ext=photoFile.name.split(".").pop();
     const path=currentUser.id+"/"+Date.now()+"."+ext;
-    const{data:upData,error:upErr}=await db.storage.from("meals").upload(path,photoFile,{upsert:true});
+    const{data:upData,error:upErr}=await db.storage.from("meal").upload(path,photoFile,{upsert:true});
     if(upErr){showMealAlert("Photo upload failed: "+upErr.message,"error");btn.disabled=false;btn.textContent="Save Meal";return;}
-    const{data:urlData}=db.storage.from("meals").getPublicUrl(path);
+    const{data:urlData}=db.storage.from("meal").getPublicUrl(path);
     photo_url=urlData.publicUrl;
   }
   const data={
