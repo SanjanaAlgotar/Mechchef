@@ -1019,6 +1019,14 @@ label.day-sel span{color:#fff!important}
           </label>
         </div>
         <div style="font-size:11px;color:var(--muted);margin-top:6px">🟥 Red = selected days · This connects to your Weekly Schedule</div>
+      <div class="form-row" style="margin-top:16px">
+        <label>Meal Photo</label>
+        <div id="meal-photo-wrap" style="border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:var(--surface2)" onclick="document.getElementById('m-photo-input').click()">
+          <div id="meal-photo-preview" style="display:none"><img id="meal-photo-img" style="max-height:160px;border-radius:8px;max-width:100%"></div>
+          <div id="meal-photo-placeholder">📸<br><span style="font-size:13px;color:var(--muted)">Click to upload meal photo</span></div>
+        </div>
+        <input type="file" id="m-photo-input" accept="image/*" style="display:none" onchange="previewMealPhoto(this)">
+      </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -1414,7 +1422,18 @@ function openMealModal(){
   document.getElementById('alert-meal-success').classList.remove('on');
   document.getElementById('meal-modal').classList.add('on');
 }
-function closeMealModal(){document.getElementById('meal-modal').classList.remove('on');editingMealId=null;}
+function closeMealModal(){document.getElementById("meal-modal").classList.remove("on");editingMealId=null;document.getElementById("m-photo-input").value="";document.getElementById("meal-photo-preview").style.display="none";document.getElementById("meal-photo-placeholder").style.display="block";}
+function previewMealPhoto(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    document.getElementById("meal-photo-img").src=e.target.result;
+    document.getElementById("meal-photo-preview").style.display="block";
+    document.getElementById("meal-photo-placeholder").style.display="none";
+  };
+  reader.readAsDataURL(file);
+}
 function toggleDiet(el,tag){
   el.classList.toggle('on');
   if(selectedTags.includes(tag))selectedTags=selectedTags.filter(t=>t!==tag);
@@ -1429,6 +1448,16 @@ async function saveMeal(){
   if(!availDays.length){showMealAlert('Please select at least one day you cook this meal','error');return;}
   const btn=document.getElementById('save-meal-btn');
   btn.disabled=true;btn.textContent='Saving...';
+  const photoFile=document.getElementById("m-photo-input").files[0];
+  let photo_url=null;
+  if(photoFile){
+    const ext=photoFile.name.split(".").pop();
+    const path=currentUser.id+"/"+Date.now()+"."+ext;
+    const{data:upData,error:upErr}=await db.storage.from("meals").upload(path,photoFile,{upsert:true});
+    if(upErr){showMealAlert("Photo upload failed: "+upErr.message,"error");btn.disabled=false;btn.textContent="Save Meal";return;}
+    const{data:urlData}=db.storage.from("meals").getPublicUrl(path);
+    photo_url=urlData.publicUrl;
+  }
   const data={
     name,
     description:document.getElementById('m-desc').value,
@@ -1437,6 +1466,7 @@ async function saveMeal(){
     dietary_tags:selectedTags,
     tags:selectedTags,
     available_days:availDays,
+    photo_url,
     serves:parseInt(document.getElementById('m-serves').value)||1,
     is_available:true,
     cook_id:currentUser.id,
