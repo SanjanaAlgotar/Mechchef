@@ -1215,7 +1215,7 @@ function selPay(el, method) {
   }
 }
 
-let cart=[],activeCui='All',activeDiet='All',curMeal=null,mqtyV=1,promoOn=false;
+let cart=JSON.parse(localStorage.getItem('mc_cart')||'[]'),activeCui='All',activeDiet='All',curMeal=null,mqtyV=1,promoOn=false;
 const fmt=n=>`£${n.toFixed(2)}`;
 
 window.onload=async ()=>{
