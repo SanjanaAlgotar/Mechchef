@@ -1066,7 +1066,7 @@ async function loadMealsFromSupabase() {
         cook: m.cook_name || 'Local Chef',
         cid: m.cook_id,
         cui: m.cuisine || 'Indian',
-        img: m.image_url || 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop',
+        img: m.photo_url || m.image_url || 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop',
         p: parseFloat(m.price),
         tags: m.tags || [],
         desc: m.description || '',
