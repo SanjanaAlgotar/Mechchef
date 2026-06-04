@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MechChef — Cook Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8472B;--red2:#e85a3d;--dark:#1a1208;--dark2:#2d1f0e;
+  --surface:#f9f6f2;--surface2:#f0ebe3;--white:#fff;
+  --border:#e8e0d4;--text:#1a1208;--muted:#8a7a68;
+  --green:#2d7d4f;--amber:#c97d1a;--blue:#1a5fa8;
+  --shadow:0 2px 12px rgba(26,18,8,.08);
+  --shadow-lg:0 8px 32px rgba(26,18,8,.14);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);display:flex;min-height:100vh}
+
+/* ── Sidebar ── */
+.sidebar{width:240px;height:100vh;background:var(--dark);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;overflow:hidden}
+.sidebar-brand{padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-brand .logo{font-family:'Playfair Display',serif;font-size:20px;color:#fff;font-weight:900;letter-spacing:-.5px}
+.sidebar-brand .logo span{color:var(--red2)}
+.cook-info{display:flex;align-items:center;gap:10px;margin-top:14px}
+.cook-av{width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;flex-shrink:0;overflow:hidden}
+.cook-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.cook-nm{font-size:13px;font-weight:600;color:#fff;line-height:1.2}
+.cook-status{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;cursor:pointer}
+.cook-status.online{color:#4ade80}
+.sidebar-nav{padding:12px 0;flex:1;overflow-y:auto}
+.nav-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1px;text-transform:uppercase;padding:16px 20px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;transition:all .15s;border:none;background:transparent;width:100%;text-align:left;font-family:'DM Sans',sans-serif;position:relative}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:rgba(200,71,43,.18);color:#fff}
+.nav-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red2);border-radius:0 2px 2px 0}
+.nav-icon{font-size:16px;width:20px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.availability-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.avail-label{font-size:12px;color:rgba(255,255,255,.6);font-weight:500}
+.toggle-switch{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,.2);border-radius:22px;transition:.3s}
+.toggle-slider:before{content:'';position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+input:checked + .toggle-slider{background:var(--green)}
+input:checked + .toggle-slider:before{transform:translateX(18px)}
+.btn-logout{display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.5);font-size:12px;font-weight:500;cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;transition:.15s}
+.btn-logout:hover{background:rgba(255,255,255,.06);color:#fff}
+
+/* ── Holiday banner ── */
+.holiday-banner{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #fcd34d;border-radius:10px;padding:10px 14px;margin:12px 20px 0;font-size:12px;color:#92400e;font-weight:600;display:none}
+.holiday-banner.on{display:block}
+
+/* ── Main ── */
+.main{margin-left:240px;flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:18px;font-weight:700;letter-spacing:-.4px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.btn{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red2)}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--border)}
+.btn-green{background:#dcfce7;color:var(--green)}
+.btn-green:hover{background:#bbf7d0}
+.btn-amber{background:#fef3c7;color:var(--amber)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.content{padding:24px 28px;flex:1}
+
+/* ── Page sections ── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── Stats Grid ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:50%;opacity:.06;transform:translate(15px,-15px)}
+.stat-card.red::after{background:var(--red)}
+.stat-card.green::after{background:var(--green)}
+.stat-card.amber::after{background:var(--amber)}
+.stat-card.blue::after{background:var(--blue)}
+.stat-icon{font-size:22px;margin-bottom:10px}
+.stat-val{font-size:26px;font-weight:700;letter-spacing:-.5px;font-family:'Playfair Display',serif}
+.stat-label{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500}
+.stat-change{font-size:11px;color:var(--green);margin-top:6px;font-weight:600}
+
+/* ── Section card ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-header h3{font-size:15px;font-weight:700;letter-spacing:-.3px}
+.card-body{padding:20px}
+.card-body.no-pad{padding:0}
+
+/* ── Orders ── */
+.order-card{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;transition:.2s}
+.order-card:hover{box-shadow:var(--shadow)}
+.order-header{padding:14px 16px;display:flex;align-items:center;gap:12px;background:var(--white)}
+.order-id{font-size:12px;font-weight:700;color:var(--muted);font-family:monospace}
+.order-time{font-size:12px;color:var(--muted);margin-left:auto}
+.order-body{padding:14px 16px;background:var(--surface);border-top:1px solid var(--border)}
+.order-items{font-size:13px;line-height:1.8}
+.order-item-row{display:flex;justify-content:space-between;align-items:center}
+.order-note{background:#fef9ed;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12px;color:#92400e}
+.order-note strong{display:block;margin-bottom:2px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#b45309}
+.order-footer{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--white)}
+.order-total{font-size:15px;font-weight:700}
+.order-actions{display:flex;gap:8px}
+.status-flow{display:flex;gap:6px;align-items:center}
+.status-step{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;background:var(--surface2);color:var(--muted)}
+.status-step.done{background:#dcfce7;color:var(--green)}
+.status-step.active{background:var(--red);color:#fff}
+
+/* ── Badge ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.2px}
+.badge-pending{background:#fef3c7;color:#92400e}
+.badge-accepted{background:#dbeafe;color:#1e40af}
+.badge-cooking{background:#fce7f3;color:#9d174d}
+.badge-ready{background:#d1fae5;color:#065f46}
+.badge-delivered{background:#f0fdf4;color:var(--green)}
+.badge-rejected{background:#fee2e2;color:#991b1b}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:4px;background:var(--surface2);border-radius:10px;padding:4px;margin-bottom:20px}
+.tab{padding:8px 16px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;transition:.15s}
+.tab.active{background:var(--white);color:var(--text);box-shadow:var(--shadow)}
+
+/* ── Meals grid ── */
+.meals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.meal-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:.2s}
+.meal-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.meal-img-wrap{height:110px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative}
+.meal-avail-dot{position:absolute;top:10px;right:10px;width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid #fff}
+.meal-avail-dot.off{background:#e5e7eb}
+.meal-info{padding:14px}
+.meal-name{font-size:14px;font-weight:700;letter-spacing:-.2px;margin-bottom:4px}
+.meal-meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+.meal-price{font-size:16px;font-weight:700;color:var(--red);margin-bottom:10px}
+.meal-row{display:flex;gap:6px;align-items:center;justify-content:space-between}
+
+/* ── Weekly Schedule ── */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.day-col{background:var(--surface2);border-radius:12px;padding:12px;text-align:center}
+.day-name{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.day-toggle{margin-bottom:10px}
+.time-range{font-size:11px;color:var(--muted);margin-top:6px}
+.slot-chips{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.slot-chip{font-size:10px;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:3px 6px;cursor:pointer;transition:.15s;text-align:center}
+.slot-chip.on{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* ── Modal ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(26,18,8,.5);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-bg.on{display:flex}
+.modal{background:var(--white);border-radius:18px;width:90%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.modal-close{background:var(--surface2);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:24px}
+.form-row{margin-bottom:16px}
+.form-row label{display:block;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--white);outline:none;transition:.15s}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,71,43,.1)}
+.form-row textarea{resize:vertical;min-height:80px}
+.form-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.diet-chips{display:flex;flex-wrap:wrap;gap:6px}
+.diet-chip{padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;transition:.15s;background:var(--white)}
+.diet-chip.on{background:var(--red);color:#fff;border-color:var(--red)}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+/* ── Reject modal ── */
+.reject-modal-bg{display:none;position:fixed;inset:0;background:rgba(26,18,8,.5);z-index:1001;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.reject-modal-bg.on{display:flex}
+
+/* ── Analytics ── */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.analytics-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px}
+.analytics-card h4{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.top-meal-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.top-meal-row:last-child{border-bottom:none}
+.top-meal-rank{font-size:11px;font-weight:700;color:var(--muted);width:18px}
+.top-meal-name{flex:1;font-size:13px;font-weight:600}
+.top-meal-count{font-size:12px;color:var(--muted)}
+.earnings-bar{height:8px;background:var(--surface2);border-radius:4px;margin-top:6px;overflow:hidden}
+.earnings-bar-fill{height:100%;background:var(--red);border-radius:4px;transition:.5s}
+
+/* ── Onboarding ── */
+.onboard-steps{display:flex;gap:0;margin-bottom:28px;position:relative}
+.onboard-steps::before{content:'';position:absolute;top:14px;left:14px;right:14px;height:2px;background:var(--border);z-index:0}
+.step-dot{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;position:relative;z-index:1}
+.step-circle{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);transition:.3s}
+.step-circle.done{background:var(--green);border-color:var(--green);color:#fff}
+.step-circle.active{background:var(--red);border-color:var(--red);color:#fff}
+.step-label{font-size:10px;color:var(--muted);font-weight:600;text-align:center;white-space:nowrap}
+
+/* ── Profile photo ── */
+.profile-photo-wrap{display:flex;align-items:center;gap:20px;margin-bottom:20px;padding:20px;background:var(--surface2);border-radius:14px}
+.profile-photo-circle{width:90px;height:90px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff;overflow:hidden;flex-shrink:0;border:3px solid var(--white);box-shadow:var(--shadow)}
+.profile-photo-circle img{width:100%;height:100%;object-fit:cover}
+.profile-photo-actions{display:flex;flex-direction:column;gap:8px}
+.profile-photo-actions .btn{font-size:12px;padding:8px 14px}
+.photo-hint{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* ── Day selector in meal modal ── */
+label.day-sel{background:var(--red)!important;border-color:var(--red)!important}
+label.day-sel span{color:#fff!important}
+
+/* ── Postcode tags ── */
+.postcode-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:36px;padding:8px;background:var(--surface2);border-radius:9px;border:1.5px solid var(--border)}
+.postcode-tag{display:inline-flex;align-items:center;gap:5px;background:var(--white);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600}
+.postcode-tag button{background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;line-height:1;padding:0;display:flex;align-items:center}
+.postcode-tag button:hover{color:var(--red)}
+.postcode-input-row{display:flex;gap:8px;margin-top:8px}
+.postcode-input-row input{flex:1}
+
+/* ── Holiday mode ── */
+.holiday-card{background:linear-gradient(135deg,#fef3c7,#fff7ed);border:1.5px solid #fde68a;border-radius:14px;padding:20px;margin-bottom:16px}
+.holiday-card h4{font-size:14px;font-weight:700;color:#92400e;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.holiday-card p{font-size:13px;color:#a16207;margin-bottom:14px}
+.holiday-active{background:#fff7ed;border:1.5px solid #fed7aa;border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+
+/* ── Bank details ── */
+.bank-card{background:linear-gradient(135deg,var(--dark),var(--dark2));border-radius:14px;padding:24px;color:#fff;margin-bottom:16px;position:relative;overflow:hidden}
+.bank-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.04)}
+.bank-card-label{font-size:10px;opacity:.5;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.bank-card-val{font-size:18px;font-weight:700;font-family:'Playfair Display',serif;letter-spacing:1px}
+.bank-card-val.masked{letter-spacing:3px;font-size:22px}
+.payout-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);font-size:13px}
+.payout-row:last-child{border-bottom:none}
+.payout-amount{font-weight:700;color:var(--green)}
+
+/* ── Notifications ── */
+.notif-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.notif-row:last-child{border-bottom:none}
+.notif-info h4{font-size:14px;font-weight:600;margin-bottom:2px}
+.notif-info p{font-size:12px;color:var(--muted)}
+
+/* ── Public profile preview ── */
+.preview-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.preview-header{background:linear-gradient(135deg,var(--red),var(--red2));padding:24px;color:#fff;text-align:center}
+.preview-av{width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;border:3px solid rgba(255,255,255,.4);overflow:hidden}
+.preview-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.preview-name{font-size:18px;font-weight:700;font-family:'Playfair Display',serif}
+.preview-cuisine{font-size:13px;opacity:.8;margin-top:4px}
+.preview-stats{display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;padding:16px;gap:1px;background:var(--border)}
+.preview-stat{background:var(--white);padding:12px}
+.preview-stat-val{font-size:18px;font-weight:700;font-family:'Playfair Display',serif}
+.preview-stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+.preview-body{padding:16px}
+.preview-bio{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.preview-url{background:var(--surface2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted);font-family:monospace;display:flex;align-items:center;justify-content:space-between}
+
+/* ── Empty ── */
+.empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty h4{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.empty p{font-size:13px}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── Alert ── */
+.alert{display:none;padding:11px 14px;border-radius:9px;font-size:13px;margin-bottom:14px;font-weight:500}
+.alert.on{display:block}
+.alert-error{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.alert-success{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+
+/* ── Table ── */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.tbl td{padding:13px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--surface)}
+
+/* ── Real-time pulse ── */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 1.5s infinite;margin-right:6px}
+
+.filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filter-bar select,.filter-bar input{padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--white);outline:none}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--red)}
+
+/* ── MOBILE RESPONSIVE ── */ @media(max-width:768px){   .sidebar{display:none}   .main{margin-left:0}   .topbar{padding:0 14px;height:54px}   .topbar-title{font-size:15px}   .topbar-right .btn-ghost{display:none}   .content{padding:16px 14px}   .stats-grid{grid-template-columns:1fr 1fr;gap:10px}   .stat-card{padding:14px}   .stat-val{font-size:20px}   .analytics-grid{grid-template-columns:1fr}   .meals-grid{grid-template-columns:1fr 1fr}   .week-grid{grid-template-columns:repeat(4,1fr)}   .card-header{padding:12px 14px}   .card-body{padding:14px}   .tabs{flex-wrap:wrap}   .form-cols{grid-template-columns:1fr}   .modal{width:95%;max-width:95%}   .profile-tabs{flex-wrap:wrap;gap:4px}   .profile-tab{font-size:11px;padding:6px 10px}   #ptab-personal>div{grid-template-columns:1fr!important}   #ptab-preview>div{grid-template-columns:1fr!important}   .preview-stats{grid-template-columns:1fr 1fr 1fr}   .week-grid>div{padding:8px 4px}   .order-footer{flex-direction:column;gap:8px}   .order-actions{flex-wrap:wrap}    /* Mobile bottom nav */   .mob-nav{display:flex!important} } .mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--dark);border-top:1px solid rgba(255,255,255,.1);z-index:200;padding:8px 0 12px} .mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;border:none;background:transparent;font-family:'DM Sans',sans-serif;padding:4px 0} .mob-nav-item.active{color:var(--red2)} .mob-nav-item span:first-child{font-size:18px}  /* ── Profile tabs ── */
+.profile-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:10px;padding:4px;margin-bottom:20px}
+.profile-tab{padding:8px 16px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;transition:.15s}
+.profile-tab.active{background:var(--white);color:var(--text);box-shadow:var(--shadow)}
+.profile-section{display:none}
+.profile-section.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">Mech<span>Chef</span></div>
+    <div class="cook-info">
+      <div class="cook-av" id="cook-av">C</div>
+      <div>
+        <div class="cook-nm" id="cook-name">Loading...</div>
+        <div class="cook-status online" id="cook-status" onclick="toggleAvailability()">● Online — Taking Orders</div>
+      </div>
+    </div>
+  </div>
+  <div class="holiday-banner" id="holiday-sidebar-banner">🏖️ On holiday mode</div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <button class="nav-item active" onclick="showPage('dashboard')"><span class="nav-icon">📊</span> Dashboard</button>
+    <button class="nav-item" onclick="showPage('orders')"><span class="nav-icon">🛒</span> Orders <span class="nav-badge" id="pending-count" style="display:none">0</span></button>
+    <div class="nav-section">Menu</div>
+    <button class="nav-item" onclick="showPage('meals')"><span class="nav-icon">🍽️</span> My Meals</button>
+    <button class="nav-item" onclick="showPage('schedule')"><span class="nav-icon">📅</span> Weekly Schedule</button>
+    <div class="nav-section">Business</div>
+    <button class="nav-item" onclick="showPage('analytics')"><span class="nav-icon">📈</span> Analytics</button>
+    <button class="nav-item" onclick="showPage('notifications')"><span class="nav-icon">🔔</span> Notifications</button>
+    <button class="nav-item" onclick="showPage('profile')"><span class="nav-icon">👤</span> Profile</button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="availability-row">
+      <span class="avail-label">Taking Orders</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="avail-toggle" checked onchange="toggleAvailability()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <button class="btn-logout" onclick="handleLogout()">🚪 Log out</button>
+  </div>
+</aside>  <!-- MOBILE BOTTOM NAV --> <div class="mob-nav" style="overflow-x:auto;justify-content:flex-start;padding:8px 4px 12px;gap:0">   <button class="mob-nav-item active" onclick="showPage('dashboard')">     <span>📊</span><span>Home</span>   </button>   <button class="mob-nav-item" onclick="showPage('orders')">     <span>🛒</span><span>Orders</span>   </button>   <button class="mob-nav-item" onclick="showPage('meals')">     <span>🍽️</span><span>Meals</span>   </button>   <button class="mob-nav-item" onclick="showPage('schedule')">     <span>📅</span><span>Schedule</span>   </button>   <button class="mob-nav-item" onclick="showPage('analytics')">     <span>📈</span><span>Analytics</span>   </button>   <button class="mob-nav-item" onclick="showPage('notifications')">     <span>🔔</span><span>Alerts</span>   </button>   <button class="mob-nav-item" onclick="showPage('profile')">     <span>👤</span><span>Profile</span>   </button> </div> <div class="mob-nav">   <button class="mob-nav-item active" onclick="showPage('dashboard')">     <span>📊</span><span>Home</span>   </button>   <button class="mob-nav-item" onclick="showPage('orders')">     <span>🛒</span><span>Orders</span>   </button>   <button class="mob-nav-item" onclick="showPage('meals')">     <span>🍽️</span><span>Meals</span>   </button>   <button class="mob-nav-item" onclick="showPage('schedule')">     <span>📅</span><span>Schedule</span>   </button>   <button class="mob-nav-item" onclick="showPage('analytics')">     <span>📈</span><span>Analytics</span>   </button>   <button class="mob-nav-item" onclick="showPage('notifications')">     <span>🔔</span><span>Alerts</span>   </button>   <button class="mob-nav-item" onclick="showPage('profile')">     <span>👤</span><span>Profile</span>   </button> </div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Dashboard</div>
+    <div class="topbar-right">
+      <span style="font-size:12px;color:var(--muted)"><span class="live-dot"></span>Live</span>
+      <button class="btn btn-ghost btn-sm" onclick="openPublicProfile()" title="Preview your public profile">👁 Preview Profile</button>
+      <button class="btn btn-red" onclick="openMealModal()">+ Add Meal</button>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- ── DASHBOARD ── -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card red">
+          <div class="stat-icon">🛒</div>
+          <div class="stat-val" id="s-today">0</div>
+          <div class="stat-label">Today's Orders</div>
+          <div class="stat-change" id="s-today-ch"></div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">💷</div>
+          <div class="stat-val" id="s-earn">£0</div>
+          <div class="stat-label">This Week's Earnings</div>
+          <div class="stat-change" id="s-earn-ch"></div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-val" id="s-rating">—</div>
+          <div class="stat-label">Avg Rating</div>
+          <div class="stat-change" id="s-rating-ch"></div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">🍽️</div>
+          <div class="stat-val" id="s-meals">0</div>
+          <div class="stat-label">Active Meals</div>
+          <div class="stat-change"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>🔴 Live Orders</h3>
+          <span style="font-size:12px;color:var(--muted)" id="live-orders-time">Updated just now</span>
+        </div>
+        <div class="card-body no-pad" id="live-orders-list">
+          <div class="empty"><div class="empty-icon">✅</div><h4>All clear!</h4><p>New orders will appear here instantly</p></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h3>📦 Recent Orders</h3><button class="btn btn-ghost btn-sm" onclick="showPage('orders')">View all</button></div>
+        <div class="card-body no-pad" id="recent-orders-list">
+          <div class="empty"><div class="empty-icon">🛒</div><h4>No orders yet</h4><p>Orders will appear here</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ORDERS ── -->
+    <div class="page" id="page-orders">
+      <div class="filter-bar" style="margin-bottom:16px">
+        <select id="order-filter" onchange="filterOrders()">
+          <option value="all">All Orders</option>
+          <option value="pending">Pending</option>
+          <option value="accepted">Accepted</option>
+          <option value="cooking">Cooking</option>
+          <option value="ready">Ready</option>
+          <option value="delivered">Delivered</option>
+          <option value="rejected">Rejected</option>
+        </select>
+        <input type="date" id="order-date" onchange="filterOrders()" style="width:160px">
+      </div>
+      <div id="orders-container">
+        <div class="empty"><div class="empty-icon">📦</div><h4>Loading orders...</h4></div>
+      </div>
+    </div>
+
+    <!-- ── MEALS ── -->
+    <div class="page" id="page-meals">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div class="tabs" id="meals-tabs">
+          <button class="tab active" onclick="filterMeals('all',this)">All</button>
+          <button class="tab" onclick="filterMeals('available',this)">Available</button>
+          <button class="tab" onclick="filterMeals('hidden',this)">Hidden</button>
+          <button class="tab" onclick="filterMeals('pending',this)">Pending Approval</button>
+        </div>
+        <button class="btn btn-red btn-sm" onclick="openMealModal()">+ Add Meal</button>
+      </div>
+      <div id="meals-container">
+        <div class="empty"><div class="empty-icon">🍽️</div><h4>Loading meals...</h4></div>
+      </div>
+    </div>
+
+    <!-- ── SCHEDULE ── -->
+    <div class="page" id="page-schedule">
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><h3>📅 Weekly home meal Schedule</h3><button class="btn btn-red btn-sm" onclick="saveSchedule()">Save Schedule</button></div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Set which days you cook and deliver. This controls when customers can place orders. Days marked <strong>OFF</strong> will show your meals as unavailable.</p>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px" id="week-grid"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><h3>🍱 Meals by Day</h3><span style="font-size:12px;color:var(--muted)">Based on your meal's available days</span></div>
+        <div class="card-body no-pad" id="meals-by-day">
+          <div class="empty" style="padding:30px"><div class="empty-icon">📅</div><h4>Loading...</h4></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h3>⚡ Quick Settings</h3></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="form-row">
+              <label>Max Orders Per Day</label>
+              <input type="number" id="max-orders" value="10" min="1" max="30">
+            </div>
+            <div class="form-row">
+              <label>Advance Order (days)</label>
+              <input type="number" id="advance-days" value="2" min="1" max="7">
+            </div>
+            <div class="form-row">
+              <label>Avg Prep Time (mins)</label>
+              <input type="number" id="default-prep" value="45" min="15" max="120">
+            </div>
+            <div class="form-row">
+              <label>Delivery Radius (miles)</label>
+              <input type="number" id="delivery-radius" value="3" min="1" max="10">
+            </div>
+          </div>
+          <div style="margin-top:16px;padding:14px 16px;background:var(--surface2);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.6">
+            💡 <strong>Tip:</strong> For home meal service, 2 days advance ordering works best — customers plan their week ahead. Max 10 orders keeps quality consistent.
+          </div>
+          <button class="btn btn-red" onclick="saveSettings()" style="margin-top:14px">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ANALYTICS ── -->
+    <div class="page" id="page-analytics">
+      <div class="stats-grid" style="margin-bottom:20px">
+        <div class="stat-card red"><div class="stat-icon">📦</div><div class="stat-val" id="a-total">0</div><div class="stat-label">Total Orders</div></div>
+        <div class="stat-card green"><div class="stat-icon">💷</div><div class="stat-val" id="a-earn">£0</div><div class="stat-label">Total Earnings</div></div>
+        <div class="stat-card amber"><div class="stat-icon">❌</div><div class="stat-val" id="a-rejected">0</div><div class="stat-label">Rejected Orders</div></div>
+        <div class="stat-card blue"><div class="stat-icon">⭐</div><div class="stat-val" id="a-rating">—</div><div class="stat-label">Avg Rating</div></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="analytics-card">
+          <h4>Top Meals</h4>
+          <div id="top-meals-list"><div class="empty" style="padding:20px"><h4>No data yet</h4></div></div>
+        </div>
+        <div class="analytics-card">
+          <h4>Monthly Earnings</h4>
+          <div id="monthly-earnings"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>💸 Payout History</h3><span style="font-size:12px;color:var(--muted)">Every Monday · 80% of order total</span></div>
+        <div class="card-body no-pad" id="payout-history">
+          <div class="empty" style="padding:40px"><div class="empty-icon">💸</div><h4>No payouts yet</h4><p>Payouts appear after first delivered order</p></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Order History</h3></div>
+        <div class="card-body no-pad" id="history-table">
+          <div class="empty" style="padding:40px"><div class="empty-icon">📊</div><h4>No history yet</h4></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NOTIFICATIONS ── -->
+    <div class="page" id="page-notifications">
+      <div class="card">
+        <div class="card-header"><h3>🔔 Notification Preferences</h3></div>
+        <div class="card-body">
+          <div class="notif-row">
+            <div class="notif-info"><h4>New Order Alert</h4><p>Get notified when a customer places an order</p></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-new-order" checked onchange="saveNotifPref()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info"><h4>Order Cancelled</h4><p>Alert when customer cancels an order</p></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-cancelled" checked onchange="saveNotifPref()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info"><h4>Daily Summary</h4><p>End-of-day report on orders and earnings</p></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-daily" onchange="saveNotifPref()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info"><h4>Weekly Payout Reminder</h4><p>Notify before Monday payout is processed</p></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-payout" checked onchange="saveNotifPref()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info"><h4>MechChef Updates</h4><p>News, tips and platform announcements</p></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-updates" onchange="saveNotifPref()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>📱 Contact Preferences</h3></div>
+        <div class="card-body">
+          <div class="notif-row">
+            <div class="notif-info"><h4>Email Notifications</h4><p>Receive alerts to your registered email</p></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-email" checked onchange="saveNotifPref()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info"><h4>SMS Notifications</h4><p>Text alerts to your mobile number</p></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-sms" onchange="saveNotifPref()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROFILE ── -->
+    <div class="page" id="page-profile">
+
+      <!-- Profile tabs -->
+      <div class="profile-tabs">
+        <button class="profile-tab active" onclick="showProfileTab('personal')">👤 Personal Info</button>
+        <button class="profile-tab" onclick="showProfileTab('delivery')">🛵 Delivery Settings</button>
+        <button class="profile-tab" onclick="showProfileTab('holiday')">🏖️ Holiday Mode</button>
+        <button class="profile-tab" onclick="showProfileTab('bank')">💳 Bank Details</button>
+        <button class="profile-tab" onclick="showProfileTab('preview')">👁 Public Profile</button>
+      </div>
+
+      <!-- PERSONAL INFO tab -->
+      <div class="profile-section active" id="ptab-personal">
+        <div style="display:grid;grid-template-columns:1fr 360px;gap:20px">
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>📸 Profile Photo</h3></div>
+              <div class="card-body">
+                <div class="profile-photo-wrap">
+                  <div class="profile-photo-circle" id="profile-photo-circle">C</div>
+                  <div class="profile-photo-actions">
+                    <label class="btn btn-ghost" style="cursor:pointer">
+                      📷 Upload Photo
+                      <input type="file" accept="image/*" style="display:none" onchange="uploadProfilePhoto(this)" id="photo-file-input">
+                    </label>
+                    <button class="btn btn-sm" style="background:#fee2e2;color:#991b1b" onclick="removeProfilePhoto()">Remove Photo</button>
+                    <div class="photo-hint">JPG, PNG or WebP · Max 2MB · Square recommended</div>
+                  </div>
+                </div>
+                <div id="photo-upload-progress" style="display:none;font-size:12px;color:var(--muted);margin-top:8px">⏳ Uploading...</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>👤 Personal Info</h3></div>
+              <div class="card-body">
+                <div id="alert-profile-error" class="alert alert-error"></div>
+                <div id="alert-profile-success" class="alert alert-success"></div>
+                <div class="form-cols">
+                  <div class="form-row"><label>First Name</label><input id="p-fname" placeholder="First name"></div>
+                  <div class="form-row"><label>Last Name</label><input id="p-lname" placeholder="Last name"></div>
+                </div>
+                <div class="form-row"><label>Bio</label><textarea id="p-bio" placeholder="Tell customers about yourself and your cooking..." rows="3"></textarea></div>
+                <div class="form-cols">
+                  <div class="form-row"><label>Cuisine Specialty</label>
+                    <select id="p-cuisine">
+                      <option value="">Select...</option>
+                      <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option>
+                      <option>Chinese</option><option>Thai</option><option>Italian</option>
+                      <option>Mexican</option><option>Lebanese</option><option>Caribbean</option><option>Other</option>
+                    </select>
+                  </div>
+                  <div class="form-row"><label>Your Area</label><input id="p-postcode" placeholder="e.g. Whitechapel, Ilford, Harrow"></div>
+                </div>
+                <div class="form-row"><label>Phone Number</label><input id="p-phone" type="tel" placeholder="+44..."></div>
+                <div class="form-row"><label>Years of Experience</label>
+                  <select id="p-experience">
+                    <option value="">Select...</option>
+                    <option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option>
+                  </select>
+                </div>
+                <div class="form-row"><label>Languages Spoken</label><input id="p-languages" placeholder="e.g. English, Hindi, Punjabi"></div>
+                <button class="btn btn-red" onclick="saveProfile()">Save Profile</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>📄 Certificates & Documents</h3></div>
+              <div class="card-body">
+                <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Upload your food hygiene certificate and any other relevant documents. Required for approval.</p>
+                <div id="docs-list" style="margin-bottom:16px"></div>
+                <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1.5px dashed var(--border);border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);transition:.15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                  📎 Upload Document
+                  <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="uploadDoc(this)">
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>Account Status</h3></div>
+              <div class="card-body">
+                <div id="approval-status" style="text-align:center;padding:20px">
+                  <div style="font-size:36px;margin-bottom:10px">⏳</div>
+                  <div style="font-weight:700;margin-bottom:6px">Pending Approval</div>
+                  <div style="font-size:13px;color:var(--muted)">Admin will review your profile and documents</div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Subscription</h3></div>
+              <div class="card-body">
+                <div style="background:linear-gradient(135deg,var(--dark),var(--dark2));border-radius:12px;padding:20px;color:#fff;margin-bottom:14px">
+                  <div style="font-size:11px;opacity:.6;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Current Plan</div>
+                  <div style="font-size:22px;font-weight:700;font-family:'Playfair Display',serif">Free</div>
+                  <div style="font-size:12px;opacity:.6;margin-top:4px">Up to 10 orders/day</div>
+                </div>
+                <button class="btn btn-red" style="width:100%">Upgrade to Pro ✨</button>
+                <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px">Unlimited orders + priority listing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DELIVERY ZONES tab -->
+      <div class="profile-section" id="ptab-delivery">
+        <div class="card">
+          <div class="card-header"><h3>🛵 Delivery Settings</h3><button class="btn btn-red btn-sm" onclick="saveDeliveryZones()">Save</button></div>
+          <div class="card-body">
+            <div style="background:linear-gradient(135deg,#fff7ed,#fef3c7);border:1.5px solid #fde68a;border-radius:12px;padding:16px 18px;margin-bottom:20px">
+              <div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:4px">📌 MechChef Delivery Model</div>
+              <div style="font-size:13px;color:#a16207;line-height:1.6">We use <strong>radius-based delivery</strong> from your home kitchen. Set your range and customers within that area can find and order from you. Keep meals affordable: £5–£10 range.</div>
+            </div>
+
+            <!-- Delivery Radius Slider -->
+            <div class="form-row" style="margin-bottom:20px">
+              <label>Delivery Radius</label>
+              <div style="display:flex;align-items:center;gap:14px;margin-top:8px">
+                <input type="range" id="delivery-radius-zone" min="1" max="10" step="0.5" value="3"
+                  style="flex:1;accent-color:var(--red)"
+                  oninput="updateRadiusDisplay(this.value)">
+                <div style="background:var(--dark);color:#fff;padding:8px 16px;border-radius:10px;font-size:15px;font-weight:700;font-family:'Playfair Display',serif;min-width:80px;text-align:center" id="radius-display">3 miles</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px">
+                <span>1 mile (very local)</span>
+                <span>5 miles</span>
+                <span>10 miles (wide area)</span>
+              </div>
+            </div>
+
+            <!-- London Area / Neighbourhood selector -->
+            <div class="form-row" style="margin-bottom:20px">
+              <label>Your Area / Neighbourhood <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">— helps customers find you</span></label>
+              <select id="delivery-area" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--white);outline:none" onchange="updateAreaDisplay()">
+                <option value="">Select your area...</option>
+                <optgroup label="North London">
+                  <option>Barnet</option><option>Finchley</option><option>Hendon</option><option>Edgware</option><option>Wembley</option><option>Harrow</option><option>Harrow on the Hill</option><option>Northolt</option><option>Southall</option><option>Ealing</option><option>Islington</option><option>Archway</option><option>Highbury</option><option>Tottenham</option><option>Wood Green</option><option>Edmonton</option><option>Enfield</option>
+                </optgroup>
+                <optgroup label="East London">
+                  <option>Whitechapel</option><option>Stepney Green</option><option>Mile End</option><option>Bethnal Green</option><option>Hackney</option><option>Stratford</option><option>Forest Gate</option><option>East Ham</option><option>Upton Park</option><option>Ilford</option><option>Barking</option><option>Dagenham</option><option>Romford</option><option>Walthamstow</option><option>Leytonstone</option><option>Leyton</option>
+                </optgroup>
+                <optgroup label="South London">
+                  <option>Brixton</option><option>Streatham</option><option>Tooting</option><option>Mitcham</option><option>Croydon</option><option>Norwood</option><option>Peckham</option><option>Lewisham</option><option>Catford</option><option>Woolwich</option><option>Plumstead</option>
+                </optgroup>
+                <optgroup label="West London">
+                  <option>Hounslow</option><option>Hayes</option><option>Uxbridge</option><option>Greenford</option><option>Perivale</option><option>Wembley</option><option>Park Royal</option><option>Shepherd's Bush</option><option>Acton</option>
+                </optgroup>
+                <optgroup label="Central London">
+                  <option>Bow</option><option>Poplar</option><option>Canary Wharf</option><option>Tower Hamlets</option><option>Bermondsey</option><option>Borough</option><option>Elephant &amp; Castle</option>
+                </optgroup>
+              </select>
+              <div id="area-display" style="margin-top:10px;display:none">
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:13px;display:flex;align-items:center;gap:10px">
+                  <span style="font-size:20px">📍</span>
+                  <div>
+                    <div style="font-weight:700" id="area-display-name"></div>
+                    <div style="font-size:12px;color:var(--muted)" id="area-display-radius">Delivering within <span id="area-radius-text">3 miles</span> from this area</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats row -->
+            <div style="background:var(--surface2);border-radius:12px;padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center">
+              <div>
+                <div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:var(--red)" id="radius-est-customers">~50</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">Est. customers in range</div>
+              </div>
+              <div>
+                <div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:var(--green)">£5–£10</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">MechChef price range</div>
+              </div>
+              <div>
+                <div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:var(--amber)">80%</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">Your earnings per order</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>⏰ Delivery Time Slots</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Set your available delivery time windows. Customers will choose from these slots when ordering.</p>
+            <div style="display:flex;flex-direction:column;gap:8px" id="slot-settings">
+              <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:.15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <input type="checkbox" id="slot-lunch" checked style="accent-color:var(--red);width:16px;height:16px">
+                <div><div style="font-size:14px;font-weight:600">🌞 Lunch Slot</div><div style="font-size:12px;color:var(--muted)">11:00 AM – 2:00 PM</div></div>
+              </label>
+              <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:.15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+                <input type="checkbox" id="slot-dinner" checked style="accent-color:var(--red);width:16px;height:16px">
+                <div><div style="font-size:14px;font-weight:600">🌙 Dinner Slot</div><div style="font-size:12px;color:var(--muted)">5:00 PM – 8:00 PM</div></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOLIDAY MODE tab -->
+      <div class="profile-section" id="ptab-holiday">
+        <div class="holiday-card">
+          <h4>🏖️ Holiday Mode</h4>
+          <p>Going away? Pause all orders for a period so customers can't place new orders while you're away. Existing orders won't be affected.</p>
+          <div id="holiday-status-box">
+            <div style="display:none" id="holiday-active-box">
+              <div class="holiday-active">
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#92400e" id="holiday-active-label">🏖️ Holiday mode is ON</div>
+                  <div style="font-size:12px;color:#a16207;margin-top:2px" id="holiday-active-dates"></div>
+                </div>
+                <button class="btn btn-sm" style="background:#fee2e2;color:#991b1b" onclick="cancelHoliday()">Cancel Holiday</button>
+              </div>
+            </div>
+            <div id="holiday-inactive-box">
+              <div class="form-cols" style="margin-top:4px">
+                <div class="form-row">
+                  <label>Away From</label>
+                  <input type="date" id="holiday-from" min="">
+                </div>
+                <div class="form-row">
+                  <label>Back On</label>
+                  <input type="date" id="holiday-to" min="">
+                </div>
+              </div>
+              <div class="form-row">
+                <label>Message to customers (optional)</label>
+                <textarea id="holiday-msg" placeholder="e.g. I'm on holiday until 20th June — see you then! 🍛" rows="2"></textarea>
+              </div>
+              <button class="btn btn-amber" onclick="activateHoliday()">🏖️ Activate Holiday Mode</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>⚡ Quick Pause</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Just need a break today? Toggle off "Taking Orders" in the sidebar — you'll come back online automatically tomorrow.</p>
+            <button class="btn btn-ghost" onclick="document.getElementById('avail-toggle').checked=false;toggleAvailability()">⏸ Pause Orders Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANK DETAILS tab -->
+      <div class="profile-section" id="ptab-bank">
+        <div class="card">
+          <div class="card-header"><h3>💳 Bank Details</h3><span style="font-size:12px;color:var(--muted)">🔒 Encrypted & secure</span></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Your earnings are paid every Monday directly to this account. MechChef takes 20% platform fee — you receive 80%.</p>
+            <div id="bank-saved-card" style="display:none">
+              <div class="bank-card" style="margin-bottom:16px">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+                  <div>
+                    <div class="bank-card-label">Account Name</div>
+                    <div class="bank-card-val" id="bc-name">—</div>
+                  </div>
+                  <div style="font-size:24px">🏦</div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+                  <div>
+                    <div class="bank-card-label">Account Number</div>
+                    <div class="bank-card-val masked" id="bc-acc">●●●● ●●●●</div>
+                  </div>
+                  <div>
+                    <div class="bank-card-label">Sort Code</div>
+                    <div class="bank-card-val" id="bc-sort">●●-●●-●●</div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="editBankDetails()">✏️ Update Bank Details</button>
+            </div>
+            <div id="bank-form-box">
+              <div id="alert-bank-error" class="alert alert-error"></div>
+              <div class="form-row"><label>Account Holder Name *</label><input id="b-name" placeholder="Full name as on bank account"></div>
+              <div class="form-cols">
+                <div class="form-row"><label>Account Number *</label><input id="b-acc" placeholder="8 digits" maxlength="8" type="text" inputmode="numeric"></div>
+                <div class="form-row"><label>Sort Code *</label><input id="b-sort" placeholder="00-00-00" maxlength="8"></div>
+              </div>
+              <div class="form-row"><label>Bank Name</label><input id="b-bank" placeholder="e.g. Barclays, HSBC, Monzo"></div>
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:12px 14px;font-size:12px;color:#166534;margin-bottom:16px">
+                🔒 Your bank details are encrypted and only used for weekly payouts. We never share this information.
+              </div>
+              <div style="display:flex;gap:10px">
+                <button class="btn btn-red" onclick="saveBankDetails()">💾 Save Bank Details</button>
+                <button class="btn btn-ghost" id="bank-cancel-btn" onclick="cancelBankEdit()" style="display:none">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>💸 Upcoming Payout</h3></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--surface2);border-radius:12px">
+              <div>
+                <div style="font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Next Monday Payout</div>
+                <div style="font-size:24px;font-weight:700;font-family:'Playfair Display',serif;color:var(--green)" id="next-payout-amount">£0.00</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px" id="next-payout-date">No pending earnings</div>
+              </div>
+              <div style="font-size:40px">💷</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PUBLIC PROFILE PREVIEW tab -->
+      <div class="profile-section" id="ptab-preview">
+        <div style="display:grid;grid-template-columns:1fr 380px;gap:20px">
+          <div>
+            <div class="card" style="margin-bottom:0">
+              <div class="card-header"><h3>👁 How Customers See You</h3></div>
+              <div class="card-body" style="padding:0">
+                <div class="preview-card">
+                  <div class="preview-header">
+                    <div class="preview-av" id="prev-av">C</div>
+                    <div class="preview-name" id="prev-name">Your Name</div>
+                    <div class="preview-cuisine" id="prev-cuisine">Cuisine Specialty</div>
+                    <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+                      <span style="background:rgba(255,255,255,.2);padding:3px 10px;border-radius:20px;font-size:11px">✅ Verified Cook</span>
+                    </div>
+                  </div>
+                  <div class="preview-stats">
+                    <div class="preview-stat">
+                      <div class="preview-stat-val" id="prev-orders">0</div>
+                      <div class="preview-stat-label">Orders</div>
+                    </div>
+                    <div class="preview-stat">
+                      <div class="preview-stat-val" id="prev-rating">—</div>
+                      <div class="preview-stat-label">Rating</div>
+                    </div>
+                    <div class="preview-stat">
+                      <div class="preview-stat-val" id="prev-meals">0</div>
+                      <div class="preview-stat-label">Meals</div>
+                    </div>
+                  </div>
+                  <div class="preview-body">
+                    <div class="preview-bio" id="prev-bio">Your bio will appear here. Tell customers about your cooking style, specialties, and what makes your food special!</div>
+                    <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Delivery Info</div>
+                    <div id="prev-zones" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
+                    <div class="preview-url">
+                      <span id="prev-url">mechchef.vercel.app/cook/your-name</span>
+                      <button class="btn btn-ghost btn-sm" onclick="copyProfileUrl()">Copy</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>Profile Completeness</h3></div>
+              <div class="card-body">
+                <div id="profile-completeness-list" style="display:flex;flex-direction:column;gap:10px"></div>
+                <div style="margin-top:16px;background:var(--surface2);border-radius:10px;overflow:hidden;height:8px">
+                  <div id="completeness-bar" style="height:100%;background:var(--green);transition:.5s;width:0%"></div>
+                </div>
+                <div style="font-size:12px;color:var(--muted);margin-top:6px;text-align:right" id="completeness-pct">0% complete</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Quick Actions</h3></div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+                <button class="btn btn-ghost" style="width:100%;justify-content:flex-start" onclick="showProfileTab('personal')">✏️ Edit Personal Info</button>
+                <button class="btn btn-ghost" style="width:100%;justify-content:flex-start" onclick="showProfileTab('delivery')">🛵 Delivery Settings</button>
+                <button class="btn btn-ghost" style="width:100%;justify-content:flex-start" onclick="showProfileTab('bank')">💳 Add Bank Details</button>
+                <button class="btn btn-red" style="width:100%;justify-content:flex-start" onclick="copyProfileUrl()">🔗 Copy Profile Link</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-profile -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ── ADD/EDIT MEAL MODAL ── -->
+<div class="modal-bg" id="meal-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="meal-modal-title">Add New Meal</h3>
+      <button class="modal-close" onclick="closeMealModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="alert-meal-error" class="alert alert-error"></div>
+      <div id="alert-meal-success" class="alert alert-success"></div>
+
+      <!-- Tiffin tip banner -->
+      <div style="background:linear-gradient(135deg,#fff7ed,#fef3c7);border:1.5px solid #fde68a;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#92400e">
+        🍱 <strong>MechChef Tiffin Style:</strong> Home-cooked meals at £5–£10. Focus on your specialty dish — dal, biryani, curry, sabzi. Keep it simple, keep it real!
+      </div>
+
+      <!-- Image Upload -->
+      <div class="form-row">
+        <label>Meal Photo <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">— helps customers choose your meal</span></label>
+        <div id="m-img-preview" style="width:100%;height:160px;border-radius:12px;background:var(--surface2);border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;position:relative;overflow:hidden;cursor:pointer" onclick="document.getElementById('m-img-input').click()">
+          <div id="m-img-placeholder" style="text-align:center">
+            <div style="font-size:32px">📷</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">Click to upload photo</div>
+            <div style="font-size:11px;color:var(--muted)">JPG, PNG · Max 3MB</div>
+          </div>
+          <img id="m-img-thumb" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0">
+          <button id="m-img-remove" type="button" onclick="event.stopPropagation();removeMealImage()" style="display:none;position:absolute;top:8px;right:8px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:14px">✕</button>
+        </div>
+        <input type="file" id="m-img-input" accept="image/*" style="display:none" onchange="previewMealImage(this)">
+        <div id="m-img-progress" style="display:none;font-size:12px;color:var(--muted)">⏳ Uploading image...</div>
+      </div>
+
+      <div class="form-row"><label>Meal Name *</label><input id="m-name" placeholder="e.g. Chicken Biryani, Dal Makhani, Aloo Gobi"></div>
+      <div class="form-row"><label>Description <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">— ingredients, portion size, what's special</span></label><textarea id="m-desc" placeholder="e.g. Home-style chicken biryani with basmati rice, slow-cooked masala. Serves 1. Comes with raita and salad."></textarea></div>
+
+      <!-- Price: fixed £5–£10 slider -->
+      <div class="form-row">
+        <label>Price *
+          <span style="font-weight:400;color:var(--green);text-transform:none;letter-spacing:0;margin-left:6px">✓ MechChef range: £5.00 – £10.00</span>
+        </label>
+        <div style="background:var(--surface2);border-radius:12px;padding:16px;margin-top:6px">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px">
+            <input type="range" id="m-price-slider" min="5" max="10" step="0.5" value="7" style="flex:1;accent-color:var(--red)" oninput="updatePriceInput(this.value)">
+            <div style="background:var(--dark);color:#fff;padding:8px 18px;border-radius:10px;font-size:18px;font-weight:700;font-family:'Playfair Display',serif;min-width:72px;text-align:center" id="m-price-display">£7.00</div>
+            <input id="m-price" type="hidden" value="7.00">
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
+            <span>£5.00 — budget tiffin</span>
+            <span>£10.00 — premium meal</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-cols">
+        <div class="form-row">
+          <label>Cuisine Type</label>
+          <select id="m-cuisine">
+            <option value="">Select...</option>
+            <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option>
+            <option>Sri Lankan</option><option>Nepali</option><option>Chinese</option>
+            <option>Thai</option><option>Lebanese</option><option>Caribbean</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Serves</label>
+          <select id="m-serves">
+            <option value="1">1 person</option>
+            <option value="2" selected>2 people</option>
+            <option value="3">3 people</option>
+            <option value="4">4 people</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Dietary Tags <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">— helps customers filter</span></label>
+        <div class="diet-chips">
+          <span class="diet-chip" onclick="toggleDiet(this,'Vegetarian')">🌱 Vegetarian</span>
+          <span class="diet-chip" onclick="toggleDiet(this,'Vegan')">🌿 Vegan</span>
+          <span class="diet-chip" onclick="toggleDiet(this,'Halal')">☪️ Halal</span>
+          <span class="diet-chip" onclick="toggleDiet(this,'Gluten Free')">🌾 Gluten Free</span>
+          <span class="diet-chip" onclick="toggleDiet(this,'Nut Free')">🥜 Nut Free</span>
+          <span class="diet-chip" onclick="toggleDiet(this,'Spicy')">🌶️ Spicy</span>
+          <span class="diet-chip" onclick="toggleDiet(this,'Dairy Free')">🥛 Dairy Free</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Cook This On <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">— which days do you make this meal?</span></label>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px" id="m-days">
+          <label style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 4px;transition:.15s" id="mlabel-Mon">
+            <input type="checkbox" name="mday" value="Mon" checked style="position:absolute;opacity:0;width:0;height:0" onchange="document.getElementById('mlabel-Mon').classList.toggle('day-sel',this.checked)">
+            <span style="font-size:11px;font-weight:700;color:var(--muted)">MON</span>
+          </label>
+          <label style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 4px;transition:.15s" id="mlabel-Tue">
+            <input type="checkbox" name="mday" value="Tue" checked style="position:absolute;opacity:0;width:0;height:0" onchange="document.getElementById('mlabel-Tue').classList.toggle('day-sel',this.checked)">
+            <span style="font-size:11px;font-weight:700;color:var(--muted)">TUE</span>
+          </label>
+          <label style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 4px;transition:.15s" id="mlabel-Wed">
+            <input type="checkbox" name="mday" value="Wed" checked style="position:absolute;opacity:0;width:0;height:0" onchange="document.getElementById('mlabel-Wed').classList.toggle('day-sel',this.checked)">
+            <span style="font-size:11px;font-weight:700;color:var(--muted)">WED</span>
+          </label>
+          <label style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 4px;transition:.15s" id="mlabel-Thu">
+            <input type="checkbox" name="mday" value="Thu" checked style="position:absolute;opacity:0;width:0;height:0" onchange="document.getElementById('mlabel-Thu').classList.toggle('day-sel',this.checked)">
+            <span style="font-size:11px;font-weight:700;color:var(--muted)">THU</span>
+          </label>
+          <label style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 4px;transition:.15s" id="mlabel-Fri">
+            <input type="checkbox" name="mday" value="Fri" checked style="position:absolute;opacity:0;width:0;height:0" onchange="document.getElementById('mlabel-Fri').classList.toggle('day-sel',this.checked)">
+            <span style="font-size:11px;font-weight:700;color:var(--muted)">FRI</span>
+          </label>
+          <label style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 4px;transition:.15s" id="mlabel-Sat">
+            <input type="checkbox" name="mday" value="Sat" style="position:absolute;opacity:0;width:0;height:0" onchange="document.getElementById('mlabel-Sat').classList.toggle('day-sel',this.checked)">
+            <span style="font-size:11px;font-weight:700;color:var(--muted)">SAT</span>
+          </label>
+          <label style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 4px;transition:.15s" id="mlabel-Sun">
+            <input type="checkbox" name="mday" value="Sun" style="position:absolute;opacity:0;width:0;height:0" onchange="document.getElementById('mlabel-Sun').classList.toggle('day-sel',this.checked)">
+            <span style="font-size:11px;font-weight:700;color:var(--muted)">SUN</span>
+          </label>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">🟥 Red = selected days · This connects to your Weekly Schedule</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeMealModal()">Cancel</button>
+      <button class="btn btn-red" id="save-meal-btn" onclick="saveMeal()">Save Meal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── REJECT MODAL ── -->
+<div class="reject-modal-bg" id="reject-modal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-head"><h3>Reject Order</h3><button class="modal-close" onclick="closeRejectModal()">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Please provide a reason — the customer will be notified.</p>
+      <div class="form-row">
+        <label>Reason *</label>
+        <select id="reject-reason" onchange="checkOtherReason()">
+          <option value="">Select reason...</option>
+          <option>Ingredients not available</option>
+          <option>Too busy right now</option>
+          <option>Outside delivery area</option>
+          <option>Order too large</option>
+          <option>other</option>
+        </select>
+      </div>
+      <div class="form-row" id="reject-other-row" style="display:none">
+        <label>Custom Reason</label>
+        <textarea id="reject-other" placeholder="Explain..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeRejectModal()">Cancel</button>
+      <button class="btn" style="background:#fee2e2;color:#991b1b" onclick="confirmReject()">Reject Order</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL='https://ccatfstzthkwridxwzfg.supabase.co';
+const SUPABASE_ANON='sb_publishable_B2MAOdQRfp8Zf9HR1GIhUA_VFmUax0-';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+
+let currentUser=null;
+let allOrders=[];
+let allMeals=[];
+let editingMealId=null;
+let selectedTags=[];
+let rejectingOrderId=null;
+let scheduleData={};
+let realtimeSub=null;
+let deliveryZones=[];
+let profileData={};
+
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DAY_FULL={Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday',Sat:'Saturday',Sun:'Sunday'};
+const SLOTS_LUNCH='11:00 AM – 2:00 PM';
+const SLOTS_DINNER='5:00 PM – 8:00 PM';
+
+function getCuisineEmoji(cuisine){
+  const map={Indian:'🍛',Pakistani:'🍖',Bangladeshi:'🍲',Chinese:'🥡',Thai:'🍜',Italian:'🍝',
+    Mexican:'🌮',Lebanese:'🧆',Caribbean:'🍗','Sri Lankan':'🥘',Nepali:'🫕',Other:'🍽️'};
+  return map[cuisine]||'🍛';
+}
+
+// ── Init ──
+async function init(){
+  const{data:{session}}=await db.auth.getSession();
+  if(!session){window.location.href='auth.html';return;}
+  currentUser=session.user;
+  const meta=currentUser.user_metadata||{};
+  const name=meta.full_name||currentUser.email.split('@')[0];
+  document.getElementById('cook-name').textContent=name;
+  document.getElementById('cook-av').textContent=name.charAt(0).toUpperCase();
+  // Set today as min date for holiday picker
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('holiday-from').min=today;
+  document.getElementById('holiday-to').min=today;
+  await loadDashboard();
+  buildWeekGrid();
+  loadProfile();
+  loadProfileDocs();
+  subscribeRealtime();
+}
+
+// ── Navigation ──
+function showPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelector('[onclick="showPage(\''+p+'\')"]').classList.add('active');
+  const titles={dashboard:'Dashboard',orders:'Orders',meals:'My Meals',schedule:'Weekly Schedule',analytics:'Analytics',notifications:'Notifications',profile:'Profile'};
+  document.getElementById('page-title').textContent=titles[p]||p;
+  if(p==='orders')loadOrders();
+  if(p==='meals')loadMeals();
+  if(p==='analytics')loadAnalytics();
+  if(p==='notifications')loadNotifPrefs();
+  if(p==='schedule'){buildWeekGrid();renderMealsByDay();}
+  if(p==='profile'){loadProfile();renderPreview();}
+}
+
+function showProfileTab(tab){
+  document.querySelectorAll('.profile-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.profile-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('ptab-'+tab).classList.add('active');
+  document.querySelector('[onclick="showProfileTab(\''+tab+'\')"]').classList.add('active');
+  if(tab==='preview')renderPreview();
+}
+
+// ── Realtime ──
+function subscribeRealtime(){
+  if(!currentUser)return;
+  realtimeSub=db.channel('cook-orders')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'orders',filter:'cook_id=eq.'+currentUser.id},
+      payload=>{
+        showToast('🔔 New order received!');
+        allOrders.unshift(payload.new);
+        updatePendingBadge();
+        renderLiveOrders();
+        if(document.getElementById('page-orders').classList.contains('active'))loadOrders();
+      })
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'orders',filter:'cook_id=eq.'+currentUser.id},
+      payload=>{
+        const idx=allOrders.findIndex(o=>o.id===payload.new.id);
+        if(idx>-1)allOrders[idx]=payload.new;
+        renderLiveOrders();
+        if(document.getElementById('page-orders').classList.contains('active'))loadOrders();
+      })
+    .subscribe();
+}
+
+// ── Dashboard ──
+async function loadDashboard(){
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const{data:orders}=await db.from('orders').select('*').eq('cook_id',currentUser.id).order('created_at',{ascending:false});
+    const{data:meals}=await db.from('meals').select('*').eq('cook_id',currentUser.id).eq('is_available',true);
+    allOrders=orders||[];
+    allMeals=meals||[];
+    const todayOrders=allOrders.filter(o=>o.created_at&&o.created_at.startsWith(today));
+    const weekStart=new Date();weekStart.setDate(weekStart.getDate()-7);
+    const weekOrders=allOrders.filter(o=>o.status==='delivered'&&new Date(o.created_at)>weekStart);
+    const weekEarn=weekOrders.reduce((s,o)=>s+(o.total||0)*0.80,0);
+    document.getElementById('s-today').textContent=todayOrders.length;
+    document.getElementById('s-earn').textContent='£'+weekEarn.toFixed(2);
+    document.getElementById('s-meals').textContent=allMeals.length;
+    updatePendingBadge();
+    renderLiveOrders();
+    renderRecentOrders();
+    document.getElementById('live-orders-time').textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    updateNextPayout();
+  }catch(e){console.error(e);}
+}
+
+function updatePendingBadge(){
+  const pending=allOrders.filter(o=>o.status==='pending');
+  const badge=document.getElementById('pending-count');
+  if(pending.length>0){badge.style.display='inline-block';badge.textContent=pending.length;}
+  else{badge.style.display='none';}
+}
+
+function renderLiveOrders(){
+  const live=allOrders.filter(o=>['pending','accepted','cooking'].includes(o.status));
+  const el=document.getElementById('live-orders-list');
+  if(!live.length){el.innerHTML='<div class="empty"><div class="empty-icon">✅</div><h4>All clear!</h4><p>New orders will appear here instantly</p></div>';return;}
+  el.innerHTML=live.map(o=>orderCard(o,true)).join('');
+}
+
+function renderRecentOrders(){
+  const el=document.getElementById('recent-orders-list');
+  const recent=allOrders.slice(0,5);
+  if(!recent.length){el.innerHTML='<div class="empty"><div class="empty-icon">🛒</div><h4>No orders yet</h4></div>';return;}
+  el.innerHTML='<table class="tbl"><thead><tr><th>Order</th><th>Items</th><th>Total</th><th>Status</th><th>Time</th></tr></thead><tbody>'+
+    recent.map(o=>'<tr><td><strong>#'+o.id.toString().slice(-4)+'</strong></td>'+
+      '<td>'+(o.items?o.items.map(i=>i.name).join(', '):'—')+'</td>'+
+      '<td><strong>£'+(o.total||0).toFixed(2)+'</strong></td>'+
+      '<td>'+getBadge(o.status)+'</td>'+
+      '<td style="color:var(--muted)">'+new Date(o.created_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+'</td></tr>').join('')+
+    '</tbody></table>';
+}
+
+// ── Orders ──
+async function loadOrders(){
+  try{
+    const{data}=await db.from('orders').select('*').eq('cook_id',currentUser.id).order('created_at',{ascending:false});
+    allOrders=data||[];
+    filterOrders();
+  }catch(e){console.error(e);}
+}
+
+function filterOrders(){
+  const status=document.getElementById('order-filter').value;
+  const date=document.getElementById('order-date').value;
+  let filtered=allOrders;
+  if(status!=='all')filtered=filtered.filter(o=>o.status===status);
+  if(date)filtered=filtered.filter(o=>o.created_at&&o.created_at.startsWith(date));
+  const el=document.getElementById('orders-container');
+  if(!filtered.length){el.innerHTML='<div class="empty"><div class="empty-icon">📦</div><h4>No orders found</h4></div>';return;}
+  el.innerHTML=filtered.map(o=>orderCard(o,false)).join('');
+}
+
+function orderCard(o,isLive){
+  const items=o.items||[];
+  const note=o.note||o.customer_note||'';
+  const time=new Date(o.created_at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  var actions='';
+  if(o.status==='pending'){
+    actions='<button class="btn btn-green btn-sm" onclick="updateStatus(\''+o.id+'\',\'accepted\')">✓ Accept</button>'
+      +'<button class="btn btn-sm" style="background:#fee2e2;color:#991b1b" onclick="openRejectModal(\''+o.id+'\')">✕ Reject</button>';
+  }else if(o.status==='accepted'){
+    actions='<button class="btn btn-amber btn-sm" onclick="updateStatus(\''+o.id+'\',\'cooking\')">🍳 Start Cooking</button>';
+  }else if(o.status==='cooking'){
+    actions='<button class="btn btn-green btn-sm" onclick="updateStatus(\''+o.id+'\',\'ready\')">✅ Mark Ready</button>';
+  }else if(o.status==='ready'){
+    actions='<button class="btn btn-red btn-sm" onclick="updateStatus(\''+o.id+'\',\'delivered\')">🚚 Mark Delivered</button>';
+  }
+  const steps=['pending','accepted','cooking','ready','delivered'];
+  const stepLabels={pending:'Pending',accepted:'Accepted',cooking:'Cooking',ready:'Ready',delivered:'Delivered'};
+  const ci=steps.indexOf(o.status);
+  var flowHtml='';
+  if(o.status!=='rejected'){
+    flowHtml='<div class="status-flow">'+steps.map((s,i)=>'<span class="status-step'+(i<ci?' done':i===ci?' active':'')+'">'+(i<ci?'✓ ':'')+stepLabels[s]+'</span>'+(i<steps.length-1?'<span style="color:var(--border)">›</span>':'')).join('')+'</div>';
+  }
+  return '<div class="order-card">'
+    +'<div class="order-header">'
+    +'<span class="order-id">#'+o.id.toString().slice(-6)+'</span>'
+    +getBadge(o.status)
+    +(o.slot?'<span style="font-size:12px;color:var(--muted)">🕐 '+o.slot+'</span>':'')
+    +'<span class="order-time">'+time+'</span>'
+    +'</div>'
+    +'<div class="order-body">'
+    +'<div class="order-items">'+items.map(i=>'<div class="order-item-row"><span>'+i.qty+'× '+i.name+'</span><span style="font-weight:600">£'+(i.price*i.qty).toFixed(2)+'</span></div>').join('')+'</div>'
+    +(note?'<div class="order-note"><strong>📝 Customer Note</strong>'+note+'</div>':'')
+    +'<div style="margin-top:10px">'+flowHtml+'</div>'
+    +'</div>'
+    +'<div class="order-footer">'
+    +'<div class="order-total">£'+(o.total||0).toFixed(2)+' <span style="font-size:11px;color:var(--green);font-weight:600">+£'+((o.total||0)*0.80).toFixed(2)+' yours</span></div>'
+    +'<div class="order-actions">'+actions+'</div>'
+    +'</div>'
+    +'</div>';
+}
+
+async function updateStatus(id,status){
+  await db.from('orders').update({status}).eq('id',id);
+  showToast('Order updated: '+status);
+  const idx=allOrders.findIndex(o=>o.id===id);
+  if(idx>-1)allOrders[idx].status=status;
+  updatePendingBadge();
+  renderLiveOrders();
+  if(document.getElementById('page-orders').classList.contains('active'))filterOrders();
+}
+
+function getBadge(s){
+  const map={pending:'⏳ Pending',accepted:'✅ Accepted',cooking:'🍳 Cooking',ready:'📦 Ready',delivered:'🚚 Delivered',rejected:'❌ Rejected'};
+  return '<span class="badge badge-'+s+'">'+(map[s]||s)+'</span>';
+}
+
+function openRejectModal(id){rejectingOrderId=id;document.getElementById('reject-reason').value='';document.getElementById('reject-other').value='';document.getElementById('reject-other-row').style.display='none';document.getElementById('reject-modal').classList.add('on');}
+function closeRejectModal(){document.getElementById('reject-modal').classList.remove('on');rejectingOrderId=null;}
+function checkOtherReason(){document.getElementById('reject-other-row').style.display=document.getElementById('reject-reason').value==='other'?'block':'none';}
+async function confirmReject(){
+  const reason=document.getElementById('reject-reason').value;
+  if(!reason){showToast('Please select a reason');return;}
+  const note=reason==='other'?document.getElementById('reject-other').value:reason;
+  await db.from('orders').update({status:'rejected',rejection_reason:note}).eq('id',rejectingOrderId);
+  showToast('Order rejected');
+  closeRejectModal();
+  updatePendingBadge();
+  renderLiveOrders();
+  if(document.getElementById('page-orders').classList.contains('active'))loadOrders();
+}
+
+// ── Meals ──
+let mealFilter='all';
+async function loadMeals(){
+  const{data}=await db.from('meals').select('*').eq('cook_id',currentUser.id).order('created_at',{ascending:false});
+  allMeals=data||[];
+  renderMeals();
+}
+function filterMeals(f,el){
+  mealFilter=f;
+  document.querySelectorAll('#meals-tabs .tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderMeals();
+}
+function renderMeals(){
+  let meals=allMeals;
+  if(mealFilter==='available')meals=meals.filter(m=>m.is_available&&m.status==='approved');
+  else if(mealFilter==='hidden')meals=meals.filter(m=>!m.is_available);
+  else if(mealFilter==='pending')meals=meals.filter(m=>m.status==='pending');
+  const el=document.getElementById('meals-container');
+  if(!meals.length){el.innerHTML='<div class="empty"><div class="empty-icon">🍽️</div><h4>No meals here</h4><button class="btn btn-red" style="margin-top:14px" onclick="openMealModal()">+ Add Meal</button></div>';return;}
+  el.innerHTML='<div class="meals-grid">'+meals.map(m=>{
+    return '<div class="meal-card">'
+      +'<div class="meal-img-wrap" style="font-size:36px">'
+      +(m.image_url
+        ? '<img src="'+m.image_url+'" alt="'+m.name+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">'
+        : getCuisineEmoji(m.cuisine))
+      +'<div class="meal-avail-dot'+(m.is_available?'':' off')+'"></div></div>'
+      +'<div class="meal-info">'
+      +'<div class="meal-name">'+m.name+'</div>'
+      +'<div class="meal-meta">'+(m.cuisine||'')+(m.serves?' · Serves '+m.serves:'')+'</div>'
+      +'<div class="meal-price">£'+(m.price||0).toFixed(2)+'</div>'
+      +'<div class="meal-row">'
+      +'<label class="toggle-switch" style="width:36px;height:20px"><input type="checkbox" '+(m.is_available?'checked':'')
+      +' onchange="toggleMeal(\''+m.id+'\',this.checked)"><span class="toggle-slider"></span></label>'
+      +'<span style="font-size:11px;color:var(--muted)">'+(m.is_available?'Visible':'Hidden')+'</span>'
+      +'</div>'
+      +'<div class="meal-row" style="margin-top:8px">'
+      +'<button class="btn btn-ghost btn-sm" onclick="openEditMeal(\''+m.id+'\')">Edit</button>'
+      +'<button class="btn btn-sm" style="background:#fee2e2;color:#991b1b" onclick="deleteMeal(\''+m.id+'\')">Delete</button>'
+      +'</div>'
+      +(m.status==='pending'?'<div style="font-size:11px;color:var(--amber);margin-top:6px;font-weight:600">⏳ Pending approval</div>':'')
+      +'</div></div>';
+  }).join('')+'</div>';
+}
+async function toggleMeal(id,val){
+  await db.from('meals').update({is_available:val}).eq('id',id);
+  showToast(val?'Meal is now visible!':'Meal hidden from menu');
+  loadMeals();
+}
+async function deleteMeal(id){
+  if(!confirm('Delete this meal?'))return;
+  await db.from('meals').delete().eq('id',id);
+  showToast('Meal deleted');
+  loadMeals();
+}
+function openEditMeal(id){
+  const m=allMeals.find(x=>x.id===id);
+  if(!m)return;
+  editingMealId=id;
+  document.getElementById('meal-modal-title').textContent='Edit Meal';
+  document.getElementById('m-name').value=m.name||'';
+  document.getElementById('m-desc').value=m.description||'';
+  const price=parseFloat(m.price)||7;
+  document.getElementById('m-price').value=price.toFixed(2);
+  document.getElementById('m-price-slider').value=price;
+  document.getElementById('m-price-display').textContent='£'+price.toFixed(2);
+  document.getElementById('m-cuisine').value=m.cuisine||'';
+  document.getElementById('m-serves').value=m.serves||2;
+  selectedTags=m.dietary_tags||[];
+  document.querySelectorAll('.diet-chip').forEach(c=>{
+    const tag=c.textContent.trim().replace(/[^\w ]/g,'').trim();
+    c.classList.toggle('on',selectedTags.includes(tag));
+  });
+  // Set available days
+  const mdays=m.available_days||['Mon','Tue','Wed','Thu','Fri'];
+  DAYS.forEach(d=>{
+    const lbl=document.getElementById('mlabel-'+d);
+    const cb=lbl?.querySelector('input');
+    if(!lbl||!cb)return;
+    const on=mdays.includes(d);
+    cb.checked=on;
+    lbl.classList.toggle('day-sel',on);
+  });
+  document.getElementById('alert-meal-error').classList.remove('on');
+  document.getElementById('alert-meal-success').classList.remove('on');
+  resetMealImageUI(m.image_url||null);
+  document.getElementById('meal-modal').classList.add('on');
+}
+function updatePriceSlider(val){
+  const v=Math.min(10,Math.max(5,parseFloat(val)||7));
+  document.getElementById('m-price-slider').value=v;
+  document.getElementById('m-price-display').textContent='£'+v.toFixed(2);
+  document.getElementById('m-price').value=v.toFixed(2);
+}
+function updatePriceInput(val){
+  const v=Math.min(10,Math.max(5,parseFloat(val)||7));
+  document.getElementById('m-price').value=v.toFixed(2);
+  document.getElementById('m-price-display').textContent='£'+v.toFixed(2);
+}
+
+function openMealModal(){
+  editingMealId=null;
+  document.getElementById('meal-modal-title').textContent='Add New Meal';
+  document.getElementById('m-name').value='';
+  document.getElementById('m-desc').value='';
+  document.getElementById('m-price').value='7.00';
+  document.getElementById('m-price-slider').value=7;
+  document.getElementById('m-price-display').textContent='£7.00';
+  document.getElementById('m-cuisine').value='';
+  document.getElementById('m-serves').value=2;
+  selectedTags=[];
+  document.querySelectorAll('.diet-chip').forEach(c=>c.classList.remove('on'));
+  // Reset day labels
+  const defaultDays=['Mon','Tue','Wed','Thu','Fri'];
+  DAYS.forEach(d=>{
+    const lbl=document.getElementById('mlabel-'+d);
+    const cb=lbl?.querySelector('input');
+    if(!lbl||!cb)return;
+    const on=defaultDays.includes(d);
+    cb.checked=on;
+    lbl.classList.toggle('day-sel',on);
+  });
+  document.getElementById('alert-meal-error').classList.remove('on');
+  document.getElementById('alert-meal-success').classList.remove('on');
+  resetMealImageUI(null);
+  document.getElementById('meal-modal').classList.add('on');
+}
+function closeMealModal(){document.getElementById('meal-modal').classList.remove('on');editingMealId=null;}
+function toggleDiet(el,tag){
+  el.classList.toggle('on');
+  if(selectedTags.includes(tag))selectedTags=selectedTags.filter(t=>t!==tag);
+  else selectedTags.push(tag);
+}
+// ── Meal image helpers ──
+let mealImageFile = null;
+let mealImageUrl = null; // existing url when editing
+
+function previewMealImage(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 3*1024*1024){ showToast('Image too large — max 3MB'); return; }
+  mealImageFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('m-img-thumb').src = e.target.result;
+    document.getElementById('m-img-thumb').style.display = 'block';
+    document.getElementById('m-img-placeholder').style.display = 'none';
+    document.getElementById('m-img-remove').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeMealImage(){
+  mealImageFile = null;
+  mealImageUrl = null;
+  document.getElementById('m-img-thumb').src = '';
+  document.getElementById('m-img-thumb').style.display = 'none';
+  document.getElementById('m-img-placeholder').style.display = 'flex';
+  document.getElementById('m-img-remove').style.display = 'none';
+  document.getElementById('m-img-input').value = '';
+}
+
+function resetMealImageUI(existingUrl){
+  mealImageFile = null;
+  mealImageUrl = existingUrl || null;
+  const thumb = document.getElementById('m-img-thumb');
+  const placeholder = document.getElementById('m-img-placeholder');
+  const removeBtn = document.getElementById('m-img-remove');
+  document.getElementById('m-img-input').value = '';
+  if(existingUrl){
+    thumb.src = existingUrl;
+    thumb.style.display = 'block';
+    placeholder.style.display = 'none';
+    removeBtn.style.display = 'block';
+  } else {
+    thumb.src = '';
+    thumb.style.display = 'none';
+    placeholder.style.display = 'flex';
+    removeBtn.style.display = 'none';
+  }
+}
+
+async function saveMeal(){
+  const name=document.getElementById('m-name').value.trim();
+  const price=parseFloat(document.getElementById('m-price').value);
+  if(!name){showMealAlert('Please enter a meal name','error');return;}
+  if(!price||price<5||price>10){showMealAlert('Price must be between £5.00 and £10.00','error');return;}
+  const availDays=Array.from(document.querySelectorAll('#m-days input[name="mday"]:checked')).map(c=>c.value);
+  if(!availDays.length){showMealAlert('Please select at least one day you cook this meal','error');return;}
+  const btn=document.getElementById('save-meal-btn');
+  btn.disabled=true;btn.textContent='Saving...';
+
+  // Upload image if new file selected
+  let finalImageUrl = mealImageUrl || null;
+  if(mealImageFile){
+    document.getElementById('m-img-progress').style.display='block';
+    const ext = mealImageFile.name.split('.').pop();
+    const path = 'meals/'+currentUser.id+'/'+Date.now()+'.'+ext;
+    const{error:upErr} = await db.storage.from('meal-images').upload(path, mealImageFile, {upsert:true});
+    document.getElementById('m-img-progress').style.display='none';
+    if(upErr){ showMealAlert('Image upload failed: '+upErr.message,'error'); btn.disabled=false;btn.textContent='Save Meal'; return; }
+    const{data:urlData} = db.storage.from('meal-images').getPublicUrl(path);
+    finalImageUrl = urlData.publicUrl;
+  }
+
+  const data={
+    name,
+    description:document.getElementById('m-desc').value,
+    price,
+    cuisine:document.getElementById('m-cuisine').value,
+    dietary_tags:selectedTags,
+    tags:selectedTags,
+    available_days:availDays,
+    serves:parseInt(document.getElementById('m-serves').value)||1,
+    is_available:true,
+    cook_id:currentUser.id,
+    cook_name:currentUser.user_metadata?.full_name||currentUser.email.split('@')[0],
+    status:editingMealId?undefined:'pending',
+    image_url:finalImageUrl
+  };
+  const{error}=editingMealId
+    ?await db.from('meals').update(data).eq('id',editingMealId)
+    :await db.from('meals').insert([data]);
+  btn.disabled=false;btn.textContent='Save Meal';
+  if(error){showMealAlert('Error: '+error.message,'error');return;}
+  showMealAlert(editingMealId?'Meal updated! ✅':'Meal added! Pending admin approval. ✅','success');
+  setTimeout(()=>{closeMealModal();loadMeals();renderMealsByDay();},1200);
+}
+function showMealAlert(msg,type){
+  document.getElementById('alert-meal-error').classList.remove('on');
+  document.getElementById('alert-meal-success').classList.remove('on');
+  document.getElementById('alert-meal-'+type).textContent=msg;
+  document.getElementById('alert-meal-'+type).classList.add('on');
+}
+
+// ── Schedule ──
+function buildWeekGrid(){
+  const el=document.getElementById('week-grid');
+  el.innerHTML=DAYS.map(day=>{
+    const saved=scheduleData[day]||{on:!['Sat','Sun'].includes(day),lunch:true,dinner:true};
+    return `<div style="background:var(--white);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;transition:.2s" id="daycol-${day}">
+      <div style="background:${saved.on?'var(--red)':'var(--surface2)'};padding:10px 8px;text-align:center;transition:.3s" id="dayhd-${day}">
+        <div style="font-size:11px;font-weight:700;color:${saved.on?'#fff':'var(--muted)'};letter-spacing:.5px;text-transform:uppercase">${day}</div>
+        <label style="margin-top:6px;display:inline-flex;align-items:center;cursor:pointer">
+          <input type="checkbox" id="day-${day}" ${saved.on?'checked':''} style="display:none" onchange="toggleDay('${day}',this.checked)">
+          <span style="font-size:11px;font-weight:700;color:${saved.on?'#fff':'var(--muted)'};background:${saved.on?'rgba(255,255,255,.2)':'var(--border)'};padding:2px 8px;border-radius:20px" id="daytxt-${day}">${saved.on?'ON':'OFF'}</span>
+        </label>
+      </div>
+      <div style="padding:8px;display:flex;flex-direction:column;gap:4px" id="dayslots-${day}">
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;cursor:pointer;opacity:${saved.on?1:.4}">
+          <input type="checkbox" id="lunch-${day}" ${saved.lunch!==false?'checked':''} style="accent-color:var(--red)"> 🌞 Lunch
+        </label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;cursor:pointer;opacity:${saved.on?1:.4}">
+          <input type="checkbox" id="dinner-${day}" ${saved.dinner!==false?'checked':''} style="accent-color:var(--red)"> 🌙 Dinner
+        </label>
+      </div>
+    </div>`;
+  }).join('');
+  renderMealsByDay();
+}
+
+function toggleDay(day, on){
+  const hd=document.getElementById('dayhd-'+day);
+  const txt=document.getElementById('daytxt-'+day);
+  const slots=document.getElementById('dayslots-'+day);
+  hd.style.background=on?'var(--red)':'var(--surface2)';
+  txt.textContent=on?'ON':'OFF';
+  txt.style.color=on?'#fff':'var(--muted)';
+  txt.style.background=on?'rgba(255,255,255,.2)':'var(--border)';
+  slots.querySelectorAll('label').forEach(l=>l.style.opacity=on?1:.4);
+  if(!scheduleData[day])scheduleData[day]={};
+  scheduleData[day].on=on;
+}
+
+function renderMealsByDay(){
+  const el=document.getElementById('meals-by-day');
+  if(!el)return;
+  if(!allMeals.length){
+    el.innerHTML='<div class="empty" style="padding:30px"><div class="empty-icon">🍱</div><h4>No meals yet</h4><p>Add a meal and assign it to days</p></div>';
+    return;
+  }
+  el.innerHTML=DAYS.map(day=>{
+    const dayMeals=allMeals.filter(m=>(m.available_days||[]).includes(day)||(!m.available_days&&m.is_available));
+    const isOn=(scheduleData[day]||{on:!['Sat','Sun'].includes(day)}).on;
+    return `<div style="display:flex;align-items:center;padding:12px 20px;border-bottom:1px solid var(--border);${!isOn?'opacity:.5':''}">
+      <div style="width:44px;font-size:12px;font-weight:700;color:${isOn?'var(--red)':'var(--muted)'}">${day}</div>
+      <div style="flex:1;display:flex;flex-wrap:wrap;gap:6px">
+        ${dayMeals.length
+          ? dayMeals.map(m=>`<span style="background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600">${getCuisineEmoji(m.cuisine)} ${m.name}</span>`).join('')
+          : `<span style="font-size:12px;color:var(--muted)">No meals assigned</span>`}
+      </div>
+      <div style="font-size:11px;color:var(--muted);font-weight:600">${isOn?'🟢 Open':'🔴 Closed'}</div>
+    </div>`;
+  }).join('');
+}
+async function saveSchedule(){
+  DAYS.forEach(day=>{
+    if(!scheduleData[day])scheduleData[day]={};
+    scheduleData[day].on=document.getElementById('day-'+day)?.checked??true;
+    scheduleData[day].lunch=document.getElementById('lunch-'+day)?.checked??true;
+    scheduleData[day].dinner=document.getElementById('dinner-'+day)?.checked??true;
+  });
+  await db.from('profiles').upsert({id:currentUser.id,role:'cook',schedule_data:scheduleData,schedule:scheduleData});
+  renderMealsByDay();
+  showToast('Schedule saved! ✅');
+}
+async function saveSettings(){
+  const radius=parseFloat(document.getElementById('delivery-radius').value)||3;
+  const clampedRadius=Math.min(10,Math.max(1,radius));
+  await db.from('profiles').upsert({
+    id:currentUser.id,role:'cook',
+    max_orders_per_day:parseInt(document.getElementById('max-orders').value),
+    advance_days:parseInt(document.getElementById('advance-days').value),
+    advance_booking_days:parseInt(document.getElementById('advance-days').value),
+    default_prep_time:parseInt(document.getElementById('default-prep').value),
+    prep_time:parseInt(document.getElementById('default-prep').value),
+    delivery_radius:clampedRadius,
+    delivery_radius_zone:clampedRadius
+  });
+  // Sync the profile delivery slider too
+  const zoneSlider=document.getElementById('delivery-radius-zone');
+  if(zoneSlider){
+    zoneSlider.value=clampedRadius;
+    document.getElementById('radius-display').textContent=clampedRadius+' miles';
+    updateRadiusDisplay(clampedRadius);
+  }
+  showToast('Settings saved! ✅');
+}
+
+// ── Analytics ──
+async function loadAnalytics(){
+  const{data:orders}=await db.from('orders').select('*').eq('cook_id',currentUser.id);
+  const all=orders||[];
+  const delivered=all.filter(o=>o.status==='delivered');
+  const rejected=all.filter(o=>o.status==='rejected');
+  const totalEarn=delivered.reduce((s,o)=>s+(o.total||0)*0.80,0);
+  document.getElementById('a-total').textContent=all.length;
+  document.getElementById('a-earn').textContent='£'+totalEarn.toFixed(2);
+  document.getElementById('a-rejected').textContent=rejected.length;
+  // Top meals
+  const mealCount={};
+  all.forEach(o=>(o.items||[]).forEach(i=>{mealCount[i.name]=(mealCount[i.name]||0)+i.qty;}));
+  const topMeals=Object.entries(mealCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  document.getElementById('top-meals-list').innerHTML=topMeals.length
+    ?topMeals.map((m,i)=>'<div class="top-meal-row"><span class="top-meal-rank">'+(i+1)+'</span><span class="top-meal-name">'+m[0]+'</span><span class="top-meal-count">'+m[1]+' orders</span></div>').join('')
+    :'<div class="empty" style="padding:20px"><h4>No data yet</h4></div>';
+  // Monthly earnings
+  const monthly={};
+  delivered.forEach(o=>{
+    const mo=new Date(o.created_at).toLocaleDateString('en-GB',{month:'short',year:'2-digit'});
+    monthly[mo]=(monthly[mo]||0)+(o.total||0)*0.80;
+  });
+  const monthEntries=Object.entries(monthly).slice(-6);
+  const maxEarn=Math.max(...monthEntries.map(e=>e[1]),1);
+  document.getElementById('monthly-earnings').innerHTML=monthEntries.length
+    ?monthEntries.map(([mo,amt])=>'<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--muted)">'+mo+'</span><span style="font-weight:700">£'+amt.toFixed(2)+'</span></div><div class="earnings-bar"><div class="earnings-bar-fill" style="width:'+(amt/maxEarn*100)+'%"></div></div></div>').join('')
+    :'<div style="font-size:13px;color:var(--muted)">No data yet</div>';
+  // Payout history (weekly grouping)
+  const weeks={};
+  delivered.forEach(o=>{
+    const d=new Date(o.created_at);
+    const mon=new Date(d);mon.setDate(d.getDate()+(1+(7-d.getDay()))%7||7);
+    const key=mon.toISOString().split('T')[0];
+    weeks[key]=(weeks[key]||0)+(o.total||0)*0.80;
+  });
+  const payoutEntries=Object.entries(weeks).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,8);
+  document.getElementById('payout-history').innerHTML=payoutEntries.length
+    ?'<div style="padding:0 20px">'+payoutEntries.map(([date,amt])=>'<div class="payout-row"><div><div style="font-weight:600;font-size:13px">Week ending '+new Date(date).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+'</div><div style="font-size:11px;color:var(--muted)">Paid Monday '+new Date(date).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+'</div></div><div class="payout-amount">£'+amt.toFixed(2)+'</div></div>').join('')+'</div>'
+    :'<div class="empty" style="padding:40px"><div class="empty-icon">💸</div><h4>No payouts yet</h4><p>Payouts appear after first delivered order</p></div>';
+  // History table
+  document.getElementById('history-table').innerHTML=delivered.length
+    ?'<table class="tbl"><thead><tr><th>Date</th><th>Order</th><th>Items</th><th>Total</th><th>Your Earnings</th></tr></thead><tbody>'+
+      delivered.map(o=>'<tr><td>'+new Date(o.created_at).toLocaleDateString('en-GB')+'</td>'+
+        '<td>#'+o.id.toString().slice(-4)+'</td>'+
+        '<td>'+(o.items?o.items.map(i=>i.name).join(', '):'—')+'</td>'+
+        '<td>£'+(o.total||0).toFixed(2)+'</td>'+
+        '<td style="color:var(--green);font-weight:700">£'+((o.total||0)*0.80).toFixed(2)+'</td></tr>').join('')+
+      '</tbody></table>'
+    :'<div class="empty" style="padding:40px"><div class="empty-icon">📊</div><h4>No completed orders yet</h4></div>';
+}
+
+function updateNextPayout(){
+  const pending=allOrders.filter(o=>o.status==='delivered');
+  const thisWeek=pending.filter(o=>{
+    const d=new Date(o.created_at);
+    const now=new Date();
+    const weekAgo=new Date(now);weekAgo.setDate(now.getDate()-7);
+    return d>weekAgo;
+  });
+  const amount=thisWeek.reduce((s,o)=>s+(o.total||0)*0.80,0);
+  const el=document.getElementById('next-payout-amount');
+  const dateEl=document.getElementById('next-payout-date');
+  if(el){el.textContent='£'+amount.toFixed(2);}
+  if(dateEl){
+    const nextMon=new Date();
+    nextMon.setDate(nextMon.getDate()+(8-nextMon.getDay())%7||7);
+    dateEl.textContent=amount>0?'Paid on '+nextMon.toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'long'}):'No pending earnings';
+  }
+}
+
+// ── Availability ──
+async function toggleAvailability(){
+  const on=document.getElementById('avail-toggle').checked;
+  const statusEl=document.getElementById('cook-status');
+  statusEl.textContent=on?'● Online — Taking Orders':'○ Offline';
+  statusEl.className='cook-status'+(on?' online':'');
+  await db.from('profiles').upsert({id:currentUser.id,role:'cook',is_taking_orders:on});
+  showToast(on?'You are now taking orders!':'You are now offline');
+}
+
+// ── Profile ──
+async function loadProfile(){
+  const{data}=await db.from('profiles').select('*').eq('id',currentUser.id).single();
+  if(data){
+    profileData=data;
+    const fullName=(data.full_name||'').split(' ');
+    document.getElementById('p-fname').value=fullName[0]||'';
+    document.getElementById('p-lname').value=fullName.slice(1).join(' ')||'';
+    document.getElementById('p-bio').value=data.bio||'';
+    document.getElementById('p-cuisine').value=data.cuisine||'';
+    document.getElementById('p-postcode').value=data.address||'';
+    document.getElementById('p-phone').value=data.phone||'';
+    if(data.experience)document.getElementById('p-experience').value=data.experience;
+    if(data.languages)document.getElementById('p-languages').value=data.languages;
+    if(data.delivery_radius_zone){
+      const slider=document.getElementById('delivery-radius-zone');
+      if(slider){
+        slider.value=data.delivery_radius_zone;
+        document.getElementById('radius-display').textContent=data.delivery_radius_zone+' miles';
+        updateRadiusDisplay(data.delivery_radius_zone);
+      }
+    }
+    if(data.delivery_area){
+      const areaEl=document.getElementById('delivery-area');
+      if(areaEl){areaEl.value=data.delivery_area;updateAreaDisplay();}
+    }
+    if(data.delivery_slots){
+      if(document.getElementById('slot-lunch'))document.getElementById('slot-lunch').checked=data.delivery_slots.lunch!==false;
+      if(document.getElementById('slot-dinner'))document.getElementById('slot-dinner').checked=data.delivery_slots.dinner!==false;
+    }
+    if(data.schedule_data){scheduleData=data.schedule_data;}
+    else if(data.schedule){scheduleData=data.schedule;}
+    if(data.max_orders_per_day&&document.getElementById('max-orders'))document.getElementById('max-orders').value=data.max_orders_per_day;
+    const advDays=data.advance_days||data.advance_booking_days||1;
+    if(document.getElementById('advance-days'))document.getElementById('advance-days').value=advDays;
+    const prepTime=data.prep_time||data.default_prep_time||30;
+    if(document.getElementById('default-prep'))document.getElementById('default-prep').value=prepTime;
+    // Sync Quick Settings delivery radius from zone slider value
+    const qrVal=data.delivery_radius_zone||data.delivery_radius||3;
+    if(document.getElementById('delivery-radius'))document.getElementById('delivery-radius').value=Math.round(qrVal);
+    buildWeekGrid();
+    // Profile photo
+    if(data.avatar_url){
+      setProfilePhotoEl(data.avatar_url);
+    } else {
+      const initials=(data.full_name||currentUser.email||'C').charAt(0).toUpperCase();
+      document.getElementById('profile-photo-circle').textContent=initials;
+      document.getElementById('cook-av').textContent=initials;
+    }
+    // Bank details
+    if(data.bank_name){
+      document.getElementById('bc-name').textContent=data.bank_name||'—';
+      document.getElementById('bc-acc').textContent='●●●● '+((data.bank_account||'').slice(-4)||'●●●●');
+      document.getElementById('bc-sort').textContent=data.bank_sort||'●●-●●-●●';
+      document.getElementById('bank-saved-card').style.display='block';
+      document.getElementById('bank-form-box').style.display='none';
+    }
+    // Holiday mode
+    if(data.holiday_from&&data.holiday_to){
+      const from=new Date(data.holiday_from);const to=new Date(data.holiday_to);
+      if(to>=new Date()){
+        showHolidayActive(data.holiday_from,data.holiday_to);
+      }
+    }
+    // Notification prefs
+    if(data.notif_prefs){loadNotifPrefsFromData(data.notif_prefs);}
+    // Approval status
+    const st=data.approval_status||'pending';
+    const icons={pending:'⏳',approved:'✅',rejected:'❌'};
+    const labels={pending:'Pending Approval',approved:'Approved',rejected:'Rejected'};
+    const descs={pending:'Admin will review your profile and documents',approved:'You are approved and visible to customers!',rejected:'Please contact support for more information'};
+    document.getElementById('approval-status').innerHTML='<div style="font-size:36px;margin-bottom:10px">'+icons[st]+'</div><div style="font-weight:700;margin-bottom:6px">'+labels[st]+'</div><div style="font-size:13px;color:var(--muted)">'+descs[st]+'</div>';
+  }else{
+    const meta=currentUser.user_metadata||{};
+    const fullName=(meta.full_name||'').split(' ');
+    document.getElementById('p-fname').value=fullName[0]||'';
+    document.getElementById('p-lname').value=fullName.slice(1).join(' ')||'';
+  }
+}
+
+function setProfilePhotoEl(url){
+  const circle=document.getElementById('profile-photo-circle');
+  const av=document.getElementById('cook-av');
+  const prevAv=document.getElementById('prev-av');
+  circle.innerHTML='<img src="'+url+'" alt="Profile photo">';
+  av.innerHTML='<img src="'+url+'" alt="">';
+  if(prevAv)prevAv.innerHTML='<img src="'+url+'" alt="Profile photo" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+}
+
+async function uploadProfilePhoto(input){
+  const file=input.files[0];
+  if(!file)return;
+  if(file.size>2*1024*1024){showToast('File too large. Max 2MB');return;}
+  document.getElementById('photo-upload-progress').style.display='block';
+  const ext=file.name.split('.').pop();
+  const path='avatars/'+currentUser.id+'/photo.'+ext;
+  const{error:upErr}=await db.storage.from('avatars').upload(path,file,{upsert:true});
+  if(upErr){document.getElementById('photo-upload-progress').style.display='none';showToast('Upload failed: '+upErr.message);return;}
+  const{data:urlData}=db.storage.from('avatars').getPublicUrl(path);
+  const avatarUrl=urlData.publicUrl+'?t='+Date.now();
+  await db.from('profiles').upsert({id:currentUser.id,role:'cook',avatar_url:avatarUrl});
+  setProfilePhotoEl(avatarUrl);
+  document.getElementById('photo-upload-progress').style.display='none';
+  showToast('Profile photo updated! ✅');
+}
+
+async function removeProfilePhoto(){
+  if(!confirm('Remove profile photo?'))return;
+  await db.from('profiles').upsert({id:currentUser.id,role:'cook',avatar_url:null});
+  const name=document.getElementById('p-fname').value||'C';
+  document.getElementById('profile-photo-circle').textContent=name.charAt(0).toUpperCase();
+  document.getElementById('cook-av').textContent=name.charAt(0).toUpperCase();
+  showToast('Photo removed');
+}
+
+async function saveProfile(){
+  const fname=document.getElementById('p-fname').value.trim();
+  const lname=document.getElementById('p-lname').value.trim();
+  const{error}=await db.from('profiles').upsert({
+    id:currentUser.id,role:'cook',
+    full_name:(fname+' '+lname).trim(),
+    bio:document.getElementById('p-bio').value,
+    cuisine:document.getElementById('p-cuisine').value,
+    address:document.getElementById('p-postcode').value,
+    phone:document.getElementById('p-phone').value,
+    experience:document.getElementById('p-experience').value,
+    languages:document.getElementById('p-languages').value
+  });
+  if(error){showProfileAlert('Error: '+error.message,'error');return;}
+  await db.auth.updateUser({data:{full_name:(fname+' '+lname).trim()}});
+  document.getElementById('cook-name').textContent=(fname+' '+lname).trim();
+  document.getElementById('cook-av').textContent=fname.charAt(0).toUpperCase();
+  showProfileAlert('Profile saved! ✅','success');
+  renderPreview();
+}
+
+function showProfileAlert(msg,type){
+  document.getElementById('alert-profile-error').classList.remove('on');
+  document.getElementById('alert-profile-success').classList.remove('on');
+  document.getElementById('alert-profile-'+type).textContent=msg;
+  document.getElementById('alert-profile-'+type).classList.add('on');
+}
+
+async function loadProfileDocs(){
+  document.getElementById('docs-list').innerHTML='<div style="font-size:13px;color:var(--muted)">No documents uploaded yet.</div>';
+}
+async function uploadDoc(input){
+  const file=input.files[0];
+  if(!file)return;
+  showToast('Uploading document...');
+  const path='cook-docs/'+currentUser.id+'/'+Date.now()+'-'+file.name;
+  const{error}=await db.storage.from('documents').upload(path,file);
+  if(error){showToast('Upload failed: '+error.message);return;}
+  showToast('Document uploaded! ✅');
+  loadProfileDocs();
+}
+
+// ── Delivery Settings ──
+function updateRadiusDisplay(val){
+  document.getElementById('radius-display').textContent=val+' miles';
+  // Sync quick settings too
+  const qr=document.getElementById('delivery-radius');
+  if(qr)qr.value=Math.round(val);
+  // Update est customers
+  const est=Math.round(val*val*3.14*8);
+  const estEl=document.getElementById('radius-est-customers');
+  if(estEl)estEl.textContent='~'+Math.min(est,500);
+  // Update area display radius text
+  const artEl=document.getElementById('area-radius-text');
+  if(artEl)artEl.textContent=val+' miles';
+}
+function updateAreaDisplay(){
+  const area=document.getElementById('delivery-area').value;
+  const display=document.getElementById('area-display');
+  if(!display)return;
+  if(area){
+    display.style.display='block';
+    document.getElementById('area-display-name').textContent=area;
+  } else {
+    display.style.display='none';
+  }
+}
+function renderPostcodeTags(){} // legacy stub — no longer used
+function addPostcode(){}        // legacy stub
+function removePostcode(){}     // legacy stub
+async function saveDeliveryZones(){
+  const radius=parseFloat(document.getElementById('delivery-radius-zone').value)||3;
+  const area=document.getElementById('delivery-area')?.value||'';
+  const lunchSlot=document.getElementById('slot-lunch')?.checked??true;
+  const dinnerSlot=document.getElementById('slot-dinner')?.checked??true;
+  await db.from('profiles').upsert({
+    id:currentUser.id,role:'cook',
+    delivery_radius_zone:radius,
+    delivery_radius:Math.round(radius),
+    delivery_area:area,
+    delivery_slots:{lunch:lunchSlot,dinner:dinnerSlot}
+  });
+  // Sync quick settings radius input
+  const qr=document.getElementById('delivery-radius');
+  if(qr)qr.value=Math.round(radius);
+  // Update displays
+  updateRadiusDisplay(radius);
+  updateAreaDisplay();
+  showToast('Delivery settings saved! ✅');
+  renderPreview();
+}
+
+// ── Holiday Mode ──
+function showHolidayActive(from,to){
+  document.getElementById('holiday-active-box').style.display='block';
+  document.getElementById('holiday-inactive-box').style.display='none';
+  document.getElementById('holiday-active-dates').textContent=
+    new Date(from).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+
+    ' – '+new Date(to).toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+  document.getElementById('holiday-sidebar-banner').classList.add('on');
+}
+async function activateHoliday(){
+  const from=document.getElementById('holiday-from').value;
+  const to=document.getElementById('holiday-to').value;
+  if(!from||!to){showToast('Please select both dates');return;}
+  if(new Date(to)<=new Date(from)){showToast('End date must be after start date');return;}
+  const msg=document.getElementById('holiday-msg').value;
+  await db.from('profiles').upsert({id:currentUser.id,role:'cook',holiday_from:from,holiday_to:to,holiday_msg:msg,is_taking_orders:false});
+  document.getElementById('avail-toggle').checked=false;
+  document.getElementById('cook-status').textContent='○ Offline';
+  document.getElementById('cook-status').className='cook-status';
+  showHolidayActive(from,to);
+  showToast('Holiday mode activated! 🏖️');
+}
+async function cancelHoliday(){
+  await db.from('profiles').upsert({id:currentUser.id,role:'cook',holiday_from:null,holiday_to:null,holiday_msg:null,is_taking_orders:true});
+  document.getElementById('holiday-active-box').style.display='none';
+  document.getElementById('holiday-inactive-box').style.display='block';
+  document.getElementById('holiday-sidebar-banner').classList.remove('on');
+  document.getElementById('avail-toggle').checked=true;
+  document.getElementById('cook-status').textContent='● Online — Taking Orders';
+  document.getElementById('cook-status').className='cook-status online';
+  showToast('Holiday mode cancelled ✅');
+}
+
+// ── Bank Details ──
+async function saveBankDetails(){
+  const name=document.getElementById('b-name').value.trim();
+  const acc=document.getElementById('b-acc').value.replace(/\D/g,'');
+  const sort=document.getElementById('b-sort').value.replace(/\D/g,'');
+  const bank=document.getElementById('b-bank').value.trim();
+  if(!name||!acc||!sort){document.getElementById('alert-bank-error').textContent='Please fill in all required fields';document.getElementById('alert-bank-error').classList.add('on');return;}
+  if(acc.length!==8){document.getElementById('alert-bank-error').textContent='Account number must be 8 digits';document.getElementById('alert-bank-error').classList.add('on');return;}
+  if(sort.length!==6){document.getElementById('alert-bank-error').textContent='Sort code must be 6 digits';document.getElementById('alert-bank-error').classList.add('on');return;}
+  await db.from('profiles').upsert({id:currentUser.id,role:'cook',bank_name:name,bank_account:acc,bank_sort:sort.slice(0,2)+'-'+sort.slice(2,4)+'-'+sort.slice(4),bank_provider:bank});
+  document.getElementById('bc-name').textContent=name;
+  document.getElementById('bc-acc').textContent='●●●● '+acc.slice(-4);
+  document.getElementById('bc-sort').textContent=sort.slice(0,2)+'-'+sort.slice(2,4)+'-'+sort.slice(4);
+  document.getElementById('bank-saved-card').style.display='block';
+  document.getElementById('bank-form-box').style.display='none';
+  document.getElementById('alert-bank-error').classList.remove('on');
+  showToast('Bank details saved! ✅');
+}
+function editBankDetails(){
+  document.getElementById('bank-saved-card').style.display='none';
+  document.getElementById('bank-form-box').style.display='block';
+  document.getElementById('bank-cancel-btn').style.display='inline-flex';
+}
+function cancelBankEdit(){
+  document.getElementById('bank-saved-card').style.display='block';
+  document.getElementById('bank-form-box').style.display='none';
+}
+
+// ── Notifications ──
+function loadNotifPrefs(){
+  // Already loaded from profile if available
+}
+function loadNotifPrefsFromData(prefs){
+  const fields=['new-order','cancelled','daily','payout','updates','email','sms'];
+  fields.forEach(f=>{
+    const el=document.getElementById('notif-'+f);
+    if(el&&prefs[f]!==undefined)el.checked=prefs[f];
+  });
+}
+async function saveNotifPref(){
+  const prefs={};
+  ['new-order','cancelled','daily','payout','updates','email','sms'].forEach(f=>{
+    const el=document.getElementById('notif-'+f);
+    if(el)prefs[f]=el.checked;
+  });
+  await db.from('profiles').upsert({id:currentUser.id,role:'cook',notif_prefs:prefs});
+  showToast('Preferences saved ✅');
+}
+
+// ── Public Profile Preview ──
+function renderPreview(){
+  const fname=document.getElementById('p-fname').value||'';
+  const lname=document.getElementById('p-lname').value||'';
+  const name=(fname+' '+lname).trim()||'Your Name';
+  const bio=document.getElementById('p-bio').value||'Your bio will appear here. Tell customers about your cooking style, specialties, and what makes your food special!';
+  const cuisine=document.getElementById('p-cuisine').value||'Cuisine Specialty';
+  const slug=name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  document.getElementById('prev-name').textContent=name;
+  document.getElementById('prev-bio').textContent=bio;
+  document.getElementById('prev-cuisine').textContent=cuisine;
+  document.getElementById('prev-url').textContent='mechchef.vercel.app/cook/'+slug;
+  const prevAv=document.getElementById('prev-av');
+  // Use photo if available
+  const photoEl=document.getElementById('profile-photo-circle').querySelector('img');
+  if(photoEl){prevAv.innerHTML='<img src="'+photoEl.src+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
+  else{prevAv.textContent=fname.charAt(0).toUpperCase()||'C';}
+  // Stats
+  const delivered=allOrders.filter(o=>o.status==='delivered').length;
+  const active=allMeals.filter(m=>m.is_available&&m.status==='approved').length;
+  document.getElementById('prev-orders').textContent=delivered;
+  document.getElementById('prev-meals').textContent=active;
+  document.getElementById('prev-rating').textContent='⭐';
+  // Delivery radius instead of zones
+  const zonesEl=document.getElementById('prev-zones');
+  const radius=document.getElementById('delivery-radius-zone')?.value||3;
+  const area=document.getElementById('delivery-area')?.value||'';
+  zonesEl.innerHTML=`<span style="background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600">🛵 ${radius} mile radius</span>
+    ${area?`<span style="background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600">📍 ${area}</span>`:''}
+    <span style="background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600">💰 £5–£10 home meals</span>`;
+  // Completeness
+  const checks=[
+    {label:'Profile photo',done:!!document.getElementById('profile-photo-circle').querySelector('img')},
+    {label:'Bio written',done:!!document.getElementById('p-bio').value},
+    {label:'Phone number',done:!!document.getElementById('p-phone').value},
+    {label:'Delivery area set',done:!!(document.getElementById('delivery-area')?.value||document.getElementById('delivery-radius-zone')?.value)},
+    {label:'Bank details',done:document.getElementById('bank-saved-card').style.display!=='none'},
+    {label:'At least 1 meal',done:allMeals.length>0},
+  ];
+  const pct=Math.round(checks.filter(c=>c.done).length/checks.length*100);
+  document.getElementById('profile-completeness-list').innerHTML=checks.map(c=>'<div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="font-size:16px">'+(c.done?'✅':'⬜')+'</span><span style="'+(c.done?'':'color:var(--muted)')+'">'+(c.done?c.label:'<strong>'+c.label+'</strong> — missing')+'</span></div>').join('');
+  document.getElementById('completeness-bar').style.width=pct+'%';
+  document.getElementById('completeness-pct').textContent=pct+'% complete';
+}
+
+function copyProfileUrl(){
+  const url=document.getElementById('prev-url').textContent;
+  navigator.clipboard.writeText('https://'+url).then(()=>showToast('Profile link copied! 🔗'));
+}
+function openPublicProfile(){showPage('profile');showProfileTab('preview');}
+
+// ── Auth ──
+async function handleLogout(){
+  await db.auth.signOut();
+  window.location.href='auth.html';
+}
+
+// ── Toast ──
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),2500);
+}
+
+// ── Start ──
+init();
+</script>
+</body>
+</html>
