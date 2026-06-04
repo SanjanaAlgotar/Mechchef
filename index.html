@@ -1379,6 +1379,7 @@ function addToCart(meal,qty){
   if(!meal){return;}
   const ex=cart.find(i=>String(i.id)===String(meal.id));
   if(ex)ex.qty+=qty;else cart.push({...meal,qty});
+  localStorage.setItem("mc_cart",JSON.stringify(cart));
   renderCart();toast(`✅ Added ${meal.n.split(' ').slice(0,4).join(' ')}…`);
 }
 function changeQty(id,d){
