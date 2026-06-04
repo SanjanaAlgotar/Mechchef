@@ -1323,7 +1323,7 @@ function renderMeals(){
   if(!meals.length){el.innerHTML='<div class="empty"><div class="empty-icon">🍽️</div><h4>No meals here</h4><button class="btn btn-red" style="margin-top:14px" onclick="openMealModal()">+ Add Meal</button></div>';return;}
   el.innerHTML='<div class="meals-grid">'+meals.map(m=>{
     return '<div class="meal-card">'
-      +'<div class="meal-img-wrap" style="font-size:36px">'+getCuisineEmoji(m.cuisine)+'<div class="meal-avail-dot'+(m.is_available?'':' off')+'"></div></div>'
+      +'<div class="meal-img-wrap">'+( m.photo_url?'<img src="'+m.photo_url+'" style="width:100%;height:100%;object-fit:cover">'  :'<span style="font-size:36px">'+getCuisineEmoji(m.cuisine)+'</span>')+'<div class="meal-avail-dot'+(m.is_available?'':' off')+'"></div></div>'
       +'<div class="meal-info">'
       +'<div class="meal-name">'+m.name+'</div>'
       +'<div class="meal-meta">'+(m.cuisine||'')+(m.serves?' · Serves '+m.serves:'')+'</div>'
