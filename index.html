@@ -1385,7 +1385,8 @@ function changeQty(id,d){
   const i=cart.findIndex(x=>String(x.id)===String(id));
   if(i<0)return;
   cart[i].qty+=d;
-  if(cart[i].qty<=0)cart.splice(i,1);   localStorage.setItem('mc_cart',JSON.stringify(cart));   renderCart(); }
+  if(cart[i].qty<=0)cart.splice(i,1);
+  localStorage.setItem('mc_cart',JSON.stringify(cart));
   renderCart();
 }
 function renderCart(){
