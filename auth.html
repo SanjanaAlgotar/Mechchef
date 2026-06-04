@@ -469,7 +469,7 @@ async function handleLogin() {
   const role = data.user?.user_metadata?.role || 'customer';
   if (role === 'admin') window.location.href = 'admin.html';
   else if (role === 'cook') window.location.href = 'cook-dashboard.html';
-  else window.location.href = 'customer-dashboard.html';
+  else window.location.href = 'index.html';
 }
 
 async function handleSignup() {
