@@ -254,7 +254,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.5);padding:64px 40px 28px;
 /* ---- RESPONSIVE ---- */
 @media(max-width:768px){
   nav{padding:0 16px}
-  nav .nav-center{display:none}
+  nav.navbar .nav-center{display:none}
   .nav-right .btn{padding:7px 12px;font-size:12px}
   .loc-btn{display:none}
   .logo-text{font-size:17px}
