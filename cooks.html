@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Find Home Cooks – MechChef | Harrow & Newham</title>
+  <meta name="description" content="Browse verified home cooks in Harrow & Newham, London. Order fresh home-cooked meals directly from local chefs."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .page-hero{background:var(--cream);border-bottom:1px solid var(--border);padding:40px 40px 32px}
+    .page-hero h1{font-size:34px;font-weight:900;letter-spacing:-1px;margin-bottom:6px}
+    .page-hero p{font-size:14px;color:var(--muted)}
+    .area-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+    .area-tab{background:var(--white);border:1.5px solid var(--border);border-radius:50px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s}
+    .area-tab:hover,.area-tab.on{background:var(--dark);border-color:var(--dark);color:#fff}
+    .profile-modal-wrap{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;pointer-events:none;opacity:0;transition:opacity .2s;overflow-y:auto}
+    .profile-modal-wrap.on{opacity:1;pointer-events:all}
+    .profile-modal-wrap .modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px)}
+    .prof-modal{position:relative;z-index:1;background:var(--white);border-radius:24px;width:100%;max-width:600px;overflow:hidden;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.25)}
+    .prof-modal-close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.5);border:none;border-radius:50%;width:32px;height:32px;color:#fff;cursor:pointer;font-size:16px;z-index:2;display:flex;align-items:center;justify-content:center}
+    .prof-modal-hero{height:160px;background:linear-gradient(135deg,#ffedd5,#fed7aa);display:flex;align-items:center;justify-content:center;font-size:72px;position:relative}
+    .prof-modal-body{padding:24px}
+    .prof-modal-body h2{font-size:22px;font-weight:900;margin-bottom:4px;font-family:'Playfair Display',serif}
+    .prof-modal-meta{font-size:13px;color:var(--muted);margin-bottom:12px}
+    .prof-modal-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+    .prof-modal-bio{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+    .prof-modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+    .pms{background:var(--surface);border-radius:12px;padding:14px;text-align:center}
+    .pms strong{display:block;font-size:20px;font-weight:900;color:var(--dark)}
+    .pms span{font-size:11px;color:var(--muted)}
+    .prof-modal-meals h4{font-size:14px;font-weight:800;margin-bottom:14px}
+    @media(max-width:768px){
+      .page-hero{padding:28px 16px 20px}
+      .page-hero h1{font-size:24px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">🇬🇧 Serving Harrow & Newham, London <span>Launching Soon</span></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🍽</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <div class="nav-center">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="meals.html">Browse Meals</a>
+    <a class="nav-link active" href="cooks.html">Find Cooks</a>
+    <a class="nav-link" href="how-it-works.html">How It Works</a>
+    <a class="nav-link" href="reviews.html">Reviews</a>
+    <a class="nav-link" href="cook-with-us.html">Cook with us 🍳</a>
+  </div>
+  <div class="nav-right">
+    <button class="loc-btn" onclick="toast('📍 Location: Harrow, London')">📍 Harrow, London</button>
+    <button class="cart-bubble" onclick="toggleCart()" aria-label="Open basket">🛒<span class="cart-num" id="cn">0</span></button>
+    <div id="nav-auth" style="display:flex;align-items:center;gap:8px">
+      <button class="btn btn-ghost" onclick="window.location.href='auth.html'">Log in</button>
+      <button class="btn btn-red" onclick="window.location.href='auth.html'">Sign up free</button>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h1>Find Home Cooks 🍳</h1>
+  <p id="cooks-count">Verified home cooks in Harrow &amp; Newham — launching soon</p>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="sec">
+  <!-- Area tabs -->
+  <div class="area-tabs">
+    <div class="area-tab on" onclick="filterArea('All',this)">All Areas</div>
+    <div class="area-tab" onclick="filterArea('Harrow',this)">📍 Harrow</div>
+    <div class="area-tab" onclick="filterArea('Newham',this)">📍 Newham</div>
+  </div>
+
+  <!-- Cuisine filter -->
+  <div class="fbar" id="cuisine-fbar"></div>
+
+  <!-- Cooks grid -->
+  <div class="ckgrid" id="cooks-grid"></div>
+
+  <!-- Empty state -->
+  <div id="no-cooks" style="display:none;text-align:center;padding:60px 0">
+    <div style="font-size:48px;margin-bottom:16px">👩‍🍳</div>
+    <p style="color:var(--muted);font-size:15px">No cooks found in this area yet.<br>We're onboarding cooks right now!</p>
+    <a href="cook-with-us.html" class="btn btn-red" style="display:inline-block;margin-top:16px;text-decoration:none">Join as a cook →</a>
+  </div>
+
+  <!-- Become a cook CTA -->
+  <div style="background:var(--dark);border-radius:20px;padding:40px;text-align:center;margin-top:48px;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,67,0.12) 0%,transparent 60%);pointer-events:none"></div>
+    <div style="position:relative;z-index:1">
+      <div style="font-size:36px;margin-bottom:12px">🍳</div>
+      <h3 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;font-family:'Playfair Display',serif">Cook from home. Earn on your terms.</h3>
+      <p style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:24px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.7">Join our growing community of home cooks in Harrow & Newham. Set your hours, cook what you love, and earn every week.</p>
+      <a href="cook-with-us.html" class="btn btn-red" style="display:inline-block;text-decoration:none;padding:13px 32px;font-size:14px;font-weight:700">Join the cook waitlist →</a>
+    </div>
+  </div>
+</div>
+
+<!-- COOK PROFILE MODAL -->
+<div class="profile-modal-wrap" id="profile-modal">
+  <div class="modal-bg" onclick="closeProfileModal()"></div>
+  <div class="prof-modal">
+    <button class="prof-modal-close" onclick="closeProfileModal()">✕</button>
+    <div class="prof-modal-hero" id="pm-hero-img"></div>
+    <div class="prof-modal-body">
+      <h2 id="pm-name"></h2>
+      <div class="prof-modal-meta" id="pm-meta"></div>
+      <div class="prof-modal-pills" id="pm-pills"></div>
+      <div class="prof-modal-bio" id="pm-bio"></div>
+      <div class="prof-modal-stats" id="pm-stats"></div>
+      <div class="prof-modal-meals">
+        <h4>🍽 Their Menu</h4>
+        <div class="mgrid" id="pm-meals" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))"></div>
+      </div>
+      <div style="margin-top:20px">
+        <button class="btn btn-red" style="width:100%;padding:13px;font-size:14px;font-weight:700" onclick="closeProfileModal();window.location.href='meals.html'">Browse All Meals →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart">
+  <div class="cp-hd"><h3>🛒 Your Basket</h3><button onclick="toggleCart()">✕</button></div>
+  <div class="cp-body" id="cp-body"></div>
+  <div id="cp-foot" style="display:none">
+    <div class="cp-foot">
+      <div class="cp-row"><span>Subtotal</span><span id="cp-sub">£0.00</span></div>
+      <div class="cp-row"><span>Delivery fee</span><span>£1.99</span></div>
+      <div class="cp-total"><span>Total (inc. VAT)</span><span id="cp-tot">£0.00</span></div>
+      <button class="btn btn-red cp-cta" onclick="window.location.href='meals.html'">Browse Meals →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><div class="icon">🍽</div>MechChef</div>
+      <div class="ft-desc">London's first pre-order home cook tiffin marketplace. Fresh meals from verified home cooks in Harrow &amp; Newham.</div>
+      <div class="ft-social">
+        <a class="ftsoc" href="https://x.com/mechchef" target="_blank">𝕏</a>
+        <a class="ftsoc" href="https://instagram.com/mechchef" target="_blank">📸</a>
+        <a class="ftsoc" href="https://facebook.com/mechchef" target="_blank">📘</a>
+      </div>
+    </div>
+    <div class="ft-col"><h5>For Customers</h5><a href="meals.html">Browse Meals</a><a href="cooks.html">Find Cooks</a><a href="reviews.html">Reviews</a></div>
+    <div class="ft-col"><h5>For Cooks</h5><a href="cook-with-us.html">Become a Cook</a><a href="cook-dashboard.html">Cook Dashboard</a></div>
+    <div class="ft-col"><h5>Company</h5><a href="how-it-works.html">How It Works</a><a href="index.html">Home</a></div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2025 MechChef Ltd. Launch areas: Harrow &amp; Newham, London 🇬🇧</span>
+    <span>Pre-order home-cooked tiffins · Delivery fee £1.99</span>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+const CUISINES_LIST = ['All','Indian','Pakistani','Caribbean','Italian','Chinese','Turkish','Mediterranean','Thai','British'];
+const MEALS_DATA = [
+  {id:1,n:'Butter Chicken & Basmati Rice',cid:1,img:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&h=200&fit=crop',p:8.50,tags:['Halal'],e:'🍛'},
+  {id:2,n:'Jerk Chicken & Rice & Peas',cid:2,img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=300&h=200&fit=crop',p:9.00,tags:['Gluten Free'],e:'🍗'},
+  {id:5,n:'Dal Makhani & Garlic Naan',cid:1,img:'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=300&h=200&fit=crop',p:7.00,tags:['Vegetarian'],e:'🫘'},
+  {id:7,n:'Dum Chicken Biryani',cid:6,img:'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300&h=200&fit=crop',p:9.50,tags:['Halal'],e:'🍚'},
+];
+const fmt = n => `£${n.toFixed(2)}`;
+
+let COOKS = [
+  {id:1,full_name:'Chef Priya Sharma',cuisine:'Indian',area:'Harrow',bio:'Specialising in authentic North Indian cuisine — butter chicken, biryani, and homemade breads. Cooking for 15 years.',avatar_url:'',rating:4.9,orders:320},
+  {id:2,full_name:'Chef Amara Thomas',cuisine:'Caribbean',area:'Newham',bio:'Jamaican home cook bringing jerk chicken, rice & peas, and Caribbean stews straight from my kitchen to your door.',avatar_url:'',rating:4.8,orders:210},
+  {id:3,full_name:'Chef Sofia Rossi',cuisine:'Italian',area:'Harrow',bio:'Trained in Florence, now cooking handmade pasta, lasagne and wood-fired pizzas in Harrow. Buonissimo!',avatar_url:'',rating:4.9,orders:185},
+  {id:4,full_name:'Chef Wei Liu',cuisine:'Chinese',area:'Newham',bio:'Dim sum specialist and Cantonese home cook. Handfolded dumplings, steamed bao, and classic wok dishes.',avatar_url:'',rating:4.7,orders:142},
+  {id:5,full_name:'Chef Mehmet Yilmaz',cuisine:'Turkish',area:'Harrow',bio:'Istanbul-born home cook serving adana kebabs, lahmacun, and slow-roasted lamb dishes from my Harrow kitchen.',avatar_url:'',rating:4.8,orders:98},
+  {id:6,full_name:'Chef Fatima Hussain',cuisine:'Pakistani',area:'Newham',bio:'Karachi-style home cooking — dum biryani, karahi, and seekh kebabs. Every dish made fresh on order.',avatar_url:'',rating:5.0,orders:276},
+];
+
+let activeArea = 'All', activeCuisine = 'All';
+
+window.addEventListener('DOMContentLoaded', async () => {
+  buildCuisineFilters();
+  renderCooks();
+  try {
+    const { data } = await db.from('profiles').select('id,full_name,cuisine,address,bio,avatar_url').eq('role','cook').eq('approval_status','approved');
+    if (data && data.length) {
+      COOKS = data.map(c => ({ id:c.id, full_name:c.full_name, cuisine:c.cuisine||'Home Cook', area:c.address||'London', bio:c.bio||'', avatar_url:c.avatar_url||'', rating:4.9, orders:0 }));
+      renderCooks();
+      document.getElementById('cooks-count').textContent = data.length + ' verified home cook' + (data.length!==1?'s':'') + ' in Harrow & Newham';
+    }
+  } catch(e) {}
+});
+
+function buildCuisineFilters() {
+  document.getElementById('cuisine-fbar').innerHTML = CUISINES_LIST.map(c =>
+    `<div class="fpill ${c===activeCuisine?'on':''}" onclick="setCuisine('${c}')">${c}</div>`
+  ).join('');
+}
+function setCuisine(c) { activeCuisine = c; buildCuisineFilters(); renderCooks(); }
+function filterArea(a, el) {
+  activeArea = a;
+  document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  renderCooks();
+}
+
+function renderCooks() {
+  let f = [...COOKS];
+  if (activeArea !== 'All') f = f.filter(c => (c.area||'').includes(activeArea));
+  if (activeCuisine !== 'All') f = f.filter(c => c.cuisine === activeCuisine);
+  const grid = document.getElementById('cooks-grid'), empty = document.getElementById('no-cooks');
+  if (!f.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  grid.innerHTML = f.map(c => cookCard(c)).join('');
+}
+
+function cookCard(c) {
+  const initials = (c.full_name||'Chef').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  const top = c.avatar_url
+    ? `<img src="${c.avatar_url}" alt="${c.full_name}" style="width:100%;height:100%;object-fit:cover">`
+    : `<span style="font-family:'Playfair Display',serif;font-weight:700;color:var(--red);font-size:32px">${initials}</span>`;
+  return `<div class="ckcard" onclick="openProfileModal('${c.id}')">
+    <div class="ckcard-top" style="background:linear-gradient(135deg,#ffedd5,#fed7aa);display:flex;align-items:center;justify-content:center;overflow:hidden">
+      ${top}
+      <div class="ck-verified">✓ Verified</div>
+    </div>
+    <div class="ckcard-body">
+      <div class="ck-name">${c.full_name||'Home Chef'}</div>
+      <div class="ck-meta">${c.cuisine||'Home Cook'} · ${c.area||'London'}</div>
+      ${c.bio ? `<p style="font-size:12px;color:var(--muted);margin:6px 0 10px;line-height:1.5">${c.bio.slice(0,80)}${c.bio.length>80?'...':''}</p>` : ''}
+      <div class="ck-stats">
+        <div class="ckstat"><strong>⭐ ${c.rating||4.9}</strong><span>Rating</span></div>
+        <div class="ckstat"><strong>${c.orders||'—'}</strong><span>Orders</span></div>
+        <div class="ckstat"><strong>£1.99</strong><span>Delivery</span></div>
+      </div>
+      <button class="btn btn-red" style="width:100%;margin-top:12px;padding:10px;font-size:13px" onclick="event.stopPropagation();openProfileModal('${c.id}')">View Profile →</button>
+    </div>
+  </div>`;
+}
+
+function openProfileModal(id) {
+  const c = COOKS.find(x => String(x.id) === String(id));
+  if (!c) return;
+  const initials = (c.full_name||'Chef').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('pm-hero-img').innerHTML = c.avatar_url
+    ? `<img src="${c.avatar_url}" alt="${c.full_name}" style="width:100%;height:100%;object-fit:cover"/>`
+    : `<span style="font-size:64px;font-family:'Playfair Display',serif;font-weight:700;color:var(--red)">${initials}</span>`;
+  document.getElementById('pm-name').textContent = c.full_name || 'Home Chef';
+  document.getElementById('pm-meta').textContent = `${c.cuisine||'Home Cook'} · ${c.area||'London'}`;
+  document.getElementById('pm-pills').innerHTML = `<span class="ppill hl">✓ Verified Cook</span><span class="ppill">📍 ${c.area||'London'}</span><span class="ppill">🍽 ${c.cuisine||'Home Cook'}</span>`;
+  document.getElementById('pm-bio').textContent = c.bio || 'Fresh home-cooked meals prepared by a local MechChef cook.';
+  document.getElementById('pm-stats').innerHTML = [
+    [c.rating||4.9,'⭐ Rating'],['£1.99','Delivery'],['Pre-order','Order type']
+  ].map(s => `<div class="pms"><strong>${s[0]}</strong><span>${s[1]}</span></div>`).join('');
+  const meals = MEALS_DATA.filter(m => String(m.cid) === String(c.id));
+  document.getElementById('pm-meals').innerHTML = meals.length
+    ? meals.map(m => `<div class="mcard" style="cursor:pointer" onclick="window.location.href='meals.html'">
+        <div class="mcard-img" style="background:#f0ede8;overflow:hidden;padding:0"><img src="${m.img}" alt="${m.n}" style="width:100%;height:100%;object-fit:cover" loading="lazy"/></div>
+        <div class="mcard-body">
+          <div class="mcard-name" style="font-size:13px">${m.n}</div>
+          <div class="mcard-price" style="font-size:18px;margin-top:8px">${fmt(m.p)}</div>
+        </div>
+      </div>`).join('')
+    : '<p style="color:var(--muted);font-size:13px;grid-column:1/-1">No meals listed yet — coming soon!</p>';
+  document.getElementById('profile-modal').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProfileModal() {
+  document.getElementById('profile-modal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+</script>
+</body>
+</html>
