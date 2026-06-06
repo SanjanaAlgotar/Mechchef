@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>How It Works – MechChef | Home Cooked Food Delivered</title>
+  <meta name="description" content="Learn how MechChef works — browse meals, pre-order from local home cooks, and get fresh food delivered in Harrow & Newham."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .hiw-hero{background:var(--dark);padding:72px 40px;text-align:center;color:#fff;position:relative;overflow:hidden}
+    .hiw-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,67,0.1) 0%,transparent 60%);pointer-events:none}
+    .hiw-hero h1{font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:12px;font-family:'Playfair Display',serif;position:relative;z-index:1}
+    .hiw-hero p{font-size:16px;color:rgba(255,255,255,.6);max-width:500px;margin:0 auto;line-height:1.7;position:relative;z-index:1}
+    .step-block{display:flex;gap:32px;align-items:flex-start;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
+    .step-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+    .step-block.reverse{flex-direction:row-reverse}
+    .step-num-big{width:64px;height:64px;border-radius:18px;background:var(--dark);color:#fff;font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif}
+    .step-content h3{font-size:22px;font-weight:800;margin-bottom:10px;font-family:'Playfair Display',serif}
+    .step-content p{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:14px}
+    .step-content ul{list-style:none;padding:0}
+    .step-content ul li{font-size:13px;color:var(--muted);padding:5px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+    .step-content ul li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+    .step-visual{flex:1;min-width:0;background:var(--surface);border-radius:20px;border:1.5px solid var(--border);padding:28px;text-align:center}
+    .step-icon-big{font-size:72px;margin-bottom:12px}
+    .faq-item{border-bottom:1px solid var(--border);padding:20px 0}
+    .faq-q{font-size:15px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .faq-a{font-size:13px;color:var(--muted);line-height:1.75;margin-top:12px;display:none}
+    .faq-a.open{display:block}
+    @media(max-width:768px){
+      .hiw-hero{padding:48px 16px}
+      .hiw-hero h1{font-size:28px}
+      .step-block,.step-block.reverse{flex-direction:column;gap:20px}
+      .step-num-big{width:48px;height:48px;font-size:18px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">🇬🇧 Serving Harrow & Newham, London <span>Launching Soon</span></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🍽</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <div class="nav-center">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="meals.html">Browse Meals</a>
+    <a class="nav-link" href="cooks.html">Find Cooks</a>
+    <a class="nav-link active" href="how-it-works.html">How It Works</a>
+    <a class="nav-link" href="reviews.html">Reviews</a>
+    <a class="nav-link" href="cook-with-us.html">Cook with us 🍳</a>
+  </div>
+  <div class="nav-right">
+    <button class="loc-btn" onclick="toast('📍 Location: Harrow, London')">📍 Harrow, London</button>
+    <button class="cart-bubble" onclick="toggleCart()" aria-label="Open basket">🛒<span class="cart-num" id="cn">0</span></button>
+    <div id="nav-auth" style="display:flex;align-items:center;gap:8px">
+      <button class="btn btn-ghost" onclick="window.location.href='auth.html'">Log in</button>
+      <button class="btn btn-red" onclick="window.location.href='auth.html'">Sign up free</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hiw-hero">
+  <h1>How MechChef Works</h1>
+  <p>Fresh home-cooked food from verified local chefs to your door — in 3 simple steps</p>
+</div>
+
+<!-- FOR CUSTOMERS -->
+<div class="sec">
+  <div class="sec-hd" style="margin-bottom:40px"><div><h2>For Customers</h2><p>Ordering fresh home-cooked food has never been easier</p></div></div>
+
+  <div class="step-block">
+    <div class="step-num-big">1</div>
+    <div class="step-content" style="flex:1">
+      <h3>Browse & Choose Your Meal</h3>
+      <p>Explore our menu of freshly made home-cooked dishes from verified local cooks in Harrow & Newham. Filter by cuisine, dietary requirements, or price.</p>
+      <ul>
+        <li>Browse Indian, Pakistani, Caribbean, Italian, Chinese and more</li>
+        <li>Filter by Vegan, Vegetarian, Halal, or Gluten Free</li>
+        <li>See real photos, ingredients, and allergen info</li>
+        <li>Read verified reviews from real customers</li>
+      </ul>
+    </div>
+    <div class="step-visual">
+      <div class="step-icon-big">🍽</div>
+      <p style="font-size:13px;color:var(--muted)">12+ cuisines available at launch</p>
+    </div>
+  </div>
+
+  <div class="step-block reverse">
+    <div class="step-num-big">2</div>
+    <div class="step-content" style="flex:1">
+      <h3>Pre-Order & Pay Securely</h3>
+      <p>Place your order and choose your delivery date and time slot. All payments are processed securely via Stripe — we never store your card details.</p>
+      <ul>
+        <li>Pre-order 1–2 days in advance so your cook can prepare fresh</li>
+        <li>Choose your preferred date and time window</li>
+        <li>Pay by card, Apple Pay or PayPal</li>
+        <li>Instant confirmation by email and SMS</li>
+      </ul>
+    </div>
+    <div class="step-visual">
+      <div class="step-icon-big">🔒</div>
+      <p style="font-size:13px;color:var(--muted)">Secured by Stripe · 256-bit SSL</p>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-num-big">3</div>
+    <div class="step-content" style="flex:1">
+      <h3>Fresh Food Delivered to Your Door</h3>
+      <p>Your local home cook prepares your order fresh on the morning of delivery. Track your order in real-time and enjoy home-cooked food at its best.</p>
+      <ul>
+        <li>Freshly cooked on the day — never reheated or mass-produced</li>
+        <li>Real-time order tracking in the app</li>
+        <li>Delivery fee just £1.99 per order</li>
+        <li>Delivered in eco-friendly packaging</li>
+      </ul>
+    </div>
+    <div class="step-visual">
+      <div class="step-icon-big">🛵</div>
+      <p style="font-size:13px;color:var(--muted)">Delivery fee just £1.99</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOR COOKS -->
+<div class="sec sec-alt">
+  <div class="sec-hd" style="margin-bottom:40px"><div><h2>For Home Cooks</h2><p>Turn your passion for cooking into a flexible income</p></div></div>
+  <div class="how-grid">
+    <div class="how-card"><div class="how-num">1</div><h4>Apply & Get Verified</h4><p>Submit a short application. We verify your Food Hygiene Certificate and do a brief kitchen walkthrough via video call.</p></div>
+    <div class="how-card"><div class="how-num">2</div><h4>List Your Dishes</h4><p>Upload photos, descriptions and prices for your signature dishes. Set your available cooking days and delivery zones.</p></div>
+    <div class="how-card"><div class="how-num">3</div><h4>Cook & Earn</h4><p>Receive orders, cook when it suits you, and get paid every Monday. No hidden fees, no minimum hours.</p></div>
+  </div>
+  <div style="text-align:center;margin-top:32px">
+    <a href="cook-with-us.html" class="btn btn-dark" style="display:inline-block;text-decoration:none;padding:13px 32px;font-size:14px;font-weight:700">Join the cook waitlist →</a>
+  </div>
+</div>
+
+<!-- TRUST SIGNALS -->
+<div class="sec">
+  <div class="sec-hd" style="margin-bottom:32px"><div><h2>Why MechChef?</h2></div></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px">
+    <div style="background:var(--surface);border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:36px;margin-bottom:12px">🏠</div>
+      <h4 style="font-size:15px;font-weight:700;margin-bottom:8px;font-family:'Playfair Display',serif">Real Home Cooking</h4>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6">Every dish is made from scratch in a real home kitchen — not a factory or restaurant.</p>
+    </div>
+    <div style="background:var(--surface);border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:36px;margin-bottom:12px">✅</div>
+      <h4 style="font-size:15px;font-weight:700;margin-bottom:8px;font-family:'Playfair Display',serif">Verified Cooks</h4>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6">Every cook holds a valid Level 2 Food Hygiene Certificate and passes our kitchen safety check.</p>
+    </div>
+    <div style="background:var(--surface);border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:36px;margin-bottom:12px">💷</div>
+      <h4 style="font-size:15px;font-weight:700;margin-bottom:8px;font-family:'Playfair Display',serif">Affordable Prices</h4>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6">Meals start from £6.50 with a flat £1.99 delivery fee. Far cheaper than restaurants or big apps.</p>
+    </div>
+    <div style="background:var(--surface);border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:36px;margin-bottom:12px">🌱</div>
+      <h4 style="font-size:15px;font-weight:700;margin-bottom:8px;font-family:'Playfair Display',serif">Community Impact</h4>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6">We create income for local home cooks — mostly women — who have talent but no restaurant of their own.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="sec sec-alt">
+  <div class="sec-hd" style="margin-bottom:32px"><div><h2>Frequently Asked Questions</h2></div></div>
+  <div style="max-width:720px">
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>How fresh is the food?</span><span>+</span></div><div class="faq-a">All meals are cooked fresh on the morning of your delivery. Cooks never prepare food in advance — every dish is made to order specifically for you.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>How far in advance do I need to order?</span><span>+</span></div><div class="faq-a">Typically 1–2 days in advance so your cook has time to shop for ingredients and prepare your meal. Some cooks allow same-day orders — this is shown on their profile.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>Is the food safe? Are cooks verified?</span><span>+</span></div><div class="faq-a">Yes. Every MechChef cook holds a minimum Level 2 Food Hygiene Certificate (FSA-approved) and passes our kitchen safety video walkthrough before going live. All cooks are re-verified annually.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>What areas do you deliver to?</span><span>+</span></div><div class="faq-a">We are currently launching in Harrow and Newham, London. More areas coming soon — join the waitlist to be notified when we reach your area.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>What is the delivery fee?</span><span>+</span></div><div class="faq-a">A flat £1.99 delivery fee applies to all orders, regardless of order size. There is no minimum order value.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>Can I cancel or get a refund?</span><span>+</span></div><div class="faq-a">You can cancel up to 12 hours before your delivery slot for a full refund. After that, cancellations are not accepted as the cook will have already started preparing your meal.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>How do I become a home cook on MechChef?</span><span>+</span></div><div class="faq-a">Visit our <a href="cook-with-us.html" style="color:var(--red);font-weight:600">Cook with us</a> page to register your interest. We'll be in touch to verify your food hygiene certificate and complete onboarding.</div></div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div style="background:var(--dark);padding:72px 40px;text-align:center;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50%,rgba(212,168,67,0.1),transparent 60%);pointer-events:none"></div>
+  <div style="max-width:520px;margin:0 auto;position:relative;z-index:1">
+    <h2 style="font-size:34px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:12px;font-family:'Playfair Display',serif">Ready to try real home cooking?</h2>
+    <p style="font-size:15px;color:rgba(255,255,255,.6);margin-bottom:28px;line-height:1.7">Join thousands of food lovers in Harrow & Newham ordering fresh home-cooked meals every week.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="meals.html" class="btn btn-red" style="display:inline-block;text-decoration:none;padding:13px 32px;font-size:14px;font-weight:700">Browse Meals →</a>
+      <a href="auth.html" class="btn" style="display:inline-block;text-decoration:none;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);color:#fff;padding:13px 32px;font-size:14px;font-weight:700">Create Account</a>
+    </div>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart">
+  <div class="cp-hd"><h3>🛒 Your Basket</h3><button onclick="toggleCart()">✕</button></div>
+  <div class="cp-body" id="cp-body"></div>
+  <div id="cp-foot" style="display:none">
+    <div class="cp-foot">
+      <div class="cp-row"><span>Subtotal</span><span id="cp-sub">£0.00</span></div>
+      <div class="cp-row"><span>Delivery fee</span><span>£1.99</span></div>
+      <div class="cp-total"><span>Total (inc. VAT)</span><span id="cp-tot">£0.00</span></div>
+      <button class="btn btn-red cp-cta" onclick="window.location.href='meals.html'">Browse Meals →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><div class="icon">🍽</div>MechChef</div>
+      <div class="ft-desc">London's first pre-order home cook tiffin marketplace. Fresh meals from verified home cooks in Harrow &amp; Newham.</div>
+    </div>
+    <div class="ft-col"><h5>For Customers</h5><a href="meals.html">Browse Meals</a><a href="cooks.html">Find Cooks</a><a href="reviews.html">Reviews</a></div>
+    <div class="ft-col"><h5>For Cooks</h5><a href="cook-with-us.html">Become a Cook</a><a href="cook-dashboard.html">Cook Dashboard</a></div>
+    <div class="ft-col"><h5>Company</h5><a href="how-it-works.html">How It Works</a><a href="index.html">Home</a></div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2025 MechChef Ltd. Launch areas: Harrow &amp; Newham, London 🇬🇧</span>
+    <span>Pre-order home-cooked tiffins · Delivery fee £1.99</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  const icon = el.querySelector('span:last-child');
+  answer.classList.toggle('open');
+  icon.textContent = answer.classList.contains('open') ? '−' : '+';
+}
+</script>
+</body>
+</html>

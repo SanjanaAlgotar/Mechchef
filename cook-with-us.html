@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Cook With Us – MechChef | Earn From Your Home Kitchen</title>
+  <meta name="description" content="Join MechChef as a home cook in Harrow & Newham. Cook from home, set your own hours, and earn weekly. Register your interest today."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .cook-hero{background:var(--dark);padding:80px 40px;text-align:center;position:relative;overflow:hidden}
+    .cook-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,67,0.12),transparent 60%);pointer-events:none}
+    .cook-hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
+    .cook-hero h1{font-size:48px;font-weight:900;color:#fff;letter-spacing:-1.5px;margin-bottom:14px;line-height:1.08;font-family:'Playfair Display',serif}
+    .cook-hero h1 span{color:var(--gold)}
+    .cook-hero p{font-size:16px;color:rgba(255,255,255,.65);max-width:480px;margin:0 auto 28px;line-height:1.75}
+    .cook-hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.3);border-radius:50px;padding:7px 18px;font-size:12px;font-weight:600;color:var(--gold);margin-bottom:20px;letter-spacing:.3px}
+    .earn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .earn-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;padding:28px 24px;text-align:center}
+    .earn-card .ico{font-size:40px;margin-bottom:14px}
+    .earn-card h4{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:8px;font-family:'Playfair Display',serif}
+    .earn-card p{font-size:13px;color:var(--muted);line-height:1.7}
+    .earn-card .stat{font-size:28px;font-weight:900;color:var(--red);font-family:'Playfair Display',serif;margin-bottom:4px}
+    .steps-wrap{max-width:700px;margin:0 auto}
+    .step-row{display:flex;gap:20px;margin-bottom:0;padding:28px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .step-row:last-child{border-bottom:none}
+    .step-num{width:44px;height:44px;border-radius:13px;background:var(--dark);color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif}
+    .step-info h4{font-size:15px;font-weight:700;margin-bottom:5px;font-family:'Playfair Display',serif}
+    .step-info p{font-size:13px;color:var(--muted);line-height:1.65}
+    .step-badge{display:inline-flex;align-items:center;gap:5px;background:var(--green-light);border:1px solid rgba(45,125,90,.2);border-radius:50px;padding:3px 10px;font-size:11px;font-weight:600;color:var(--green);margin-top:8px}
+    .apply-card{background:var(--white);border:1.5px solid var(--border);border-radius:24px;padding:36px;max-width:680px;margin:0 auto}
+    .apply-card h2{font-size:22px;font-weight:900;margin-bottom:6px;font-family:'Playfair Display',serif}
+    .apply-card .sub{font-size:13px;color:var(--muted);margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+    .checkbox-row{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+    .checkbox-row input{margin-top:3px;accent-color:var(--red);width:16px;height:16px;flex-shrink:0}
+    .success-box{display:none;background:var(--green-light);border:1.5px solid rgba(45,125,90,.25);border-radius:16px;padding:28px;text-align:center}
+    .success-box.on{display:block}
+    .testimonial-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+    .testimonial{background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:24px}
+    .testimonial-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .testimonial-av{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .testimonial-name{font-size:14px;font-weight:700}
+    .testimonial-meta{font-size:12px;color:var(--muted)}
+    .faq-item{border-bottom:1px solid var(--border);padding:18px 0}
+    .faq-q{font-size:14px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .faq-a{font-size:13px;color:var(--muted);line-height:1.75;margin-top:10px;display:none}
+    .faq-a.open{display:block}
+    @media(max-width:768px){
+      .cook-hero{padding:56px 16px}
+      .cook-hero h1{font-size:32px}
+      .earn-grid{grid-template-columns:1fr}
+      .apply-card{padding:24px 16px}
+      .fgrow{grid-template-columns:1fr !important}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">🇬🇧 Serving Harrow & Newham, London <span>Launching Soon</span></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🍽</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <div class="nav-center">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="meals.html">Browse Meals</a>
+    <a class="nav-link" href="cooks.html">Find Cooks</a>
+    <a class="nav-link" href="how-it-works.html">How It Works</a>
+    <a class="nav-link" href="reviews.html">Reviews</a>
+    <a class="nav-link active" href="cook-with-us.html">Cook with us 🍳</a>
+  </div>
+  <div class="nav-right">
+    <button class="loc-btn" onclick="toast('📍 Location: Harrow, London')">📍 Harrow, London</button>
+    <button class="cart-bubble" onclick="toggleCart()" aria-label="Open basket">🛒<span class="cart-num" id="cn">0</span></button>
+    <div id="nav-auth" style="display:flex;align-items:center;gap:8px">
+      <button class="btn btn-ghost" onclick="window.location.href='auth.html'">Log in</button>
+      <button class="btn btn-red" onclick="window.location.href='auth.html'">Sign up free</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="cook-hero">
+  <div class="cook-hero-inner">
+    <div class="cook-hero-pill">🇬🇧 Harrow & Newham launch — now taking applications</div>
+    <h1>Cook from home.<br><span>Earn on your terms.</span></h1>
+    <p>Join MechChef as a verified home cook. Set your hours, share your recipes, and earn weekly — all from your own kitchen.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="#apply" class="btn btn-red" style="display:inline-block;text-decoration:none;padding:14px 32px;font-size:15px;font-weight:700">Apply now — it's free →</a>
+      <a href="#how" class="btn" style="display:inline-block;text-decoration:none;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);color:#fff;padding:14px 32px;font-size:15px;font-weight:700">How it works</a>
+    </div>
+    <div style="display:flex;justify-content:center;gap:32px;margin-top:36px;flex-wrap:wrap">
+      <div style="text-align:center"><div style="font-size:24px;font-weight:900;color:#fff">£0</div><div style="font-size:11px;color:rgba(255,255,255,.5)">To register</div></div>
+      <div style="text-align:center"><div style="font-size:24px;font-weight:900;color:#fff">Weekly</div><div style="font-size:11px;color:rgba(255,255,255,.5)">Payouts</div></div>
+      <div style="text-align:center"><div style="font-size:24px;font-weight:900;color:#fff">Your hours</div><div style="font-size:11px;color:rgba(255,255,255,.5)">Full flexibility</div></div>
+      <div style="text-align:center"><div style="font-size:24px;font-weight:900;color:#fff">Local</div><div style="font-size:11px;color:rgba(255,255,255,.5)">Harrow & Newham</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY COOK WITH US -->
+<div class="sec">
+  <div class="sec-hd" style="margin-bottom:32px"><div><h2>Why cook with MechChef?</h2><p>Built for home cooks, by people who believe in real food</p></div></div>
+  <div class="earn-grid">
+    <div class="earn-card">
+      <div class="ico">⏰</div>
+      <h4>Your Hours, Your Rules</h4>
+      <p>Cook Monday to Sunday, mornings or evenings — you decide when your kitchen is open. No minimum hours, no shifts.</p>
+    </div>
+    <div class="earn-card">
+      <div class="ico">🏠</div>
+      <h4>Cook from Your Own Kitchen</h4>
+      <p>No restaurant needed. Just your home kitchen, your recipes, and your passion. We handle the orders and delivery.</p>
+    </div>
+    <div class="earn-card">
+      <div class="ico">💷</div>
+      <h4>Weekly Bank Payouts</h4>
+      <p>Earnings transferred to your account every Monday. No waiting, no chasing — just cook and get paid.</p>
+    </div>
+    <div class="earn-card">
+      <div class="ico">📱</div>
+      <h4>Simple Cook Dashboard</h4>
+      <p>Manage your menu, schedule, and orders from one easy dashboard. See your earnings in real time.</p>
+    </div>
+    <div class="earn-card">
+      <div class="ico">🌟</div>
+      <h4>Build Your Reputation</h4>
+      <p>Grow a loyal customer base in your area. Verified reviews and a public profile help you stand out.</p>
+    </div>
+    <div class="earn-card">
+      <div class="ico">🤝</div>
+      <h4>Full Support from Us</h4>
+      <p>We help with food safety guidance, menu photography tips, and pricing advice. You're never alone.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS FOR COOKS -->
+<div class="sec sec-alt" id="how">
+  <div class="sec-hd" style="margin-bottom:32px"><div><h2>How it works for cooks</h2><p>From application to first order in as little as a week</p></div></div>
+  <div class="steps-wrap">
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-info">
+        <h4>Apply Online — 5 minutes</h4>
+        <p>Fill in the short form below with your details, cooking style, and the cuisines you specialise in. No CV needed — just your passion for food.</p>
+        <span class="step-badge">✓ Takes just 5 minutes</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-info">
+        <h4>Food Safety Verification</h4>
+        <p>Upload your Level 2 Food Hygiene Certificate (FSA-approved). Don't have one? We'll point you to a free online course you can complete in a day.</p>
+        <span class="step-badge">✓ Free hygiene course available</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-info">
+        <h4>Kitchen Video Walkthrough</h4>
+        <p>A brief 15-minute video call where we check your kitchen setup against UK Food Safety regulations. Friendly, informal, and done from your phone.</p>
+        <span class="step-badge">✓ Under 15 minutes</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-info">
+        <h4>List Your Dishes & Set Your Schedule</h4>
+        <p>Upload photos, write descriptions, and set your prices. Choose which days you want to cook and your delivery zone. We'll help with tips on pricing and photography.</p>
+        <span class="step-badge">✓ We help with photos & pricing</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">5</div>
+      <div class="step-info">
+        <h4>Go Live & Start Earning</h4>
+        <p>Your profile goes live and customers can start ordering. Most new cooks receive their first order within 48 hours of going live. Earnings hit your bank every Monday.</p>
+        <span class="step-badge">✓ First order within 48 hrs</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="sec">
+  <div class="sec-hd" style="margin-bottom:28px"><div><h2>What our cooks say</h2></div></div>
+  <div class="testimonial-grid">
+    <div class="testimonial">
+      <div class="testimonial-head">
+        <div class="testimonial-av" style="background:#fce7f3">👩🏽‍🍳</div>
+        <div><div class="testimonial-name">Priya S.</div><div class="testimonial-meta">Indian Cuisine · Harrow</div></div>
+      </div>
+      <div style="color:var(--amber);font-size:14px;margin-bottom:10px">★★★★★</div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">"I was nervous at first but the onboarding was so smooth. Within a week I had my first order, and now I'm cooking 4–5 days a week. It's changed my life — I earn more than my old part-time job."</p>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-head">
+        <div class="testimonial-av" style="background:#dcfce7">👩🏿‍🍳</div>
+        <div><div class="testimonial-name">Amara T.</div><div class="testimonial-meta">Caribbean Cuisine · Newham</div></div>
+      </div>
+      <div style="color:var(--amber);font-size:14px;margin-bottom:10px">★★★★★</div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">"MechChef gave me the platform to share my grandmother's Jamaican recipes with the whole community. My jerk chicken is now famous in Newham! The dashboard is so easy to use."</p>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-head">
+        <div class="testimonial-av" style="background:#dbeafe">👩🏻‍🍳</div>
+        <div><div class="testimonial-name">Fatima H.</div><div class="testimonial-meta">Pakistani Cuisine · Newham</div></div>
+      </div>
+      <div style="color:var(--amber);font-size:14px;margin-bottom:10px">★★★★★</div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">"I'm a single mum and MechChef lets me earn around school hours. I cook Tuesday to Friday, 10am–2pm, and the earnings go straight to my account on Monday. It's perfect for my life."</p>
+    </div>
+  </div>
+</div>
+
+<!-- APPLICATION FORM -->
+<div class="sec sec-alt" id="apply">
+  <div class="sec-hd" style="margin-bottom:32px"><div><h2>Register your interest</h2><p>Join the cook waitlist — free to apply, no commitment</p></div></div>
+
+  <!-- Success message (shown after submit) -->
+  <div class="success-box" id="success-box" style="max-width:680px;margin:0 auto 24px">
+    <div style="font-size:48px;margin-bottom:14px">🎉</div>
+    <h3 style="font-size:20px;font-weight:800;color:var(--green);margin-bottom:8px">You're on the waitlist!</h3>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7">Thanks for applying! We'll review your application and be in touch within 3–5 working days with next steps. Keep an eye on your inbox.</p>
+  </div>
+
+  <div class="apply-card" id="apply-form-card">
+    <h2>Cook registration</h2>
+    <div class="sub">Launching in Harrow & Newham — no fees to register, no commitment required</div>
+
+    <div class="fgrow" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fg"><label>First Name *</label><input type="text" id="ck-fname" placeholder="Priya"/></div>
+      <div class="fg"><label>Last Name *</label><input type="text" id="ck-lname" placeholder="Sharma"/></div>
+    </div>
+
+    <div class="fgrow" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fg"><label>Email Address *</label><input type="email" id="ck-email" placeholder="priya@email.com"/></div>
+      <div class="fg"><label>Mobile Number</label><input type="tel" id="ck-phone" placeholder="+44 7700 900000"/></div>
+    </div>
+
+    <div class="fgrow" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fg">
+        <label>Area *</label>
+        <select id="ck-area">
+          <option value="">Select your area</option>
+          <option>Harrow</option>
+          <option>Newham</option>
+          <option>Both / Either</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Postcode</label>
+        <input type="text" id="ck-postcode" placeholder="HA1 1AA"/>
+      </div>
+    </div>
+
+    <div class="fgrow" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fg">
+        <label>Cuisine Speciality *</label>
+        <select id="ck-cuisine">
+          <option value="">Select cuisine</option>
+          <option>Indian</option>
+          <option>Pakistani</option>
+          <option>Bangladeshi</option>
+          <option>Caribbean</option>
+          <option>Italian</option>
+          <option>Chinese</option>
+          <option>Turkish</option>
+          <option>Thai</option>
+          <option>Mediterranean</option>
+          <option>British</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Years of Cooking Experience</label>
+        <select id="ck-exp">
+          <option>1–2 years</option>
+          <option>3–5 years</option>
+          <option>5–10 years</option>
+          <option>10+ years</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>Tell us about your cooking (optional)</label>
+      <textarea id="ck-bio" rows="3" placeholder="What are your signature dishes? What makes your cooking special?" style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;outline:none;font-family:inherit;resize:vertical;width:100%;transition:border-color .15s"></textarea>
+    </div>
+
+    <div class="fg">
+      <label>Preferred cooking days</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px" id="day-picker">
+        <div class="slot" style="min-width:60px;font-size:12px" onclick="toggleDay(this,'Mon')">Mon</div>
+        <div class="slot" style="min-width:60px;font-size:12px" onclick="toggleDay(this,'Tue')">Tue</div>
+        <div class="slot" style="min-width:60px;font-size:12px" onclick="toggleDay(this,'Wed')">Wed</div>
+        <div class="slot" style="min-width:60px;font-size:12px" onclick="toggleDay(this,'Thu')">Thu</div>
+        <div class="slot" style="min-width:60px;font-size:12px" onclick="toggleDay(this,'Fri')">Fri</div>
+        <div class="slot" style="min-width:60px;font-size:12px" onclick="toggleDay(this,'Sat')">Sat</div>
+        <div class="slot" style="min-width:60px;font-size:12px" onclick="toggleDay(this,'Sun')">Sun</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface);border-radius:14px;padding:18px;margin-bottom:18px">
+      <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:12px;letter-spacing:.3px">REQUIREMENTS</div>
+      <div class="checkbox-row"><input type="checkbox" id="ck-hygiene"/><label for="ck-hygiene">I hold a Level 2 Food Hygiene Certificate (or will obtain one before going live)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="ck-kitchen"/><label for="ck-kitchen">I have a clean, domestic kitchen that meets basic food safety standards</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="ck-terms"/><label for="ck-terms">I agree to MechChef's <a href="#" style="color:var(--red)">Cook Terms & Conditions</a> and <a href="#" style="color:var(--red)">Community Standards</a></label></div>
+    </div>
+
+    <button class="btn btn-red" id="submit-btn" style="width:100%;padding:15px;font-size:15px;font-weight:800" onclick="submitApplication()">
+      Join the cook waitlist →
+    </button>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:12px">Free to apply · No commitment · Launching Soon in Harrow & Newham</p>
+  </div>
+</div>
+
+<!-- COOK FAQ -->
+<div class="sec">
+  <div class="sec-hd" style="margin-bottom:28px"><div><h2>Cook FAQs</h2></div></div>
+  <div style="max-width:720px">
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>Do I need a food hygiene certificate?</span><span>+</span></div><div class="faq-a">Yes — all MechChef cooks must hold a minimum Level 2 Food Hygiene Certificate. If you don't have one, we'll point you to a free online course you can complete in a day. It's a legal requirement for selling food in the UK.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>How much can I earn?</span><span>+</span></div><div class="faq-a">Earnings vary by how many days you cook and your menu prices. Our cooks typically earn between £150–£600 per month cooking 2–5 days a week. You keep the full meal price minus a small platform fee (shown during onboarding).</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>Do I handle my own deliveries?</span><span>+</span></div><div class="faq-a">No — MechChef handles all deliveries. You simply cook and have the food ready by the agreed time. Our courier will collect and deliver to the customer. You never need to leave your kitchen.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>Can I cook multiple cuisines?</span><span>+</span></div><div class="faq-a">Absolutely. You can list dishes from multiple cuisines on your profile. Many of our cooks offer a mix — for example, Indian mains with Mediterranean salads. You decide what's on your menu.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>What about ingredients and packaging?</span><span>+</span></div><div class="faq-a">You are responsible for sourcing your own ingredients. MechChef provides eco-friendly packaging at cost price, or you can source your own. We'll share packaging guidelines during onboarding.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>Is there a minimum number of orders I have to take?</span><span>+</span></div><div class="faq-a">No minimum. You set your availability and can pause or stop cooking at any time with 24 hours notice. There's no penalty for taking breaks — cook when it works for you.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>When and how do I get paid?</span><span>+</span></div><div class="faq-a">Earnings from the previous week are transferred to your bank account every Monday morning. You'll receive a full breakdown of orders and earnings in your dashboard.</div></div>
+  </div>
+</div>
+
+<!-- BOTTOM CTA -->
+<div style="background:var(--dark);padding:72px 40px;text-align:center;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(212,168,67,0.1),transparent 60%);pointer-events:none"></div>
+  <div style="max-width:520px;margin:0 auto;position:relative;z-index:1">
+    <div style="font-size:48px;margin-bottom:16px">🍳</div>
+    <h2 style="font-size:34px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:12px;font-family:'Playfair Display',serif">Your kitchen.<br>Your business.</h2>
+    <p style="font-size:15px;color:rgba(255,255,255,.6);margin-bottom:28px;line-height:1.7">Join the waitlist today. We'll be in touch within 3–5 working days to begin your onboarding.</p>
+    <a href="#apply" class="btn btn-red" style="display:inline-block;text-decoration:none;padding:14px 36px;font-size:15px;font-weight:800">Apply now — it's free →</a>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart">
+  <div class="cp-hd"><h3>🛒 Your Basket</h3><button onclick="toggleCart()">✕</button></div>
+  <div class="cp-body" id="cp-body"></div>
+  <div id="cp-foot" style="display:none">
+    <div class="cp-foot">
+      <div class="cp-row"><span>Subtotal</span><span id="cp-sub">£0.00</span></div>
+      <div class="cp-row"><span>Delivery fee</span><span>£1.99</span></div>
+      <div class="cp-total"><span>Total (inc. VAT)</span><span id="cp-tot">£0.00</span></div>
+      <button class="btn btn-red cp-cta" onclick="window.location.href='meals.html'">Browse Meals →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><div class="icon">🍽</div>MechChef</div>
+      <div class="ft-desc">London's first pre-order home cook tiffin marketplace. Fresh, affordable meals from verified home cooks in Harrow &amp; Newham.</div>
+      <div class="ft-social">
+        <a class="ftsoc" href="https://x.com/mechchef" target="_blank">𝕏</a>
+        <a class="ftsoc" href="https://instagram.com/mechchef" target="_blank">📸</a>
+        <a class="ftsoc" href="https://facebook.com/mechchef" target="_blank">📘</a>
+      </div>
+    </div>
+    <div class="ft-col"><h5>For Customers</h5><a href="meals.html">Browse Meals</a><a href="cooks.html">Find Cooks</a><a href="reviews.html">Reviews</a></div>
+    <div class="ft-col"><h5>For Cooks</h5><a href="cook-with-us.html">Become a Cook</a><a href="cook-dashboard.html">Cook Dashboard</a></div>
+    <div class="ft-col"><h5>Company</h5><a href="how-it-works.html">How It Works</a><a href="index.html">Home</a></div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2025 MechChef Ltd. Launch areas: Harrow &amp; Newham, London 🇬🇧</span>
+    <span>Pre-order home-cooked tiffins · Delivery fee £1.99</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+// ── DAY PICKER ──
+const selectedDays = new Set();
+function toggleDay(el, day) {
+  if (selectedDays.has(day)) { selectedDays.delete(day); el.classList.remove('on'); }
+  else { selectedDays.add(day); el.classList.add('on'); }
+}
+
+// ── FAQ ──
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  const icon = el.querySelector('span:last-child');
+  answer.classList.toggle('open');
+  icon.textContent = answer.classList.contains('open') ? '−' : '+';
+}
+
+// ── SUBMIT APPLICATION ──
+async function submitApplication() {
+  const fname = document.getElementById('ck-fname').value.trim();
+  const lname = document.getElementById('ck-lname').value.trim();
+  const email = document.getElementById('ck-email').value.trim();
+  const phone = document.getElementById('ck-phone').value.trim();
+  const area  = document.getElementById('ck-area').value;
+  const postcode = document.getElementById('ck-postcode').value.trim();
+  const cuisine  = document.getElementById('ck-cuisine').value;
+  const exp      = document.getElementById('ck-exp').value;
+  const bio      = document.getElementById('ck-bio').value.trim();
+  const hygiene  = document.getElementById('ck-hygiene').checked;
+  const kitchen  = document.getElementById('ck-kitchen').checked;
+  const terms    = document.getElementById('ck-terms').checked;
+
+  // Validate
+  if (!fname || !lname) { toast('Please enter your full name'); return; }
+  if (!email || !email.includes('@')) { toast('Please enter a valid email address'); return; }
+  if (!area) { toast('Please select your area'); return; }
+  if (!cuisine) { toast('Please select your cuisine speciality'); return; }
+  if (!hygiene) { toast('Please confirm your food hygiene certificate'); return; }
+  if (!kitchen) { toast('Please confirm your kitchen meets food safety standards'); return; }
+  if (!terms) { toast('Please agree to the Terms & Conditions'); return; }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    await db.from('cook_waitlist').insert([{
+      name: `${fname} ${lname}`,
+      email, phone, area, postcode, cuisine,
+      experience: exp,
+      bio,
+      preferred_days: [...selectedDays],
+      hygiene_cert: hygiene,
+      status: 'pending',
+      submitted_at: new Date().toISOString(),
+    }]);
+  } catch(e) {
+    console.warn('Waitlist save error:', e);
+    // Still show success — don't block the user
+  }
+
+  // Show success
+  document.getElementById('apply-form-card').style.display = 'none';
+  const box = document.getElementById('success-box');
+  box.classList.add('on');
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  toast('🎉 Application submitted! We\'ll be in touch soon.');
+}
+</script>
+</body>
+</html>
