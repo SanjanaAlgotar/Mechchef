@@ -18,29 +18,35 @@
     .page.active{display:block;animation:fadein .22s ease}
 
     /* HERO */
-    .hero{position:relative;min-height:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:72px 24px 56px;overflow:hidden;background:var(--cream);border-bottom:1px solid var(--border)}
-    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 0%,rgba(200,71,43,0.06) 0%,transparent 60%),radial-gradient(ellipse at 10% 100%,rgba(212,168,67,0.08) 0%,transparent 50%);pointer-events:none}
-    .hero-content{position:relative;z-index:1;max-width:740px}
-    .hero h1{font-size:58px;font-weight:900;line-height:1.06;letter-spacing:-2px;color:var(--dark);margin-bottom:20px;font-family:'Playfair Display',serif}
-    .hero h1 .ul{position:relative;display:inline-block;color:var(--red)}
-    .hero h1 .ul::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:3px;background:var(--gold);border-radius:2px}
-    .hero-sub{font-size:17px;color:var(--muted);max-width:500px;margin:0 auto 32px;line-height:1.7;font-weight:400}
-    .hero-search{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:8px;display:flex;gap:6px;max-width:620px;width:100%;margin:0 auto 20px;box-shadow:0 4px 20px rgba(0,0,0,.07)}
-    .hs-input{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:10px;padding:11px 16px}
-    .hs-input input,.hs-input select{background:transparent;border:none;outline:none;color:var(--text);font-size:14px;font-weight:500;width:100%;font-family:'DM Sans',sans-serif}
-    .hs-input input::placeholder{color:var(--muted)}
-    .hs-div{width:1px;background:var(--border);margin:8px 0}
-    .hs-btn{background:var(--dark);color:#fff;border:none;border-radius:10px;padding:13px 28px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s;font-family:'DM Sans',sans-serif}
-    .hs-btn:hover{background:var(--dark2)}
-    .hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
-    .hero-tag{background:var(--white);border:1px solid var(--border);border-radius:50px;padding:7px 18px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500}
-    .hero-tag:hover{background:var(--dark);border-color:var(--dark);color:#fff}
-    .hero-stats{margin-top:40px;padding:18px 32px;background:var(--dark);border-radius:14px;display:inline-flex;justify-content:center;align-items:center;gap:16px}
-    .hstat{text-align:center}
-    .hstat strong{display:block;font-size:17px;font-weight:700;color:#fff;font-family:'DM Sans',sans-serif}
-    .hstat span{font-size:12px;color:rgba(255,255,255,.5);font-weight:400}
-    .hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--border);border-radius:50px;padding:7px 18px;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:24px;letter-spacing:.4px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-    .uk-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,.06);border:1px solid rgba(0,0,0,.08);border-radius:50px;padding:5px 14px;font-size:11px;color:var(--muted);margin-bottom:18px}
+    .hero{position:relative;min-height:min(780px,calc(100vh - 110px));display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;overflow:hidden;background:#151914}
+    .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+    .hero::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,12,9,0.85) 0%,rgba(10,12,9,0.5) 55%,rgba(10,12,9,0.05) 100%)}
+    .hero-content{position:relative;z-index:1;padding:0 clamp(24px,7vw,84px) clamp(52px,9vw,96px);color:#fff;max-width:700px}
+    .hero-eyebrow{font-size:13px;font-weight:600;color:#f2cf72;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
+    .hero h1{font-size:clamp(3.2rem,9vw,6rem);font-weight:900;line-height:0.92;letter-spacing:-2.5px;color:#fff;margin-bottom:22px;font-family:'Playfair Display',serif}
+    .hero h1 em{font-style:normal;color:#f2cf72}
+    .hero-sub{font-size:16px;color:rgba(255,255,255,.7);max-width:460px;margin:0 0 34px;line-height:1.75;font-weight:400}
+    .hero-search{background:rgba(255,255,255,.96);border-radius:14px;padding:7px;display:flex;gap:6px;max-width:560px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+    .hs-input{flex:1;display:flex;align-items:center;gap:10px;background:#f4f1eb;border-radius:9px;padding:11px 16px}
+    .hs-input input,.hs-input select{background:transparent;border:none;outline:none;color:#1a1a1a;font-size:14px;font-weight:500;width:100%;font-family:'DM Sans',sans-serif}
+    .hs-input input::placeholder{color:#999}
+    .hs-div{width:1px;background:rgba(0,0,0,.1);margin:8px 0}
+    .hs-btn{background:var(--red);color:#fff;border:none;border-radius:9px;padding:13px 26px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s;font-family:'DM Sans',sans-serif}
+    .hs-btn:hover{background:#b83a20}
+    .hero-tags{display:none}
+    .hero-stats{margin-top:28px;display:inline-flex;align-items:center;gap:24px}
+    .hstat{text-align:left}
+    .hstat strong{display:block;font-size:20px;font-weight:800;color:#fff}
+    .hstat span{font-size:11px;color:rgba(255,255,255,.45);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+    .hstat-div{width:1px;height:32px;background:rgba(255,255,255,.15)}
+    .uk-badge{display:none}
+    .hero-pill{display:none}
+    @media(max-width:768px){
+      .hero{min-height:620px}
+      .hero::after{background:linear-gradient(0deg,rgba(10,12,9,0.9) 0%,rgba(10,12,9,0.3) 100%)}
+      .hero-search{flex-direction:column}
+      .hs-div{display:none}
+    }
 
     /* CHECKOUT */
     .co-wrap{max-width:760px;margin:0 auto;padding:36px 20px}
@@ -194,19 +200,19 @@
 <!-- ══════════ HOME PAGE ══════════ -->
 <div class="page active" id="page-home">
   <div class="hero">
+    <img class="hero-bg" src="https://images.unsplash.com/photo-1567337710282-00832b415979?w=1800&q=85&auto=format&fit=crop" alt="Fresh home cooked food"/>
     <div class="hero-content">
-      <div class="uk-badge">🇬🇧 Serving Harrow & Newham, London</div>
-      <div class="hero-pill">🔥 Freshly made by real home cooks near you</div>
-      <h1>Home cooked tiffins from<br><span class="ul">real kitchens</span><br>across London</h1>
-      <p class="hero-sub">Skip the takeaways. Order fresh home-cooked South Asian meals from verified home cooks in Harrow & Newham.</p>
+      <p class="hero-eyebrow">Local kitchens. Real cooks. Fresh food.</p>
+      <h1>Home cooked<br>meals from<br><em>real kitchens</em></h1>
+      <p class="hero-sub">Order authentic homemade meals from verified home cooks in Harrow &amp; Newham, London.</p>
       <div class="hero-search">
         <div class="hs-input">
-          <span class="icon">📍</span>
-          <input type="text" id="h-zip" placeholder="Enter your postcode (e.g. E1 6RF)…"/>
+          <span>📍</span>
+          <input type="text" id="h-zip" placeholder="Enter your postcode…"/>
         </div>
         <div class="hs-div"></div>
-        <div class="hs-input" style="min-width:130px">
-          <span class="icon">🍽</span>
+        <div class="hs-input" style="min-width:140px">
+          <span>🍽</span>
           <select id="h-cuisine">
             <option value="">All Cuisines</option>
             <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option>
@@ -216,20 +222,13 @@
         </div>
         <button class="hs-btn" onclick="heroSearch()">Find Food →</button>
       </div>
-      <div class="hero-tags">
-        <span class="hero-tag" onclick="setCuisine('Indian');go('browse')">🍛 Indian</span>
-        <span class="hero-tag" onclick="setCuisine('Pakistani');go('browse')">🫕 Pakistani</span>
-        <span class="hero-tag" onclick="setCuisine('Caribbean');go('browse')">🍗 Caribbean</span>
-        <span class="hero-tag" onclick="setCuisine('Chinese');go('browse')">🥟 Chinese</span>
-        <span class="hero-tag" onclick="setCuisine('Turkish');go('browse')">🥙 Turkish</span>
-        <span class="hero-tag" onclick="setCuisine('Italian');go('browse')">🍕 Italian</span>
-        <span class="hero-tag" onclick="setCuisine('Mediterranean');go('browse')">🥗 Mediterranean</span>
-        <span class="hero-tag" onclick="setDiet('Vegan');go('browse')">🌿 Vegan</span>
-        <span class="hero-tag" onclick="setDiet('Halal');go('browse')">☪️ Halal</span>
+      <div class="hero-stats">
+        <div class="hstat"><strong>100%</strong><span>Home cooked</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><strong>Harrow &amp; Newham</strong><span>Launch areas</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><strong>£1.99</strong><span>Delivery fee</span></div>
       </div>
-    </div>
-    <div class="hero-stats">
-      <div class="hstat"><strong>Launching Soon</strong><span>in Harrow & Newham</span></div>
     </div>
   </div>
 
