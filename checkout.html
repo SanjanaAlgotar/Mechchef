@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Mechchef</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="index.html">Mechchef</a><nav class="nav-links"><a href="meals.html">Meals</a><a href="auth.html">Sign in</a></nav></header>
+  <main class="page checkout-grid">
+    <section>
+      <p class="eyebrow">Checkout</p>
+      <h1>Confirm your homemade dinner</h1>
+      <div class="order-line"><span>Hyderabadi chicken biryani</span><strong>£9.50</strong></div>
+      <div class="order-line"><span>Delivery fee</span><strong>£2.00</strong></div>
+      <div class="order-line total"><span>Total</span><strong>£11.50</strong></div>
+    </section>
+    <form class="panel">
+      <label>Delivery address<input required placeholder="Flat, street, postcode"></label>
+      <label>Delivery slot<select><option>Today 18:30-19:00</option><option>Today 19:00-19:30</option></select></label>
+      <label>Notes<textarea placeholder="Door code, allergy reminders, or handoff notes"></textarea></label>
+      <button class="button" type="submit">Place order</button>
+    </form>
+  </main>
+  <script src="js/main.js"></script>
+</body>
+</html>
