@@ -203,6 +203,7 @@ function mCard(m) {
       <div class="mcard-tags">${m.tags.map(t => `<span class="mtag ${vT.includes(t) ? 'v' : ''}">${t}</span>`).join('')}</div>
       <div class="mcard-name">${m.n}</div>
       <div class="mcard-cook">🍳 ${m.cook} · Harrow & Newham</div>
+      ${m.available_days && m.available_days.length ? `<div class="mcard-days" style="font-size:11px;color:var(--muted);margin-top:3px">📅 ${m.available_days.join(" · ")}</div>` : ""}
       <div class="mcard-foot">
         <div class="mcard-price">${fmt(m.p)}</div>
         <div class="mcard-meta">
