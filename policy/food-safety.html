@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Food Safety & Allergen Policy – MechChef</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#C8472B;--red-dark:#a8391f;--red-light:#fdf2ee;--dark:#1a1a18;--dark2:#2e2e2b;--surface:#faf9f7;--surface2:#f2f0eb;--green:#2d7d5a;--green-light:#e8f5ee;--amber:#D4A843;--border:#e5e2da;--muted:#7a7a70;--white:#fff;--text:#1a1a18;--cream:#faf9f7;}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);background:var(--cream);line-height:1.7}
+nav{background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-icon{width:38px;height:38px;background:var(--dark);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-text{font-size:20px;font-weight:700;color:var(--dark);letter-spacing:-.5px;font-family:'Playfair Display',serif}
+.logo-text span{color:var(--red)}
+.policy-hero{background:var(--dark);color:#fff;padding:60px 40px 50px;text-align:center}
+.policy-hero .badge{display:inline-block;background:var(--red);color:#fff;border-radius:50px;padding:5px 16px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:16px}
+.policy-hero h1{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;margin-bottom:12px}
+.policy-hero p{font-size:14px;color:rgba(255,255,255,.6);max-width:500px;margin:0 auto}
+.policy-body{max-width:780px;margin:0 auto;padding:48px 24px 80px}
+.policy-section{margin-bottom:40px;scroll-margin-top:90px}
+.policy-section h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px}
+.policy-section h2 .sec-num{background:var(--red);color:#fff;border-radius:6px;padding:2px 9px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700}
+.policy-section h3{font-size:15px;font-weight:700;color:var(--dark);margin:20px 0 8px}
+.policy-section p{font-size:14px;color:#3a3a35;margin-bottom:12px}
+.policy-section ul{padding-left:20px;margin-bottom:12px}
+.policy-section li{font-size:14px;color:#3a3a35;margin-bottom:6px}
+.policy-section a{color:var(--red);text-decoration:none}
+.highlight-box{background:var(--red-light);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+.highlight-box p{color:var(--red-dark);font-size:13px;margin:0;font-weight:500}
+.info-box{background:var(--green-light);border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+.info-box p{color:var(--green);font-size:13px;margin:0;font-weight:500}
+.warn-box{background:#fff9ec;border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+.warn-box p{color:#7a5c0a;font-size:13px;margin:0;font-weight:500}
+.allergen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:16px 0}
+.allergen-pill{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.allergen-pill .icon{font-size:18px}
+.last-updated{font-size:12px;color:var(--muted);margin-top:32px;text-align:center;padding-top:20px;border-top:1px solid var(--border)}
+.policy-footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;padding:32px 24px;font-size:13px}
+.policy-footer a{color:rgba(255,255,255,.8);text-decoration:none}
+.policy-nav-links{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.policy-nav-links a{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:5px 14px;font-size:12px;color:rgba(255,255,255,.7);text-decoration:none;transition:all .15s}
+.policy-nav-links a:hover{background:rgba(255,255,255,.15);color:#fff}
+@media(max-width:768px){nav{padding:0 16px}.policy-hero{padding:40px 20px 32px}.policy-hero h1{font-size:26px}.allergen-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">🍱</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <a href="index.html" style="font-size:13px;font-weight:600;color:var(--muted);text-decoration:none">← Back to Home</a>
+</nav>
+
+<div class="policy-hero">
+  <div class="badge">Food Safety</div>
+  <h1>Food Safety & Allergen Policy</h1>
+  <p>Your safety is our priority. All meals on MechChef are prepared by verified home cooks following UK food safety standards.</p>
+</div>
+
+<div class="policy-body">
+
+  <div class="policy-section">
+    <h2><span class="sec-num">1</span> Our Commitment to Food Safety</h2>
+    <p>MechChef is committed to ensuring the food prepared and delivered through our platform is safe for consumption. We require all cooks on our platform to meet UK food hygiene standards before going live.</p>
+    <div class="info-box"><p>✅ All MechChef cooks must hold a valid Level 2 Food Hygiene Certificate from an accredited UK provider (e.g. Highfield, RSPH, CIEH) before their first order.</p></div>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">2</span> UK Legal Compliance</h2>
+    <p>MechChef and our cooks operate in compliance with the following UK legislation:</p>
+    <ul>
+      <li><strong>Food Safety Act 1990</strong> — general food safety requirements</li>
+      <li><strong>Food Hygiene Regulations 2006</strong> — hygiene standards for food businesses</li>
+      <li><strong>UK Food Information Regulations 2014</strong> — allergen labelling requirements</li>
+      <li><strong>Natasha's Law (PPDS Regulations, October 2021)</strong> — full ingredient and allergen labelling on pre-packed for direct sale food</li>
+      <li><strong>Food Standards Agency (FSA) guidance</strong> — food safety management procedures</li>
+    </ul>
+    <div class="warn-box"><p>⚠️ Cooks who prepare food for sale in the UK may be required to register as a food business with their local authority. We advise all cooks to check their registration obligations with their local council.</p></div>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">3</span> The 14 Major Allergens</h2>
+    <p>Under UK law (Food Information Regulations 2014), the following 14 allergens must be declared when present as an ingredient. All MechChef cooks are required to clearly list all applicable allergens on every meal listing:</p>
+    <div class="allergen-grid">
+      <div class="allergen-pill"><span class="icon">🌾</span>Cereals/Gluten</div>
+      <div class="allergen-pill"><span class="icon">🦐</span>Crustaceans</div>
+      <div class="allergen-pill"><span class="icon">🥚</span>Eggs</div>
+      <div class="allergen-pill"><span class="icon">🐟</span>Fish</div>
+      <div class="allergen-pill"><span class="icon">🥜</span>Peanuts</div>
+      <div class="allergen-pill"><span class="icon">🫘</span>Soybeans</div>
+      <div class="allergen-pill"><span class="icon">🥛</span>Milk</div>
+      <div class="allergen-pill"><span class="icon">🌰</span>Nuts</div>
+      <div class="allergen-pill"><span class="icon">🌿</span>Celery</div>
+      <div class="allergen-pill"><span class="icon">🟡</span>Mustard</div>
+      <div class="allergen-pill"><span class="icon">🌱</span>Sesame</div>
+      <div class="allergen-pill"><span class="icon">🍷</span>Sulphites</div>
+      <div class="allergen-pill"><span class="icon">🐌</span>Lupin</div>
+      <div class="allergen-pill"><span class="icon">🦑</span>Molluscs</div>
+    </div>
+    <div class="highlight-box"><p>⚠️ If you have a severe food allergy, always check the allergen information on each meal listing AND contact the cook directly before ordering. MechChef cannot guarantee meals are free from cross-contamination in home kitchen environments.</p></div>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">4</span> Natasha's Law — What It Means for MechChef</h2>
+    <p>Natasha's Law (October 2021) requires full ingredient and allergen labelling on all pre-packed for direct sale (PPDS) food — that is, food packaged at the same place it is sold.</p>
+    <p>For MechChef, this means:</p>
+    <ul>
+      <li>Every meal listing must display a full ingredient list and highlight allergens in bold</li>
+      <li>Cooks must label packaged meals with the meal name and all ingredients before delivery</li>
+      <li>Allergens must be emphasised (bold, underlined, or different colour) within the ingredient list</li>
+    </ul>
+    <p>MechChef's platform captures allergen information from cooks at the meal creation stage and displays it clearly to customers on every meal listing.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">5</span> Food Hygiene Standards for Cooks</h2>
+    <p>All cooks on MechChef must follow these minimum hygiene standards:</p>
+    <ul>
+      <li>Wash hands thoroughly before and during food preparation</li>
+      <li>Use separate chopping boards for raw meat, vegetables, and cooked food</li>
+      <li>Store food at correct temperatures (below 5°C for chilled, above 63°C for hot food)</li>
+      <li>Do not cook when ill with vomiting, diarrhoea, or infectious skin conditions</li>
+      <li>Keep kitchen clean and free from pests</li>
+      <li>Use food-safe packaging for delivery</li>
+      <li>Label all packaged meals with meal name, ingredients, and allergens</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">6</span> Reporting Food Safety Concerns</h2>
+    <p>If you experience a food safety issue — such as foreign objects in food, suspected food poisoning, or mislabelled allergens — please contact us immediately:</p>
+    <ul>
+      <li>Email: <a href="mailto:safety@mechchef.co.uk">safety@mechchef.co.uk</a></li>
+      <li>In the case of a medical emergency, call 999 immediately.</li>
+      <li>Food safety concerns can also be reported to your local council's Environmental Health department or the Food Standards Agency at <a href="https://www.food.gov.uk" target="_blank">food.gov.uk</a>.</li>
+    </ul>
+    <div class="last-updated">Last updated: June 2026 · Questions? Email <a href="mailto:safety@mechchef.co.uk">safety@mechchef.co.uk</a></div>
+  </div>
+</div>
+
+<footer class="policy-footer">
+  <div>© 2026 MechChef · Home Cooked Food, Delivered · Harrow & Newham, London</div>
+  <div class="policy-nav-links">
+    <a href="terms.html">Terms & Conditions</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="cookie-policy.html">Cookie Policy</a>
+    <a href="food-safety.html">Food Safety</a>
+    <a href="cook-guidelines.html">Cook Guidelines</a>
+    <a href="refund-policy.html">Refund Policy</a>
+  </div>
+</footer>
+</body>
+</html>

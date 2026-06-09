@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cook Guidelines – MechChef</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#C8472B;--red-dark:#a8391f;--red-light:#fdf2ee;--dark:#1a1a18;--dark2:#2e2e2b;--surface:#faf9f7;--surface2:#f2f0eb;--green:#2d7d5a;--green-light:#e8f5ee;--amber:#D4A843;--border:#e5e2da;--muted:#7a7a70;--white:#fff;--text:#1a1a18;--cream:#faf9f7;}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);background:var(--cream);line-height:1.7}
+nav{background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-icon{width:38px;height:38px;background:var(--dark);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-text{font-size:20px;font-weight:700;color:var(--dark);letter-spacing:-.5px;font-family:'Playfair Display',serif}
+.logo-text span{color:var(--red)}
+.policy-hero{background:var(--dark);color:#fff;padding:60px 40px 50px;text-align:center}
+.policy-hero .badge{display:inline-block;background:var(--green);color:#fff;border-radius:50px;padding:5px 16px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:16px}
+.policy-hero h1{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;margin-bottom:12px}
+.policy-hero p{font-size:14px;color:rgba(255,255,255,.6);max-width:500px;margin:0 auto}
+.policy-body{max-width:780px;margin:0 auto;padding:48px 24px 80px}
+.policy-section{margin-bottom:40px;scroll-margin-top:90px}
+.policy-section h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px}
+.policy-section h2 .sec-num{background:var(--green);color:#fff;border-radius:6px;padding:2px 9px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700}
+.policy-section h3{font-size:15px;font-weight:700;color:var(--dark);margin:20px 0 8px}
+.policy-section p{font-size:14px;color:#3a3a35;margin-bottom:12px}
+.policy-section ul,.policy-section ol{padding-left:20px;margin-bottom:12px}
+.policy-section li{font-size:14px;color:#3a3a35;margin-bottom:6px}
+.policy-section a{color:var(--red);text-decoration:none}
+.highlight-box{background:var(--red-light);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+.highlight-box p{color:var(--red-dark);font-size:13px;margin:0;font-weight:500}
+.info-box{background:var(--green-light);border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+.info-box p{color:var(--green);font-size:13px;margin:0;font-weight:500}
+.warn-box{background:#fff9ec;border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+.warn-box p{color:#7a5c0a;font-size:13px;margin:0;font-weight:500}
+.step-list{counter-reset:steps;list-style:none;padding:0;margin:16px 0}
+.step-list li{counter-increment:steps;display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
+.step-list li::before{content:counter(steps);background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;min-width:26px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin-top:2px}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.do-box,.dont-box{border-radius:12px;padding:18px 20px}
+.do-box{background:var(--green-light);border:1.5px solid var(--green)}
+.dont-box{background:var(--red-light);border:1.5px solid var(--red)}
+.do-box h4{color:var(--green);font-size:13px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.dont-box h4{color:var(--red);font-size:13px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.do-box ul,.dont-box ul{padding-left:16px;margin:0}
+.do-box li,.dont-box li{font-size:13px;margin-bottom:5px}
+.do-box li{color:#1a4a2e}
+.dont-box li{color:var(--red-dark)}
+.last-updated{font-size:12px;color:var(--muted);margin-top:32px;text-align:center;padding-top:20px;border-top:1px solid var(--border)}
+.policy-footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;padding:32px 24px;font-size:13px}
+.policy-footer a{color:rgba(255,255,255,.8);text-decoration:none}
+.policy-nav-links{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.policy-nav-links a{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:5px 14px;font-size:12px;color:rgba(255,255,255,.7);text-decoration:none;transition:all .15s}
+.policy-nav-links a:hover{background:rgba(255,255,255,.15);color:#fff}
+@media(max-width:768px){nav{padding:0 16px}.policy-hero{padding:40px 20px 32px}.policy-hero h1{font-size:26px}.do-dont{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">🍱</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <a href="index.html" style="font-size:13px;font-weight:600;color:var(--muted);text-decoration:none">← Back to Home</a>
+</nav>
+
+<div class="policy-hero">
+  <div class="badge">For Cooks</div>
+  <h1>Cook Guidelines</h1>
+  <p>Everything you need to know to cook and earn on MechChef. Welcome to the community!</p>
+</div>
+
+<div class="policy-body">
+
+  <div class="policy-section">
+    <h2><span class="sec-num">1</span> Getting Started</h2>
+    <p>Welcome to MechChef! We connect passionate home cooks with customers who crave real, home-cooked food. Here's how to get set up:</p>
+    <ol class="step-list">
+      <li><div><strong>Create your cook account</strong> — Register at mechchef.vercel.app and select "I'm a Cook" during signup.</div></li>
+      <li><div><strong>Complete your profile</strong> — Add your name, cuisine type, a short bio, and a profile photo. Customers choose cooks they trust.</div></li>
+      <li><div><strong>Upload your Food Hygiene Certificate</strong> — A valid Level 2 certificate is mandatory. Our team will verify it before approving your account.</div></li>
+      <li><div><strong>Add your meals</strong> — List your dishes with photos, descriptions, allergens, and pricing (£5–£10).</div></li>
+      <li><div><strong>Set your availability</strong> — Tell customers which days and time slots you cook. Only appear online when you're ready.</div></li>
+      <li><div><strong>Wait for approval</strong> — Our admin team reviews all new cook accounts within 48 hours.</div></li>
+    </ol>
+    <div class="info-box"><p>✅ Once approved, you're live! Customers in your area can find and order from you immediately.</p></div>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">2</span> Meal Listings</h2>
+    <h3>What makes a great listing</h3>
+    <ul>
+      <li><strong>Real photo of your actual food</strong> — This is the most important thing. Customers eat with their eyes first.</li>
+      <li><strong>Clear, accurate description</strong> — Ingredients, cooking method, spice level, serving size.</li>
+      <li><strong>All allergens declared</strong> — Required by UK law. Do not skip this.</li>
+      <li><strong>Honest pricing</strong> — Meals must be priced between £5.00 and £10.00.</li>
+    </ul>
+    <h3>Pricing guidance</h3>
+    <p>MechChef is a tiffin-style platform — affordable, everyday home cooking. We recommend:</p>
+    <ul>
+      <li>Simple dal/sabzi combos: £5.00 – £6.00</li>
+      <li>Biryani, curry with rice/roti: £6.00 – £8.00</li>
+      <li>Special meals, larger portions: £8.00 – £10.00</li>
+    </ul>
+    <div class="warn-box"><p>⚠️ Meal photos must be original photos of food you have actually prepared. Stock images or photos from the internet are not allowed and will result in meal removal.</p></div>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">3</span> Managing Orders</h2>
+    <p>When a customer places an order with you, you will receive a notification on your dashboard. You must:</p>
+    <ul>
+      <li><strong>Accept or reject within 30 minutes</strong> — If you don't respond, the order is automatically cancelled and the customer refunded.</li>
+      <li><strong>Update order status</strong> — Mark as Cooking → Ready → Delivered as you progress.</li>
+      <li><strong>Never cancel without good reason</strong> — Repeated cancellations affect your rating and may lead to account suspension.</li>
+    </ul>
+    <div class="do-dont">
+      <div class="do-box">
+        <h4>✅ Do</h4>
+        <ul>
+          <li>Accept orders you can definitely fulfil</li>
+          <li>Update status in real time</li>
+          <li>Contact MechChef if there's an emergency</li>
+          <li>Package food safely and hygienically</li>
+          <li>Label every package with meal name and allergens</li>
+        </ul>
+      </div>
+      <div class="dont-box">
+        <h4>❌ Don't</h4>
+        <ul>
+          <li>Accept orders when you're unavailable</li>
+          <li>Ignore order notifications</li>
+          <li>Cancel last-minute without contacting us</li>
+          <li>Send food different from your listing</li>
+          <li>Ask customers to pay outside the platform</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">4</span> Availability & Schedule</h2>
+    <ul>
+      <li>Set your available days and delivery time slots in your cook dashboard.</li>
+      <li>Only switch to "Live" when you are genuinely ready to cook and receive orders.</li>
+      <li>If you need a day off, turn off availability in advance — don't just ignore orders.</li>
+      <li>We understand life happens — maternity leave, holidays, illness. Just keep your schedule updated so customers aren't disappointed.</li>
+    </ul>
+    <div class="info-box"><p>✅ MechChef is designed for flexible cooking. Whether you cook 2 days a week or 5, you are in control of your schedule.</p></div>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">5</span> Earnings & Payouts</h2>
+    <ul>
+      <li>MechChef charges a platform commission on each completed order. Your net earnings are shown in your dashboard analytics.</li>
+      <li>Payouts are processed weekly to your registered bank account.</li>
+      <li>You are an independent contractor, not an employee of MechChef.</li>
+      <li><strong>Tax responsibility:</strong> Any income earned through MechChef must be declared to HMRC. If your total self-employment income exceeds £1,000 per tax year, you must register as self-employed and complete a Self Assessment tax return.</li>
+    </ul>
+    <div class="warn-box"><p>⚠️ We strongly recommend keeping records of your MechChef earnings. For tax advice, consult HMRC's self-employment guidance at <a href="https://www.gov.uk/self-employed-national-insurance-the-basics" target="_blank" style="color:#7a5c0a;text-decoration:underline">gov.uk</a> or speak to an accountant.</p></div>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">6</span> Food Business Registration</h2>
+    <p>Under UK law, anyone running a food business — including home cooks selling food regularly — may need to register with their local authority as a food business operator. This applies if you are selling food regularly (not just occasionally).</p>
+    <ul>
+      <li>Registration is <strong>free</strong> and must be done at least 28 days before starting to trade.</li>
+      <li>Contact your local council's Environmental Health department to register.</li>
+      <li>Find your local authority at: <a href="https://www.food.gov.uk/business-guidance/register-a-food-business" target="_blank">food.gov.uk</a></li>
+    </ul>
+    <div class="highlight-box"><p>⚠️ MechChef requires all cooks who fulfil regular orders to confirm they have registered (or confirmed they are exempt) with their local authority. Failure to register when required is a criminal offence.</p></div>
+  </div>
+
+  <div class="policy-section">
+    <h2><span class="sec-num">7</span> Account Suspension & Removal</h2>
+    <p>MechChef may suspend or remove a cook account for:</p>
+    <ul>
+      <li>Repeated order cancellations without valid reason</li>
+      <li>Repeated negative customer feedback or complaints</li>
+      <li>Failure to declare allergens accurately</li>
+      <li>Evidence of poor food hygiene standards</li>
+      <li>Attempting to take payments outside the platform</li>
+      <li>Any violation of our Terms & Conditions</li>
+    </ul>
+    <p>We will always try to resolve issues before taking action. If you receive a warning, please contact us at <a href="mailto:cooks@mechchef.co.uk">cooks@mechchef.co.uk</a>.</p>
+    <div class="last-updated">Last updated: June 2026 · Cook support: <a href="mailto:cooks@mechchef.co.uk">cooks@mechchef.co.uk</a></div>
+  </div>
+</div>
+
+<footer class="policy-footer">
+  <div>© 2026 MechChef · Home Cooked Food, Delivered · Harrow & Newham, London</div>
+  <div class="policy-nav-links">
+    <a href="terms.html">Terms & Conditions</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="cookie-policy.html">Cookie Policy</a>
+    <a href="food-safety.html">Food Safety</a>
+    <a href="cook-guidelines.html">Cook Guidelines</a>
+    <a href="refund-policy.html">Refund Policy</a>
+  </div>
+</footer>
+</body>
+</html>
