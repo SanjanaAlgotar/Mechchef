@@ -9,6 +9,33 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .rev-hero{background:var(--dark);padding:64px 40px;text-align:center;position:relative;overflow:hidden}
+    .rev-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,67,0.1),transparent 60%);pointer-events:none}
+    .rev-hero h1{font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:10px;font-family:'Playfair Display',serif;position:relative;z-index:1}
+    .rev-hero p{font-size:15px;color:rgba(255,255,255,.6);position:relative;z-index:1}
+    .rev-hero-stats{display:flex;justify-content:center;gap:40px;margin-top:28px;position:relative;z-index:1;flex-wrap:wrap}
+    .rhs{text-align:center}
+    .rhs strong{display:block;font-size:32px;font-weight:900;color:#fff;font-family:'Playfair Display',serif}
+    .rhs span{font-size:12px;color:rgba(255,255,255,.5)}
+    .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;align-items:center}
+    .filter-row .fpill{font-size:12px}
+    .star-filter{display:flex;gap:6px;flex-wrap:wrap}
+    .sfilter{background:var(--white);border:1.5px solid var(--border);border-radius:50px;padding:6px 16px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s}
+    .sfilter:hover,.sfilter.on{background:var(--amber);border-color:var(--amber);color:var(--dark)}
+    .rev-modal-wrap{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;pointer-events:none;opacity:0;transition:opacity .2s}
+    .rev-modal-wrap.on{opacity:1;pointer-events:all}
+    .rev-modal-wrap .modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px)}
+    .rev-mbox{position:relative;z-index:1;background:var(--white);border-radius:24px;width:100%;max-width:480px;padding:36px;box-shadow:0 32px 80px rgba(0,0,0,.25)}
+    .star-pick{display:flex;gap:8px;font-size:36px;cursor:pointer;margin:10px 0 16px}
+    .star-pick span{transition:transform .1s;line-height:1;user-select:none}
+    .star-pick span:hover{transform:scale(1.2)}
+    @media(max-width:768px){
+      .rev-hero{padding:48px 16px}
+      .rev-hero h1{font-size:28px}
+      .rev-hero-stats{gap:24px}
+    }
+  </style>
 </head>
 <body>
 

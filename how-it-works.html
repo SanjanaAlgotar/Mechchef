@@ -9,6 +9,33 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .hiw-hero{background:var(--dark);padding:72px 40px;text-align:center;color:#fff;position:relative;overflow:hidden}
+    .hiw-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,67,0.1) 0%,transparent 60%);pointer-events:none}
+    .hiw-hero h1{font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:12px;font-family:'Playfair Display',serif;position:relative;z-index:1}
+    .hiw-hero p{font-size:16px;color:rgba(255,255,255,.6);max-width:500px;margin:0 auto;line-height:1.7;position:relative;z-index:1}
+    .step-block{display:flex;gap:32px;align-items:flex-start;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
+    .step-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+    .step-block.reverse{flex-direction:row-reverse}
+    .step-num-big{width:64px;height:64px;border-radius:18px;background:var(--dark);color:#fff;font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif}
+    .step-content h3{font-size:22px;font-weight:800;margin-bottom:10px;font-family:'Playfair Display',serif}
+    .step-content p{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:14px}
+    .step-content ul{list-style:none;padding:0}
+    .step-content ul li{font-size:13px;color:var(--muted);padding:5px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+    .step-content ul li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+    .step-visual{flex:1;min-width:0;background:var(--surface);border-radius:20px;border:1.5px solid var(--border);padding:28px;text-align:center}
+    .step-icon-big{font-size:72px;margin-bottom:12px}
+    .faq-item{border-bottom:1px solid var(--border);padding:20px 0}
+    .faq-q{font-size:15px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .faq-a{font-size:13px;color:var(--muted);line-height:1.75;margin-top:12px;display:none}
+    .faq-a.open{display:block}
+    @media(max-width:768px){
+      .hiw-hero{padding:48px 16px}
+      .hiw-hero h1{font-size:28px}
+      .step-block,.step-block.reverse{flex-direction:column;gap:20px}
+      .step-num-big{width:48px;height:48px;font-size:18px}
+    }
+  </style>
 </head>
 <body>
 
