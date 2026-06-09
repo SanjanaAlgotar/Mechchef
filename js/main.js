@@ -116,22 +116,10 @@ function showComingSoon(feature) {
 function closeComingSoon() {
   document.getElementById('coming-soon-modal').style.display = 'none';
 }
-function openPrivacyModal() {
-  document.getElementById('privacy-modal').style.display = 'flex';
-}
-function closePrivacyModal() {
-  document.getElementById('privacy-modal').style.display = 'none';
-}
-function openTermsModal() {
-  document.getElementById('terms-modal').style.display = 'flex';
-}
-function closeTermsModal() {
-  document.getElementById('terms-modal').style.display = 'none';
-}
 
 // Close modals on background click
 document.addEventListener('DOMContentLoaded', () => {
-  ['coming-soon-modal', 'privacy-modal', 'terms-modal'].forEach(id => {
+  ['coming-soon-modal'].forEach(id => {
     document.getElementById(id)?.addEventListener('click', function (e) {
       if (e.target === this) this.style.display = 'none';
     });
