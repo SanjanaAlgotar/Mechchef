@@ -1,91 +1,322 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meals | Mechchef</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Browse Meals – MechChef | Home Cooked Food Harrow & Newham</title>
+  <meta name="description" content="Browse fresh home-cooked meals from verified local cooks in Harrow & Newham, London."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="index.html">Mechchef</a>
-    <nav class="nav-links" aria-label="Primary">
-      <a class="active" href="meals.html">Meals</a>
-      <a href="cook-with-us.html">Cook with us</a>
+
+<!-- TOP BAR -->
+<div class="topbar">🇬🇧 Serving Harrow & Newham, London <span>Launching Soon</span></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🍽</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <div class="nav-center">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link active" href="meals.html">Browse Meals</a>
+    <a class="nav-link" href="cooks.html">Find Cooks</a>
+    <a class="nav-link" href="how-it-works.html">How It Works</a>
+    <a class="nav-link" href="reviews.html">Reviews</a>
+    <a class="nav-link" href="cook-with-us.html">Cook with us 🍳</a>
+  </div>
+  <div class="nav-right">
+    <button class="loc-btn" onclick="toast('📍 Location: Harrow, London')">📍 Harrow, London</button>
+    <button class="cart-bubble" onclick="toggleCart()" aria-label="Open basket">🛒<span class="cart-num" id="cn">0</span></button>
+    <div id="nav-auth" style="display:flex;align-items:center;gap:8px">
+      <button class="btn btn-ghost" onclick="window.location.href='auth.html'">Log in</button>
+      <button class="btn btn-red" onclick="window.location.href='auth.html'">Sign up</button>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h1>Browse All Meals 🍽</h1>
+  <p>Fresh home-cooked food from verified local cooks in Harrow &amp; Newham</p>
+</div>
+
+<!-- STICKY SEARCH + SORT BAR -->
+<div class="sticky-bar">
+  <div class="sb-input">
+    <span>🔍</span>
+    <input type="text" id="search-inp" placeholder="Search meals, cuisines, chefs…" oninput="searchMeals(this.value)"/>
+  </div>
+  <select class="sort-sel" onchange="sortMeals(this.value)">
+    <option value="">Sort by</option>
+    <option value="price-asc">Price: Low to High</option>
+    <option value="price-desc">Price: High to Low</option>
+    <option value="popular">Most Popular</option>
+  </select>
+  <span class="results-count" id="results-count">12 meals</span>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="sec">
+  <!-- Cuisine scroll -->
+  <div class="sec-hd" style="margin-bottom:16px"><div><h2 style="font-size:18px">Browse by cuisine</h2></div></div>
+  <div class="cscroll" id="cuisine-scroll" style="margin-bottom:28px"></div>
+
+  <!-- Diet filters -->
+  <div class="fbar" id="diet-fbar"></div>
+
+  <!-- Meals grid -->
+  <div class="mgrid" id="meals-grid"></div>
+
+  <!-- No results -->
+  <div id="no-results" style="display:none;text-align:center;padding:60px 0">
+    <div style="font-size:48px;margin-bottom:16px">🍽</div>
+    <p style="color:var(--muted);font-size:15px">No meals match your filters.<br>Try a different cuisine or dietary option.</p>
+    <button class="btn btn-dark" style="margin-top:16px" onclick="resetFilters()">Clear filters</button>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart">
+  <div class="cp-hd">
+    <h3>🛒 Your Basket</h3>
+    <button onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cp-body" id="cp-body"></div>
+  <div id="cp-foot" style="display:none">
+    <div class="cp-foot">
+      <div class="cp-row"><span>Subtotal</span><span id="cp-sub">£0.00</span></div>
+      <div class="cp-row"><span>Delivery fee</span><span>£1.99</span></div>
+      <div class="cp-total"><span>Total (inc. VAT)</span><span id="cp-tot">£0.00</span></div>
+      <button class="btn btn-red cp-cta" onclick="window.location.href='index.html#checkout'">Go to Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEAL MODAL -->
+<div class="modal-wrap" id="mwrap">
+  <div class="modal-bg" onclick="closeModal()"></div>
+  <div class="mbox">
+    <button class="mbox-close" onclick="closeModal()">✕</button>
+    <div class="mbox-img" id="mimg"></div>
+    <div class="mbox-body">
+      <h2 id="mname"></h2>
+      <div class="mbox-cook" id="mcook"></div>
+      <div class="mcard-tags" id="mtags"></div>
+      <div class="mbox-desc" id="mdesc"></div>
+      <div class="mbox-bottom">
+        <div class="mbox-price" id="mprice"></div>
+        <div class="qty-row">
+          <button onclick="mQty(-1)">−</button>
+          <span id="mqty">1</span>
+          <button onclick="mQty(1)">+</button>
+        </div>
+      </div>
+      <button class="btn btn-red mbox-add" onclick="addFromModal()">Add to Basket →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><div class="icon">🍽</div>MechChef</div>
+      <div class="ft-desc">London's first pre-order home cook tiffin marketplace. Fresh, affordable meals from verified home cooks in Harrow &amp; Newham.</div>
+      <div class="ft-social">
+        <a class="ftsoc" href="https://x.com/mechchef" target="_blank">𝕏</a>
+        <a class="ftsoc" href="https://instagram.com/mechchef" target="_blank">📸</a>
+        <a class="ftsoc" href="https://facebook.com/mechchef" target="_blank">📘</a>
+      </div>
+    </div>
+    <div class="ft-col">
+      <h5>For Customers</h5>
+      <a href="meals.html">Browse Meals</a>
+      <a href="cooks.html">Find Cooks</a>
       <a href="reviews.html">Reviews</a>
-      <a href="auth.html">Sign in</a>
-    </nav>
-    <a class="button button-small" href="checkout.html">Cart</a>
-  </header>
+    </div>
+    <div class="ft-col">
+      <h5>For Cooks</h5>
+      <a href="cook-with-us.html">Become a Cook</a>
+      <a href="cook-dashboard.html">Cook Dashboard</a>
+    </div>
+    <div class="ft-col">
+      <h5>Company</h5>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="index.html">Home</a>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2025 MechChef Ltd. Launch areas: Harrow &amp; Newham, London 🇬🇧</span>
+    <span>Pre-order home-cooked tiffins · Delivery fee £1.99</span>
+  </div>
+</footer>
 
-  <main class="page">
-    <section class="page-title">
-      <p class="eyebrow">Order now</p>
-      <h1>Meals ready around you</h1>
-      <p>Search menus from verified home cooks. Every listing includes allergy notes, collection times, and cook ratings.</p>
-    </section>
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+// ── DATA ──
+const CUISINES = [
+  {n:'All',img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=120&h=120&fit=crop'},
+  {n:'Indian',img:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=120&h=120&fit=crop'},
+  {n:'Pakistani',img:'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=120&h=120&fit=crop'},
+  {n:'Caribbean',img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=120&h=120&fit=crop'},
+  {n:'Italian',img:'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=120&h=120&fit=crop'},
+  {n:'Chinese',img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=120&h=120&fit=crop'},
+  {n:'Turkish',img:'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=120&h=120&fit=crop'},
+  {n:'Mediterranean',img:'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=120&h=120&fit=crop'},
+  {n:'Thai',img:'https://images.unsplash.com/photo-1562565652-a0d8f0c59eb4?w=120&h=120&fit=crop'},
+  {n:'British',img:'https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=120&h=120&fit=crop'},
+];
+const DIETS = ['All','Vegan','Vegetarian','Halal','Gluten Free','Under £10','Bestsellers'];
+const MEALS = [
+  {id:1,n:'Butter Chicken & Basmati Rice',cook:'Coming Soon',cid:1,cui:'Indian',img:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop',p:8.50,tags:['Halal','Non-Veg'],desc:'Tender chicken in a rich, creamy tomato-butter sauce. Served with fragrant basmati rice.',badge:'Bestseller',badgeC:'badge-hot',e:'🍛'},
+  {id:2,n:'Jerk Chicken & Rice & Peas',cook:'Coming Soon',cid:2,cui:'Caribbean',img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop',p:9.00,tags:['Gluten Free','Non-Veg'],desc:'Authentic Jamaican jerk chicken marinated overnight. Served with coconut rice and kidney beans.',badge:'Popular',badgeC:'badge-hot',e:'🍗'},
+  {id:3,n:'Homemade Lasagne al Forno',cook:'Coming Soon',cid:3,cui:'Italian',img:'https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=600&h=400&fit=crop',p:7.50,tags:['Non-Veg'],desc:'Classic Italian lasagne with slow-cooked beef ragù, béchamel sauce, and three cheeses.',badge:'New',badgeC:'badge-new',e:'🫕'},
+  {id:4,n:'Steamed Dim Sum Basket (12 pcs)',cook:'Coming Soon',cid:4,cui:'Chinese',img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&h=400&fit=crop',p:6.50,tags:['Non-Veg'],desc:'Hand-folded pork and prawn dim sum dumplings. Steamed fresh.',badge:'Popular',badgeC:'badge-hot',e:'🥟'},
+  {id:5,n:'Dal Makhani & Garlic Naan',cook:'Coming Soon',cid:1,cui:'Indian',img:'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&h=400&fit=crop',p:7.00,tags:['Vegetarian','Halal'],desc:'Slow-cooked black lentils in a creamy tomato-butter sauce with freshly baked garlic naan.',e:'🫘'},
+  {id:6,n:'Adana Lamb Kebab Wrap',cook:'Coming Soon',cid:5,cui:'Turkish',img:'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600&h=400&fit=crop',p:8.00,tags:['Halal','Non-Veg'],desc:"Hand-minced lamb adana kebab with sumac onions and garlic yoghurt in a warm lavash wrap.",badge:"Today's Special",badgeC:'badge-special',e:'🥙'},
+  {id:7,n:'Dum Chicken Biryani',cook:'Coming Soon',cid:6,cui:'Pakistani',img:'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&h=400&fit=crop',p:9.50,tags:['Halal','Non-Veg'],desc:'Slow-cooked dum biryani with fragrant basmati, saffron, and tender chicken.',badge:'Bestseller',badgeC:'badge-hot',e:'🍚'},
+  {id:8,n:'Pad Thai with Silken Tofu',cook:'Coming Soon',cid:7,cui:'Thai',img:'https://images.unsplash.com/photo-1562565652-a0d8f0c59eb4?w=600&h=400&fit=crop',p:6.99,tags:['Vegan','Gluten Free'],desc:'Classic pad thai with rice noodles, silken tofu, bean sprouts, and roasted peanuts.',e:'🍜'},
+  {id:9,n:'Slow-Cooked Lamb Karahi',cook:'Coming Soon',cid:6,cui:'Pakistani',img:'https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?w=600&h=400&fit=crop',p:10.00,tags:['Halal','Non-Veg'],desc:'Tender lamb in a cast-iron karahi with tomatoes, green chillies, and whole spices.',badge:"Chef's Pick",badgeC:'badge-hot',e:'🥩'},
+  {id:10,n:'Classic Sunday Roast Chicken',cook:'Coming Soon',cid:8,cui:'British',img:'https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=600&h=400&fit=crop',p:9.99,tags:['Non-Veg'],desc:'Traditional British Sunday roast with free-range chicken, roasties, Yorkshire pudding and gravy.',badge:'Weekend Special',badgeC:'badge-special',e:'🍗'},
+  {id:11,n:'Wood-Fired Margherita Pizza',cook:'Coming Soon',cid:3,cui:'Italian',img:'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop',p:7.99,tags:['Vegetarian'],desc:'48-hour fermented dough with San Marzano tomato, fresh mozzarella, and torn basil.',e:'🍕'},
+  {id:12,n:'Lemon Herb Mezze Bowl',cook:'Coming Soon',cid:9,cui:'Mediterranean',img:'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=600&h=400&fit=crop',p:6.50,tags:['Vegan','Gluten Free'],desc:'Quinoa with roasted courgette, aubergine, olives, and a lemon-herb tahini dressing.',badge:'New',badgeC:'badge-new',e:'🥗'},
+];
 
-    <section class="filters" aria-label="Meal filters">
-      <input id="mealSearch" type="search" placeholder="Search meals, cooks, or cuisine">
-      <select id="cuisineFilter">
-        <option value="all">All cuisines</option>
-        <option value="indian">Indian</option>
-        <option value="italian">Italian</option>
-        <option value="thai">Thai</option>
-        <option value="middle-eastern">Middle Eastern</option>
-      </select>
-      <select id="dietFilter">
-        <option value="all">Any diet</option>
-        <option value="vegetarian">Vegetarian</option>
-        <option value="vegan">Vegan</option>
-        <option value="halal">Halal</option>
-      </select>
-    </section>
+let activeCui = 'All', activeDiet = 'All', curMeal = null, mqtyV = 1;
+const fmt = n => `£${n.toFixed(2)}`;
 
-    <section class="meal-list" id="mealList">
-      <article class="listing" data-cuisine="indian" data-diet="halal" data-search="chicken biryani amina indian halal">
-        <div class="meal-photo biryani"></div>
-        <div>
-          <p class="tag">Amina's Kitchen · 4.9</p>
-          <h2>Hyderabadi chicken biryani</h2>
-          <p>Slow-cooked basmati rice, chicken, raita, mirchi salan, and salad. Medium spice.</p>
-          <p class="muted">Ready today 18:00 · Delivery or pickup · Contains dairy</p>
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', async () => {
+  buildCuisines();
+  buildDietFilters();
+  renderMeals();
+  // Try load from Supabase
+  try {
+    const { data } = await db.from('meals').select('*').eq('status','approved').eq('is_available',true);
+    if (data && data.length) {
+      MEALS.length = 0;
+      data.forEach(m => MEALS.push({
+        id:m.id, n:m.name, e:m.emoji||'🍽️', cook:m.cook_name||'Local Chef',
+        cid:m.cook_id, cui:m.cuisine||'Indian',
+        img:m.photo_url||m.image_url||'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop',
+        p:parseFloat(m.price), tags:m.tags||[], desc:m.description||'',
+        badge:m.badge||'', badgeC:m.badge_color||'badge-hot',
+      }));
+      renderMeals();
+    }
+  } catch(e) {}
+});
+
+function buildCuisines() {
+  document.getElementById('cuisine-scroll').innerHTML = CUISINES.map(c => `
+    <div class="c-pill ${c.n === activeCui ? 'on' : ''}" onclick="setCuisine('${c.n}')">
+      <div class="c-pill-img"><img src="${c.img}" alt="${c.n}" loading="lazy"/></div>
+      <div class="nm">${c.n}</div>
+    </div>`).join('');
+}
+
+function setCuisine(n) {
+  activeCui = n;
+  buildCuisines();
+  renderMeals();
+}
+
+function buildDietFilters() {
+  document.getElementById('diet-fbar').innerHTML = DIETS.map(d =>
+    `<div class="fpill ${d === activeDiet ? 'on' : ''}" onclick="setDiet('${d}')">${d}</div>`
+  ).join('');
+}
+
+function setDiet(d) { activeDiet = d; buildDietFilters(); renderMeals(); }
+
+function resetFilters() { activeCui = 'All'; activeDiet = 'All'; buildCuisines(); buildDietFilters(); renderMeals(); }
+
+function renderMeals() {
+  let f = [...MEALS];
+  if (activeCui !== 'All') f = f.filter(m => m.cui === activeCui);
+  if (activeDiet === 'Vegan') f = f.filter(m => m.tags.includes('Vegan'));
+  else if (activeDiet === 'Vegetarian') f = f.filter(m => m.tags.includes('Vegetarian') || m.tags.includes('Vegan'));
+  else if (activeDiet === 'Halal') f = f.filter(m => m.tags.includes('Halal'));
+  else if (activeDiet === 'Gluten Free') f = f.filter(m => m.tags.includes('Gluten Free'));
+  else if (activeDiet === 'Under £10') f = f.filter(m => m.p <= 10);
+  else if (activeDiet === 'Bestsellers') f = f.filter(m => m.badge === 'Bestseller' || m.badge === 'Popular');
+  const grid = document.getElementById('meals-grid'), nr = document.getElementById('no-results');
+  const count = document.getElementById('results-count');
+  if (!f.length) { grid.innerHTML = ''; nr.style.display = 'block'; count.textContent = '0 meals'; }
+  else { nr.style.display = 'none'; grid.innerHTML = f.map(mCard).join(''); count.textContent = f.length + ' meal' + (f.length !== 1 ? 's' : ''); }
+}
+
+function searchMeals(q) {
+  const s = q.toLowerCase().trim();
+  let f = [...MEALS];
+  if (activeCui !== 'All') f = f.filter(m => m.cui === activeCui);
+  if (s) f = f.filter(m => m.n.toLowerCase().includes(s) || m.cui.toLowerCase().includes(s) || m.tags.some(t => t.toLowerCase().includes(s)));
+  const grid = document.getElementById('meals-grid'), nr = document.getElementById('no-results');
+  const count = document.getElementById('results-count');
+  if (!f.length) { grid.innerHTML = ''; nr.style.display = 'block'; count.textContent = '0 meals'; }
+  else { nr.style.display = 'none'; grid.innerHTML = f.map(mCard).join(''); count.textContent = f.length + ' meal' + (f.length !== 1 ? 's' : ''); }
+}
+
+function sortMeals(v) {
+  let f = [...MEALS];
+  if (activeCui !== 'All') f = f.filter(m => m.cui === activeCui);
+  if (v === 'price-asc') f.sort((a,b) => a.p - b.p);
+  else if (v === 'price-desc') f.sort((a,b) => b.p - a.p);
+  else if (v === 'popular') f.sort((a,b) => (b.badge ? 1 : 0) - (a.badge ? 1 : 0));
+  document.getElementById('meals-grid').innerHTML = f.map(mCard).join('');
+}
+
+function mCard(m) {
+  const vT = ['Vegan','Vegetarian','Gluten Free'];
+  return `<div class="mcard" onclick="openModal('${m.id}')">
+    <div class="mcard-img" style="background:#f0ede8;overflow:hidden;padding:0">
+      ${m.badge ? `<div class="mcard-badge ${m.badgeC||'badge-hot'}">${m.badge}</div>` : ''}
+      <button class="mcard-fav" onclick="event.stopPropagation();toast('❤️ Saved to favourites!')">🤍</button>
+      <img src="${m.img}" alt="${m.n}" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+    </div>
+    <div class="mcard-body">
+      <div class="mcard-tags">${m.tags.map(t => `<span class="mtag ${vT.includes(t)?'v':''}">${t}</span>`).join('')}</div>
+      <div class="mcard-name">${m.n}</div>
+      <div class="mcard-cook">🍳 ${m.cook} · Harrow & Newham</div>
+      <div class="mcard-foot">
+        <div class="mcard-price">${fmt(m.p)}</div>
+        <div class="mcard-meta">
+          <div class="mcard-rating" style="font-size:11px;color:var(--muted)">Pre-order</div>
+          <button class="add-circle" onclick="event.stopPropagation();quickAdd('${m.id}')" aria-label="Add to basket">+</button>
         </div>
-        <div class="price-block"><strong>£9.50</strong><button class="button add-cart">Add</button></div>
-      </article>
-      <article class="listing" data-cuisine="italian" data-diet="vegetarian" data-search="spinach ricotta lasagne marco italian vegetarian">
-        <div class="meal-photo lasagne"></div>
-        <div>
-          <p class="tag">Marco Home Table · 4.8</p>
-          <h2>Spinach ricotta lasagne</h2>
-          <p>Fresh pasta sheets, tomato basil sauce, ricotta, spinach, parmesan, and side salad.</p>
-          <p class="muted">Ready tomorrow 12:30 · Pickup · Vegetarian</p>
-        </div>
-        <div class="price-block"><strong>£8.20</strong><button class="button add-cart">Add</button></div>
-      </article>
-      <article class="listing" data-cuisine="thai" data-diet="vegan" data-search="thai green curry nok vegan coconut">
-        <div class="meal-photo curry"></div>
-        <div>
-          <p class="tag">Nok's Thai Pot · 4.7</p>
-          <h2>Vegan Thai green curry</h2>
-          <p>Coconut green curry with tofu, aubergine, jasmine rice, and cucumber relish.</p>
-          <p class="muted">Ready today 19:30 · Delivery · Vegan</p>
-        </div>
-        <div class="price-block"><strong>£8.80</strong><button class="button add-cart">Add</button></div>
-      </article>
-      <article class="listing" data-cuisine="middle-eastern" data-diet="halal" data-search="lamb kofta farah middle eastern halal">
-        <div class="meal-photo kofta"></div>
-        <div>
-          <p class="tag">Farah's Supper Club · 5.0</p>
-          <h2>Lamb kofta mezze box</h2>
-          <p>Charred kofta, saffron rice, hummus, tabbouleh, pickles, and flatbread.</p>
-          <p class="muted">Ready Friday 17:00 · Delivery or pickup · Halal</p>
-        </div>
-        <div class="price-block"><strong>£10.40</strong><button class="button add-cart">Add</button></div>
-      </article>
-    </section>
-  </main>
-  <footer class="site-footer"><p>Fresh food, fairly sold.</p></footer>
-  <script src="js/main.js"></script>
+      </div>
+    </div>
+  </div>`;
+}
+
+function openModal(id) {
+  curMeal = MEALS.find(m => String(m.id) === String(id)); mqtyV = 1;
+  const m = curMeal, vT = ['Vegan','Vegetarian','Gluten Free'];
+  document.getElementById('mimg').style.cssText = 'background:#f0ede8;padding:0';
+  document.getElementById('mimg').innerHTML = `${m.badge ? `<div class="mcard-badge ${m.badgeC||'badge-hot'}" style="position:absolute;top:12px;left:12px;z-index:2">${m.badge}</div>` : ''}<img src="${m.img}" alt="${m.n}" style="width:100%;height:100%;object-fit:cover;display:block"/>`;
+  document.getElementById('mname').textContent = m.n;
+  document.getElementById('mcook').textContent = `by ${m.cook} · ${m.cui}`;
+  document.getElementById('mtags').innerHTML = m.tags.map(t => `<span class="mtag ${vT.includes(t)?'v':''}">${t}</span>`).join('');
+  document.getElementById('mdesc').textContent = m.desc;
+  document.getElementById('mprice').textContent = fmt(m.p);
+  document.getElementById('mqty').textContent = 1;
+  document.getElementById('mwrap').classList.add('on');
+}
+function closeModal() { document.getElementById('mwrap').classList.remove('on'); }
+function mQty(d) { mqtyV = Math.max(1, mqtyV + d); document.getElementById('mqty').textContent = mqtyV; }
+function addFromModal() { addToCart(curMeal, mqtyV); closeModal(); }
+function quickAdd(id) { addToCart(MEALS.find(m => String(m.id) === String(id)), 1); }
+</script>
 </body>
 </html>

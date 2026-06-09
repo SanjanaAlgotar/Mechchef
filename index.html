@@ -1,111 +1,573 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mechchef | Homemade meals near you</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/home.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>MechChef – Home Cooked Food, Delivered | Harrow & Newham</title>
+  <meta name="description" content="Order fresh home-cooked South Asian meals from verified home cooks in Harrow & Newham, London."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+
+  <!-- Shared stylesheet -->
+  <link rel="stylesheet" href="css/style.css"/>
+
+  <!-- Page-specific styles -->
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="index.html">Mechchef</a>
-    <nav class="nav-links" aria-label="Primary">
-      <a href="meals.html">Meals</a>
-      <a href="cook-with-us.html">Cook with us</a>
-      <a href="reviews.html">Reviews</a>
-      <a href="auth.html">Sign in</a>
-    </nav>
-    <a class="button button-small" href="checkout.html">Cart</a>
-  </header>
 
-  <main>
-    <section class="hero">
-      <img src="assets/images/mechchef-hero.png" alt="Fresh homemade meals prepared in a bright kitchen">
-      <div class="hero-overlay">
-        <p class="eyebrow">Local kitchens. Real cooks. Fresh food.</p>
-        <h1>Mechchef</h1>
-        <p>Order authentic homemade meals from trusted cooks in your area, or turn your kitchen into a small food business.</p>
-        <div class="hero-actions">
-          <a class="button" href="meals.html">Browse meals</a>
-          <a class="button button-light" href="cook-with-us.html">Start cooking</a>
+<!-- TOP BAR -->
+
+<!-- NAVBAR -->
+<nav>
+  <a class="logo" onclick="go('home')">
+    <div class="logo-icon">🍽</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <div class="nav-center">
+    
+    <button class="nav-link" id="nl-browse" onclick="go('browse')">Browse Meals</button>
+    <button class="nav-link" id="nl-cooks" onclick="go('cooks')">Find Cooks</button>
+    <button class="nav-link" id="nl-how" onclick="go('how')">How It Works</button>
+    <button class="nav-link" id="nl-reviews" onclick="go('reviews')">Reviews</button>
+    <button class="nav-link" id="nl-cook" onclick="go('become-cook')">Cook with us 🍳</button>
+  </div>
+  <div class="nav-right">
+    <button class="loc-btn" onclick="toast('📍 Location: Harrow, London')">📍 Harrow, London</button>
+    <button class="cart-bubble" onclick="toggleCart()" aria-label="Open basket">🛒<span class="cart-num" id="cn">0</span></button>
+    <div id="nav-auth" style="display:flex;align-items:center;gap:8px">
+      <button class="btn btn-ghost" onclick="window.location.href='auth.html'">Log in</button>
+      <button class="btn btn-red" onclick="window.location.href='auth.html'">Sign up</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════ HOME PAGE ══════════ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <img class="hero-bg" src="assets/images/mechchef-hero.png" alt="Fresh home cooked food"/>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Local kitchens. Real cooks. Fresh food.</p>
+      <h1>MechChef</h1>
+      <p class="hero-sub">Order authentic homemade meals from verified home cooks in Harrow &amp; Newham, London.</p>
+      <div class="hero-search">
+        <div class="hs-input">
+          <span>📍</span>
+          <input type="text" id="h-zip" placeholder="Enter your postcode…"/>
         </div>
+        <div class="hs-div"></div>
+        <div class="hs-input" style="min-width:140px">
+          <span>🍽</span>
+          <select id="h-cuisine">
+            <option value="">All Cuisines</option>
+            <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option>
+            <option>Caribbean</option><option>Italian</option><option>Chinese</option>
+            <option>Turkish</option><option>Mediterranean</option><option>Thai</option><option>British</option>
+          </select>
+        </div>
+        <button class="hs-btn" onclick="heroSearch()">Find Food →</button>
       </div>
-    </section>
+      <div class="hero-stats">
+        <div class="hstat"><strong>100%</strong><span>Home cooked</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><strong>Harrow &amp; Newham</strong><span>Launch areas</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><strong>£1.99</strong><span>Delivery fee</span></div>
+      </div>
+    </div>
+  </div>
 
-    <section class="section two-column">
-      <div>
-        <p class="eyebrow">How it works</p>
-        <h2>Food that feels personal, ordered like delivery.</h2>
-      </div>
-      <div class="steps">
-        <article>
-          <span>1</span>
-          <h3>Pick a meal</h3>
-          <p>Filter by cuisine, diet, spice, delivery slot, and cook rating.</p>
-        </article>
-        <article>
-          <span>2</span>
-          <h3>Meet the cook</h3>
-          <p>See kitchen badges, allergy notes, prep photos, and real reviews.</p>
-        </article>
-        <article>
-          <span>3</span>
-          <h3>Eat fresh</h3>
-          <p>Choose pickup or delivery and track your order from prep to doorstep.</p>
-        </article>
-      </div>
-    </section>
+  <div class="sec sec-alt">
+    <div class="sec-hd"><div><h2>Browse by cuisine</h2><p>What are you craving today?</p></div><a onclick="go('browse')">View all →</a></div>
+    <div class="cscroll" id="home-cs"></div>
+  </div>
 
-    <section class="section">
-      <div class="section-head">
+  <div class="sec">
+    <div class="sec-hd"><div><h2>🔥 Today's specials</h2><p>Fresh meals available for delivery right now</p></div><a onclick="go('browse')">See all meals →</a></div>
+    <div class="mgrid" id="home-meals"></div>
+  </div>
+
+  <div class="sec sec-alt">
+    <div class="sec-hd"><div><h2>Home cooks</h2><p id="cooks-subhd">Verified home cooks in Harrow &amp; Newham</p></div><a onclick="go('cooks')">View all →</a></div>
+    <div class="ckgrid" id="home-cooks"></div>
+  </div>
+
+  <div class="sec sec-dark">
+    <div class="sec-hd" style="margin-bottom:32px"><div><h2>How MechChef works</h2><p>Fresh food in 3 simple steps</p></div></div>
+    <div class="how-grid">
+      <div class="how-card"><div class="how-num">1</div><h4>Browse & Pre-order</h4><p>Choose your meal from verified home cooks in Harrow & Newham.</p></div>
+      <div class="how-card"><div class="how-num">2</div><h4>Cook Prepares Fresh</h4><p>Your order is freshly made to order by a local home cook.</p></div>
+      <div class="how-card"><div class="how-num">3</div><h4>Delivered to your door</h4><p>Hot, fresh, home-cooked food delivered straight to you.</p></div>
+    </div>
+  </div>
+
+  <div class="sec sec-alt">
+    <div class="sec-hd"><div><h2>💬 What our customers say</h2></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+      <div class="rev-card"><div style="color:var(--amber);font-size:15px;margin-bottom:12px">★★★★★</div><p style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:16px">"Amara's jollof rice is better than anything I've had in a restaurant. Genuinely tastes like home cooking — because it is! I order every single week now."</p><div style="display:flex;align-items:center;gap:10px"><div style="width:38px;height:38px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#1d4ed8">JM</div><div><div style="font-size:13px;font-weight:700">James M.</div><div style="font-size:11px;color:var(--muted)">Hackney, London · Verified Customer</div></div></div></div>
+      <div class="rev-card"><div style="color:var(--amber);font-size:15px;margin-bottom:12px">★★★★★</div><p style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:16px">"As a busy professional I never have time to cook properly. MechChef lets me eat healthy, affordable, real food every day. Brilliant concept, brilliant execution."</p><div style="display:flex;align-items:center;gap:10px"><div style="width:38px;height:38px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#166534">SK</div><div><div style="font-size:13px;font-weight:700">Sophie K.</div><div style="font-size:11px;color:var(--muted)">Didsbury, Manchester · Verified Customer</div></div></div></div>
+      <div class="rev-card"><div style="color:var(--amber);font-size:15px;margin-bottom:12px">★★★★★</div><p style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:16px">"My whole family switched from Deliveroo to MechChef. Saving loads and the food quality is incredible. Love supporting local home cooks!"</p><div style="display:flex;align-items:center;gap:10px"><div style="width:38px;height:38px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#92400e">RP</div><div><div style="font-size:13px;font-weight:700">Raj P.</div><div style="font-size:11px;color:var(--muted)">Moseley, Birmingham · Verified Customer</div></div></div></div>
+    </div>
+  </div>
+
+  <div style="background:var(--dark);padding:72px 40px;text-align:center;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(212,168,67,0.1) 0%,transparent 60%);pointer-events:none"></div>
+    <div style="max-width:560px;margin:0 auto;position:relative;z-index:1">
+      <h2 style="font-size:36px;font-weight:700;color:#fff;letter-spacing:-.5px;margin-bottom:12px;font-family:'Playfair Display',serif">Ready to taste the difference?</h2>
+      <p style="font-size:15px;color:rgba(255,255,255,.6);margin-bottom:32px;line-height:1.7">Launching Soon in Harrow & Newham — pre-order home-cooked tiffins from verified home cooks.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-red" style="font-weight:700;padding:14px 32px;font-size:14px" onclick="go('browse')">Browse Meals →</button>
+        <button class="btn" style="background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);color:#fff;font-weight:700;padding:14px 32px;font-size:14px" onclick="go('become-cook')">Join Cook Waitlist</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BROWSE MEALS PAGE ══════════ -->
+<div class="page" id="page-browse">
+  <div class="search-bar-wrap">
+    <div class="sb-input"><span>🔍</span><input type="text" placeholder="Search meals, cuisines, chefs…" oninput="searchMeals(this.value)"/></div>
+    <select class="sort-sel" onchange="sortMeals(this.value)">
+      <option value="">Sort by</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="popular">Most Popular</option>
+    </select>
+  </div>
+  <div class="sec">
+    <div class="sec-hd"><div><h2>Browse All Meals</h2><p>Fresh home-cooked food near you</p></div></div>
+    <div class="cscroll" id="browse-cs" style="margin-bottom:20px"></div>
+    <div class="fbar" id="browse-fbar"></div>
+    <div class="mgrid" id="browse-meals"></div>
+    <div id="no-results" style="display:none;text-align:center;padding:60px 0">
+      <div style="font-size:48px;margin-bottom:16px">🍽</div>
+      <p style="color:var(--muted)">No meals match your filters.<br>Try a different cuisine or dietary option.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FIND COOKS PAGE ══════════ -->
+<div class="page" id="page-cooks">
+  <div class="sec">
+    <div class="sec-hd"><div><h2>Home Cooks</h2><p>Coming Soon — Join our waitlist in Harrow &amp; Newham</p></div></div>
+    <div class="ckgrid" id="all-cooks"></div>
+  </div>
+</div>
+
+<!-- ══════════ COOK PROFILE PAGE ══════════ -->
+<div class="page" id="page-profile">
+  <div class="prof-hero">
+    <div id="phero"></div>
+  </div>
+  <div class="prof-stats" id="pstats"></div>
+  <div class="sec">
+    <div class="sec-hd"><div><h2 id="pmtitle">Menu</h2></div></div>
+    <div class="mgrid" id="profile-meals"></div>
+  </div>
+</div>
+
+<!-- ══════════ HOW IT WORKS PAGE ══════════ -->
+<div class="page" id="page-how">
+  <div class="sec">
+    <div class="sec-hd" style="margin-bottom:32px"><div><h2>How MechChef Works</h2><p>Fresh home-cooked food in 3 simple steps</p></div></div>
+    <div class="how-grid">
+      <div class="how-card"><div class="how-num">1</div><h4>Browse & Pre-order</h4><p>Choose your meal from verified home cooks in Harrow & Newham.</p></div>
+      <div class="how-card"><div class="how-num">2</div><h4>Cook Prepares Fresh</h4><p>Your order is freshly made to order by a local home cook.</p></div>
+      <div class="how-card"><div class="how-num">3</div><h4>Delivered to your door</h4><p>Hot, fresh, home-cooked food delivered straight to you.</p></div>
+    </div>
+  </div>
+  <div class="sec sec-alt">
+    <div class="sec-hd"><div><h2>🍳 Want to earn cooking for others?</h2></div></div>
+    <div style="max-width:680px">
+      <div class="step-row"><div class="step-num">1</div><div class="step-info"><h4>Apply Online</h4><p>Short application with your food hygiene certificate</p></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-info"><h4>Get Verified</h4><p>Pass our Food Standards Agency-aligned safety checks</p></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-info"><h4>List Your Meals</h4><p>Upload your menu with photos, descriptions & pricing in £</p></div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-info"><h4>Start Earning</h4><p>Launching Soon in Harrow & Newham</p></div></div>
+    </div>
+    <button class="btn btn-red" style="margin-top:24px;padding:13px 32px" onclick="go('become-cook')">Join cook waitlist →</button>
+  </div>
+</div>
+
+<!-- ══════════ CHECKOUT PAGE ══════════ -->
+<div class="page" id="page-checkout">
+  <div class="co-wrap">
+    <h1 class="co-title">Checkout</h1>
+    <div class="co-card">
+      <h3>📦 Delivery Details</h3>
+      <div class="fgrow">
+        <div class="fg"><label>First Name</label><input type="text" id="co-fn" placeholder="Ahmed"/></div>
+        <div class="fg"><label>Last Name</label><input type="text" id="co-ln" placeholder="Khan"/></div>
+      </div>
+      <div class="fg"><label>Address Line 1</label><input type="text" id="co-a1" placeholder="12 High Street"/></div>
+      <div class="fg"><label>Address Line 2 (Optional)</label><input type="text" id="co-a2" placeholder="Flat 3"/></div>
+      <div class="fgrow">
+        <div class="fg"><label>Town / City</label><input type="text" id="co-city" placeholder="Harrow"/></div>
+        <div class="fg"><label>Postcode</label><input type="text" id="co-pc" placeholder="HA1 1AA"/></div>
+      </div>
+      <div class="fg"><label>Mobile Number</label><input type="tel" id="co-tel" placeholder="+44 7700 900000"/></div>
+      <div class="fg"><label>Delivery Instructions (Optional)</label><input type="text" id="co-note" placeholder="Leave at door, ring bell twice…"/></div>
+    </div>
+    <div class="co-card">
+      <h3>📅 Choose Delivery Date & Time</h3>
+      <div id="coslots"><div style="font-size:12px;color:var(--muted);padding:8px">Add items to your cart first, then proceed to checkout.</div></div>
+    </div>
+    <div class="co-card">
+      <h3>💳 Payment</h3>
+      <div class="pay-methods">
+        <div class="payopt on" onclick="selPay(this,'card')">💳 Card</div>
+        <div class="payopt" onclick="selPay(this,'apple')">🍎 Apple Pay</div>
+        <div class="payopt" onclick="selPay(this,'paypal')">🅿️ PayPal</div>
+      </div>
+      <div id="stripe-card-section">
+        <div class="fg"><label>Name on Card</label><input type="text" id="stripe-name" placeholder="Ahmed Khan"/></div>
+        <div class="fg"><label>Card Details</label>
+          <div id="stripe-card-element" style="border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;background:var(--white)"></div>
+          <div id="stripe-card-errors" style="color:#c0392b;font-size:12px;margin-top:6px;display:none"></div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:6px">🔒 Secured by <strong>Stripe</strong> · 256-bit SSL encryption</div>
+      </div>
+      <div id="alt-pay-section" style="display:none;text-align:center;padding:20px;background:var(--surface);border-radius:12px;font-size:13px;color:var(--muted)">Redirecting to payment provider...</div>
+    </div>
+    <div class="co-card">
+      <h3>🧾 Order Summary</h3>
+      <div id="co-items"></div>
+      <div class="promo-row" style="margin-top:16px">
+        <input class="fg" style="border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:13px;outline:none;font-family:inherit;flex:1" type="text" id="promo-inp" placeholder="Promo code (try MECH20)"/>
+        <button class="btn btn-dark" onclick="applyPromo()">Apply</button>
+      </div>
+      <div style="margin-top:16px">
+        <div class="cp-row"><span>Subtotal</span><span id="co-sub">£0.00</span></div>
+        <div class="cp-row"><span>Delivery fee</span><span>£1.99</span></div>
+        <div class="cp-row" id="co-disc-row" style="display:none;color:var(--green)"><span>🎉 Promo (MECH20)</span><span id="co-disc">-£0.00</span></div>
+        <div class="cp-row"><span>VAT (20%)</span><span id="co-tax">£0.00</span></div>
+        <div class="cp-total"><span>Total</span><span id="co-total">£0.00</span></div>
+        <button class="btn btn-red cp-cta" style="width:100%;padding:14px;font-size:15px;font-weight:800;border-radius:12px" onclick="placeOrder()">Place Order 🎉</button>
+        <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:10px">🔒 Secure checkout · 256-bit SSL · All prices include VAT</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ORDER SUCCESS PAGE ══════════ -->
+<div class="page" id="page-success">
+  <div class="success-wrap">
+    <div class="success-anim">✅</div>
+    <h2>Order Confirmed!</h2>
+    <p>Your home-cooked meal is being lovingly prepared. You'll receive a text update as your order progresses.</p>
+    <div class="track-bar">
+      <div class="ts done"><div class="ts-dot">✅</div><div class="ts-lbl">Confirmed</div></div>
+      <div class="ts done"><div class="ts-dot">👩‍🍳</div><div class="ts-lbl">Preparing</div></div>
+      <div class="ts"><div class="ts-dot">🛵</div><div class="ts-lbl">Picked Up</div></div>
+      <div class="ts"><div class="ts-dot">📍</div><div class="ts-lbl">On the Way</div></div>
+      <div class="ts"><div class="ts-dot">🏠</div><div class="ts-lbl">Delivered</div></div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-ghost" onclick="go('browse')">Order More Food</button>
+      <button class="btn btn-dark" onclick="go('track')">📍 Track My Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ORDER TRACKING PAGE ══════════ -->
+<div class="page" id="page-track">
+  <div class="track-wrap">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:20px;text-align:center">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:4px">Order #MC-4821 · Placed 10 mins ago</div>
+      <div style="font-size:26px;font-weight:900;margin-bottom:4px">👩‍🍳 Being Prepared</div>
+      <div style="font-size:15px;color:var(--muted)">Estimated delivery: <span style="color:var(--amber);font-weight:700">12:45 – 13:00</span></div>
+    </div>
+    <div class="track-steps">
+      <div class="tst done"><div class="tst-dot">✅</div><div class="tst-lbl">Confirmed</div></div>
+      <div class="tst active"><div class="tst-dot">👩‍🍳</div><div class="tst-lbl">Preparing</div></div>
+      <div class="tst"><div class="tst-dot">🛵</div><div class="tst-lbl">Picked Up</div></div>
+      <div class="tst"><div class="tst-dot">📍</div><div class="tst-lbl">On the Way</div></div>
+      <div class="tst"><div class="tst-dot">🏠</div><div class="tst-lbl">Delivered</div></div>
+    </div>
+    <div class="track-card">
+      <h4>🛵 Courier Details</h4>
+      <div class="courier-row">
+        <div class="courier-av">🧑‍🦱</div>
         <div>
-          <p class="eyebrow">Popular today</p>
-          <h2>Fresh plates from nearby cooks</h2>
+          <div class="courier-name">Arjun Patel</div>
+          <div class="courier-sub">⭐ 4.8 · 1,240 deliveries · Honda PCX 125</div>
+          <div style="font-size:11px;color:var(--muted)">Registration: LN22 XYZ</div>
         </div>
-        <a href="meals.html">View all meals</a>
+        <div class="courier-actions">
+          <button class="cta-btn" onclick="toast('📞 Calling Arjun...')">📞</button>
+          <button class="cta-btn" onclick="toast('💬 Chat coming soon!')">💬</button>
+        </div>
       </div>
-      <div class="meal-grid">
-        <article class="meal-card">
-          <div class="meal-photo biryani"></div>
-          <h3>Hyderabadi chicken biryani</h3>
-          <p>Slow dum rice, raita, salan, and lemon salad.</p>
-          <strong>£9.50</strong>
-        </article>
-        <article class="meal-card">
-          <div class="meal-photo lasagne"></div>
-          <h3>Spinach ricotta lasagne</h3>
-          <p>Vegetarian layers with basil tomato sauce.</p>
-          <strong>£8.20</strong>
-        </article>
-        <article class="meal-card">
-          <div class="meal-photo curry"></div>
-          <h3>Kerala coconut curry</h3>
-          <p>Comforting curry with rice, pickle, and poppadom.</p>
-          <strong>£8.80</strong>
-        </article>
-      </div>
-    </section>
+    </div>
+    <div class="track-card">
+      <h4>🧾 Your Order</h4>
+      <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:13px"><span>🍛 1× Butter Chicken & Basmati Rice</span><span style="font-weight:700">£10.99</span></div>
+      <div style="padding:8px 0;display:flex;justify-content:space-between;font-size:13px"><span>🍲 1× Dal Makhani & Garlic Naan</span><span style="font-weight:700">£8.99</span></div>
+      <div style="padding:12px 0 4px;display:flex;justify-content:space-between;font-size:15px;font-weight:800;border-top:1px solid var(--border);margin-top:4px"><span>Total Paid</span><span>£22.97</span></div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" style="flex:1;padding:12px" onclick="toast('Issue reported. Support will contact you shortly.')">⚠️ Report Issue</button>
+      <button class="btn btn-dark" style="flex:1;padding:12px" onclick="toast('✅ Order marked as received. Enjoy your meal!')">✅ Mark as Received</button>
+    </div>
+  </div>
+</div>
 
-    <section class="section split-band">
-      <div>
-        <p class="eyebrow">For home cooks</p>
-        <h2>Sell meals without building the boring bits.</h2>
-        <p>Menus, allergy labels, order slots, payouts, and customer messages are built in, so cooks can focus on the food.</p>
+<!-- ══════════ REVIEWS PAGE ══════════ -->
+<div class="page" id="page-reviews">
+  <div class="sec">
+    <div class="sec-hd"><div><h2>Customer Reviews</h2><p>What our food lovers are saying</p></div><button class="btn btn-red" onclick="openRevModal()">✍️ Write a Review</button></div>
+    <div class="rev-summary">
+      <div class="rev-big"><div class="rev-big-num">4.9</div><div class="rev-big-stars">★★★★★</div><div class="rev-big-sub">Based on 240+ reviews</div></div>
+      <div class="rev-bars">
+        <div class="rbar"><span style="min-width:12px">5</span><div class="rbar-fill"><div class="rbar-inner" style="width:88%"></div></div><span>88%</span></div>
+        <div class="rbar"><span style="min-width:12px">4</span><div class="rbar-fill"><div class="rbar-inner" style="width:9%"></div></div><span>9%</span></div>
+        <div class="rbar"><span style="min-width:12px">3</span><div class="rbar-fill"><div class="rbar-inner" style="width:2%"></div></div><span>2%</span></div>
+        <div class="rbar"><span style="min-width:12px">2</span><div class="rbar-fill"><div class="rbar-inner" style="width:1%"></div></div><span>1%</span></div>
+        <div class="rbar"><span style="min-width:12px">1</span><div class="rbar-fill"><div class="rbar-inner" style="width:0%"></div></div><span>0%</span></div>
       </div>
-      <a class="button" href="cook-with-us.html">Apply as a cook</a>
-    </section>
-  </main>
+    </div>
+    <div style="background:var(--gold-light);border:1px solid rgba(212,168,67,.3);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:13px;color:var(--muted);text-align:center">
+      <strong style="color:var(--dark)">Launching Soon</strong> in Harrow & Newham — reviews open when we launch
+    </div>
+    <div class="rev-grid">
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#fce7f3">👩🏽</div><div><div class="rev-name">Sarah M. · London</div><div class="rev-date">2 days ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Priya's butter chicken is absolutely incredible. Tastes exactly like my mum's home cooking in India. Arrived piping hot, packaging was perfect. Will 100% order every week!</div><div class="rev-meal">🍛 Butter Chicken · Chef Priya Sharma</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#dbeafe">👨🏾</div><div><div class="rev-name">James K. · Manchester</div><div class="rev-date">4 days ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Wei's dim sum is genuinely better than any restaurant in Chinatown. Fresh, perfectly folded, the dipping sauce is incredible. Highly recommend the prawn har gow!</div><div class="rev-meal">🥟 Dim Sum Basket · Chef Wei Liu</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#dcfce7">👩🏼</div><div><div class="rev-name">Emma T. · Birmingham</div><div class="rev-date">1 week ago</div></div></div><div class="rev-stars">★★★★☆</div><div class="rev-text">Fatima's biryani is the real deal — saffron-scented, perfectly spiced, generous portions. Only reason for 4 stars is it was 10 mins late but the food made up for it!</div><div class="rev-meal">🍚 Chicken Biryani · Chef Fatima Hussain</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#f3e8ff">👨🏻</div><div><div class="rev-name">Daniel R. · Brighton</div><div class="rev-date">1 week ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Sofia's mezze bowl is the best lunch I've had in years. Fresh, vibrant, filling. The tahini dressing alone is worth the price. Perfect for anyone eating plant-based.</div><div class="rev-meal">🥗 Quinoa Mezze Bowl · Chef Sofia Papadaki</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#fef3c7">👩🏽</div><div><div class="rev-name">Layla A. · London</div><div class="rev-date">2 weeks ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Amara's jerk chicken transported me straight to Jamaica. The rice and peas were perfect. Love that MechChef supports women home cooks building real businesses. Superb!</div><div class="rev-meal">🍗 Jerk Chicken · Chef Amara Thomas</div></div>
+      <div class="rev-card"><div class="rev-head"><div class="rev-av" style="background:#fce7f3">👨🏿</div><div><div class="rev-name">Marcus B. · London</div><div class="rev-date">2 weeks ago</div></div></div><div class="rev-stars">★★★★★</div><div class="rev-text">Emma's Sunday roast is the only one that gets close to my nan's. Proper crispy roasties, fluffy Yorkshire pudding, amazing gravy. Sold out every weekend for good reason!</div><div class="rev-meal">🍗 Sunday Roast · Chef Emma Clarke</div></div>
+    </div>
+  </div>
+</div>
 
-  <footer class="site-footer">
-    <p>Mechchef connects local cooks and hungry neighbours.</p>
-    <nav>
-      <a href="customer-dashboard.html">Customer dashboard</a>
-      <a href="cook-dashboard.html">Cook dashboard</a>
-      <a href="admin.html">Admin</a>
-    </nav>
-  </footer>
-  <script src="js/main.js"></script>
-  <script src="js/home.js"></script>
+<!-- ══════════ BECOME A COOK PAGE ══════════ -->
+<div class="page" id="page-become-cook">
+  <div class="cook-hero">
+    <div style="position:relative;z-index:1;max-width:640px;margin:0 auto">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px">🇬🇧 Harrow & Newham launch</div>
+      <h1 style="font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:14px;line-height:1.1;font-family:'Playfair Display',serif">Cook from home.<br><span style="color:var(--gold)">Earn on your terms</span></h1>
+      <p style="font-size:15px;color:rgba(255,255,255,.65);max-width:480px;margin:0 auto 24px;line-height:1.7">Register your interest to cook on MechChef. We're onboarding verified home cooks in Harrow & Newham — set your hours, share your recipes, and earn from your kitchen.</p>
+      <div style="background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.3);border-radius:12px;padding:12px 20px;margin-bottom:24px;font-size:13px;color:rgba(255,255,255,.8)"><strong style="color:var(--gold)">Launching Soon in Harrow & Newham</strong><br>Join our cook waitlist today. No fees to register — we'll be in touch when we open your area.</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="earn-grid">
+      <div class="earn-card"><div class="ico">⏰</div><h4>Your Hours, Your Rules</h4><p>Cook when it suits you. Morning, afternoon, evening — you decide when your kitchen is open.</p></div>
+      <div class="earn-card"><div class="ico">🏠</div><h4>Cook from Home</h4><p>No restaurant needed. Just your home kitchen, your recipes, and your passion for great food.</p></div>
+      <div class="earn-card"><div class="ico">💷</div><h4>Weekly Payouts</h4><p>Earnings sent to your bank every Monday. No waiting, no chasing — straight into your account.</p></div>
+    </div>
+    <div style="max-width:680px;margin:0 auto">
+      <h3 style="font-size:20px;font-weight:700;margin-bottom:24px;font-family:'Playfair Display',serif">How to get started</h3>
+      <div class="apply-card" style="border:1.5px solid var(--border)">
+        <div class="step-row"><div class="step-num">1</div><div class="step-info"><h4>Apply Online (5 mins)</h4><p>Fill in your details, tell us about your cooking style and the cuisines you specialise in.</p></div></div>
+        <div class="step-row"><div class="step-num">2</div><div class="step-info"><h4>Food Safety Check</h4><p>Upload your Level 2 Food Hygiene Certificate (or get one free via our partner portal).</p></div></div>
+        <div class="step-row"><div class="step-num">3</div><div class="step-info"><h4>Kitchen Verification</h4><p>A brief virtual review of your kitchen setup — takes under 15 minutes via video call.</p></div></div>
+        <div class="step-row"><div class="step-num">4</div><div class="step-info"><h4>List Your Dishes</h4><p>Add your menu, photos, prices, and delivery zones. We help you write great descriptions.</p></div></div>
+        <div class="step-row"><div class="step-num">5</div><div class="step-info"><h4>Start Cooking & Earning</h4><p>Go live and start receiving orders. Your first order typically arrives within 48 hours.</p></div></div>
+      </div>
+    </div>
+    <div class="apply-form" style="max-width:680px;margin:32px auto 0">
+      <h3>Cook registration interest</h3>
+      <div class="fgrow">
+        <div class="fg"><label>Full Name</label><input type="text" id="cook-name" placeholder="Priya Sharma"/></div>
+        <div class="fg"><label>Email Address</label><input type="email" id="cook-email" placeholder="priya@email.com"/></div>
+      </div>
+      <div class="fgrow">
+        <div class="fg"><label>Mobile Number</label><input type="tel" id="cook-phone" placeholder="+44 7700 900000"/></div>
+        <div class="fg"><label>Area</label>
+          <select id="cook-area">
+            <option>Harrow</option><option>Newham</option><option>Both / Either</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>Cuisine Speciality</label>
+        <select id="cook-cuisine">
+          <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option><option>Caribbean</option>
+          <option>Italian</option><option>Chinese</option><option>Turkish</option><option>Thai</option>
+          <option>Mediterranean</option><option>British</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label>Years of Cooking Experience</label>
+        <select id="cook-exp">
+          <option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option>
+        </select>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="cook-hygiene"/><label for="cook-hygiene">I hold a Level 2 Food Hygiene Certificate (or will obtain one)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="cook-terms"/><label for="cook-terms">I agree to MechChef's Cook Terms &amp; Conditions and Community Standards</label></div>
+      <button class="btn btn-red" style="width:100%;padding:14px;font-size:15px;font-weight:700;margin-top:8px" onclick="submitCookInterest()">Join cook waitlist →</button>
+      <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:12px">Launching Soon in Harrow & Newham · No fees to register</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SHARED: CART PANEL ══════════ -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart">
+  <div class="cp-hd">
+    <h3>🛒 Your Basket</h3>
+    <button onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cp-body" id="cp-body"></div>
+  <div id="cp-foot" style="display:none">
+    <div class="cp-foot">
+      <div class="cp-row"><span>Subtotal</span><span id="cp-sub">£0.00</span></div>
+      <div class="cp-row"><span>Delivery fee</span><span>£1.99</span></div>
+      <div class="cp-total"><span>Total (inc. VAT)</span><span id="cp-tot">£0.00</span></div>
+      <button class="btn btn-red cp-cta" onclick="goCheckout()">Go to Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SHARED: MEAL MODAL ══════════ -->
+<div class="modal-wrap" id="mwrap">
+  <div class="modal-bg" onclick="closeModal()"></div>
+  <div class="mbox">
+    <button class="mbox-close" onclick="closeModal()">✕</button>
+    <div class="mbox-img" id="mimg"></div>
+    <div class="mbox-body">
+      <h2 id="mname"></h2>
+      <div class="mbox-cook" id="mcook"></div>
+      <div class="mcard-tags" id="mtags"></div>
+      <div class="mbox-desc" id="mdesc"></div>
+      <div class="mbox-bottom">
+        <div class="mbox-price" id="mprice"></div>
+        <div class="qty-row">
+          <button onclick="mQty(-1)">−</button>
+          <span id="mqty">1</span>
+          <button onclick="mQty(1)">+</button>
+        </div>
+      </div>
+      <button class="btn btn-red mbox-add" onclick="addFromModal()">Add to Basket →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SHARED: REVIEW MODAL ══════════ -->
+<div class="modal-wrap" id="rev-modal-wrap">
+  <div class="modal-bg" onclick="closeRevModal()"></div>
+  <div class="mbox" style="max-width:460px">
+    <button class="mbox-close" onclick="closeRevModal()">✕</button>
+    <div class="mbox-body" style="padding:32px">
+      <h2 style="margin-bottom:4px">✍️ Write a Review</h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Share your experience with the MechChef community</p>
+      <div class="fg"><label>Your Rating</label>
+        <div class="star-pick" id="star-pick">
+          <span onclick="setRevStar(1)">☆</span><span onclick="setRevStar(2)">☆</span>
+          <span onclick="setRevStar(3)">☆</span><span onclick="setRevStar(4)">☆</span><span onclick="setRevStar(5)">☆</span>
+        </div>
+        <input type="hidden" id="rev-star-val" value="0"/>
+      </div>
+      <div class="fg"><label>Which dish did you order?</label>
+        <select>
+          <option>Butter Chicken & Basmati Rice</option><option>Jerk Chicken & Rice & Peas</option>
+          <option>Homemade Lasagne</option><option>Dim Sum Basket</option>
+          <option>Chicken Biryani</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label>Your Review</label><textarea id="rev-text-inp" rows="4" placeholder="Tell us about your experience…" style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;outline:none;font-family:inherit;resize:vertical;width:100%"></textarea></div>
+      <button class="btn btn-red" style="width:100%;padding:13px;font-size:14px;font-weight:700" onclick="submitReview()">Submit Review ✍️</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SHARED: PRIVACY MODAL ══════════ -->
+<div id="privacy-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--white);border-radius:20px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto;padding:32px;position:relative">
+    <button onclick="closePrivacyModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)">✕</button>
+    <h2 style="font-size:20px;font-weight:800;margin-bottom:16px">Privacy Policy</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px"><strong>Last updated:</strong> 25 May 2026</p>
+    <h4 style="font-size:14px;font-weight:700;margin-bottom:6px">1. What data we collect</h4><p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.7">We collect your name, email address, phone number, delivery address, and order history when you create an account or place an order on MechChef.</p>
+    <h4 style="font-size:14px;font-weight:700;margin-bottom:6px">2. How we use your data</h4><p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.7">Your data is used to process orders, send delivery updates, and improve our platform. We do not sell your personal data to third parties.</p>
+    <h4 style="font-size:14px;font-weight:700;margin-bottom:6px">3. Payments</h4><p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.7">All payments are processed securely by Stripe. MechChef does not store your card details.</p>
+    <h4 style="font-size:14px;font-weight:700;margin-bottom:6px">4. Your rights (UK GDPR)</h4><p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.7">You have the right to access, correct, or delete your personal data at any time. Email us at <strong>privacy@mechchef.co.uk</strong></p>
+    <button class="btn btn-dark" onclick="closePrivacyModal()" style="width:100%;padding:12px">Close</button>
+  </div>
+</div>
+
+<!-- ══════════ SHARED: TERMS MODAL ══════════ -->
+<div id="terms-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--white);border-radius:20px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto;padding:32px;position:relative">
+    <button onclick="closeTermsModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)">✕</button>
+    <h2 style="font-size:20px;font-weight:800;margin-bottom:16px">Terms &amp; Conditions</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px"><strong>Last updated:</strong> 25 May 2026</p>
+    <h4 style="font-size:14px;font-weight:700;margin-bottom:6px">1. About MechChef</h4><p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.7">MechChef is a marketplace connecting customers with home cooks in Harrow and Newham, London. We are not a restaurant. Food is prepared by independent home cooks.</p>
+    <h4 style="font-size:14px;font-weight:700;margin-bottom:6px">2. Ordering</h4><p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.7">Orders must be placed at least 2 hours before the chosen delivery slot. Once confirmed, orders cannot be cancelled unless the cook is unable to fulfil them.</p>
+    <h4 style="font-size:14px;font-weight:700;margin-bottom:6px">3. Food Safety</h4><p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.7">All MechChef cooks must hold a valid Food Hygiene Certificate (Level 2 minimum) and comply with UK Food Safety regulations.</p>
+    <button class="btn btn-dark" onclick="closeTermsModal()" style="width:100%;padding:12px">Close</button>
+  </div>
+</div>
+
+<!-- ══════════ SHARED: COMING SOON MODAL ══════════ -->
+<div id="coming-soon-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--white);border-radius:20px;max-width:400px;width:100%;padding:40px 32px;text-align:center;position:relative">
+    <button onclick="closeComingSoon()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)">✕</button>
+    <div style="font-size:48px;margin-bottom:16px">🚀</div>
+    <h3 id="cs-title" style="font-size:18px;font-weight:800;margin-bottom:10px">Coming Soon!</h3>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:24px">This feature is currently being built and will be available soon. Stay tuned!</p>
+    <button class="btn btn-dark" onclick="closeComingSoon()" style="width:100%;padding:12px">Got it!</button>
+  </div>
+</div>
+
+<!-- ══════════ SHARED: TOAST ══════════ -->
+<div class="toast" id="toast-el"></div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><div class="icon">🍽</div>MechChef</div>
+      <div class="ft-desc">MechChef is launching in Harrow and Newham — London's first pre-order home cook tiffin marketplace. Fresh, affordable South Asian meals from verified home cooks, delivered to your door.</div>
+      <div class="ft-social">
+        <a class="ftsoc" href="https://x.com/mechchef" target="_blank">𝕏</a>
+        <a class="ftsoc" href="https://facebook.com/mechchef" target="_blank">📘</a>
+        <a class="ftsoc" href="https://instagram.com/mechchef" target="_blank">📸</a>
+        <a class="ftsoc" href="https://youtube.com/@mechchef" target="_blank">▶️</a>
+      </div>
+      <div class="app-btns">
+        <a class="app-btn" href="https://apps.apple.com" target="_blank"><span>Download on the</span><strong>App Store</strong></a>
+        <a class="app-btn" href="https://play.google.com/store" target="_blank"><span>Get it on</span><strong>Google Play</strong></a>
+      </div>
+    </div>
+    <div class="ft-col">
+      <h5>For Customers</h5>
+      <a onclick="go('browse')">Browse Meals</a>
+      <a onclick="go('cooks')">Find Cooks</a>
+      <a onclick="showComingSoon('Subscription Plans')">Subscription Plans</a>
+      <a onclick="showComingSoon('Gift Vouchers')">Gift Vouchers</a>
+      <a onclick="showComingSoon('Help & Support')">Help &amp; Support</a>
+      <a onclick="go('track')">Track Your Order</a>
+    </div>
+    <div class="ft-col">
+      <h5>For Cooks</h5>
+      <a onclick="go('become-cook')">Become a Cook</a>
+      <a href="cook-dashboard.html">Cook Dashboard</a>
+      <a onclick="showComingSoon('Earnings & Payouts')">Earnings &amp; Payouts</a>
+      <a onclick="showComingSoon('Food Hygiene Guidance')">Food Hygiene Guidance</a>
+      <a onclick="showComingSoon('Cook Community')">Cook Community</a>
+    </div>
+    <div class="ft-col">
+      <h5>Company</h5>
+      <a onclick="showComingSoon('About MechChef')">About MechChef</a>
+      <a onclick="showComingSoon('Blog & Recipes')">Blog &amp; Recipes</a>
+      <a onclick="showComingSoon('Careers')">Careers</a>
+      <a onclick="showComingSoon('Press')">Press</a>
+      <a onclick="openPrivacyModal()">Privacy Policy</a>
+      <a onclick="openTermsModal()">Terms &amp; Conditions</a>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2025 MechChef Ltd. Launch areas: Harrow &amp; Newham, London 🇬🇧</span>
+    <span>Pre-order home-cooked tiffins · Delivery fee £1.99</span>
+  </div>
+</footer>
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- Stripe -->
+<script src="https://js.stripe.com/v3/"></script>
+<!-- Shared JS -->
+<script src="js/main.js"></script>
+<!-- Page JS -->
+<script src="js/home.js"></script>
 </body>
 </html>

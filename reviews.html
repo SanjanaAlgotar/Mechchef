@@ -1,20 +1,276 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reviews | Mechchef</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Customer Reviews – MechChef | Home Cooked Food Harrow & Newham</title>
+  <meta name="description" content="See what customers are saying about MechChef home-cooked meals in Harrow & Newham, London."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-  <header class="site-header"><a class="brand" href="index.html">Mechchef</a><nav class="nav-links"><a href="meals.html">Meals</a><a class="active" href="reviews.html">Reviews</a><a href="auth.html">Sign in</a></nav></header>
-  <main class="page">
-    <section class="page-title"><p class="eyebrow">Community trust</p><h1>Real reviews from local customers</h1></section>
-    <section class="review-grid">
-      <article class="review"><strong>5.0</strong><p>"The biryani arrived hot and tasted like proper family cooking. Clear allergy info too."</p><span>Priya · Customer</span></article>
-      <article class="review"><strong>4.9</strong><p>"I joined as a cook and had my first paid orders within a week. The dashboard is simple."</p><span>Amina · Cook</span></article>
-      <article class="review"><strong>4.8</strong><p>"Better than takeaway when I want comfort food but not restaurant prices."</p><span>James · Customer</span></article>
-    </section>
-  </main>
+
+<!-- TOP BAR -->
+<div class="topbar">🇬🇧 Serving Harrow & Newham, London <span>Launching Soon</span></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🍽</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <div class="nav-center">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="meals.html">Browse Meals</a>
+    <a class="nav-link" href="cooks.html">Find Cooks</a>
+    <a class="nav-link" href="how-it-works.html">How It Works</a>
+    <a class="nav-link active" href="reviews.html">Reviews</a>
+    <a class="nav-link" href="cook-with-us.html">Cook with us 🍳</a>
+  </div>
+  <div class="nav-right">
+    <button class="loc-btn" onclick="toast('📍 Location: Harrow, London')">📍 Harrow, London</button>
+    <button class="cart-bubble" onclick="toggleCart()" aria-label="Open basket">🛒<span class="cart-num" id="cn">0</span></button>
+    <div id="nav-auth" style="display:flex;align-items:center;gap:8px">
+      <button class="btn btn-ghost" onclick="window.location.href='auth.html'">Log in</button>
+      <button class="btn btn-red" onclick="window.location.href='auth.html'">Sign up</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="rev-hero">
+  <h1>💬 Customer Reviews</h1>
+  <p>What our food lovers are saying about MechChef</p>
+  <div class="rev-hero-stats">
+    <div class="rhs"><strong>4.9</strong><span>Average rating</span></div>
+    <div class="rhs"><strong>240+</strong><span>Verified reviews</span></div>
+    <div class="rhs"><strong>98%</strong><span>Would recommend</span></div>
+    <div class="rhs"><strong>★★★★★</strong><span>Most common rating</span></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="sec">
+
+  <!-- Summary bar -->
+  <div class="rev-summary" style="margin-bottom:32px">
+    <div class="rev-big">
+      <div class="rev-big-num">4.9</div>
+      <div class="rev-big-stars">★★★★★</div>
+      <div class="rev-big-sub">240+ reviews</div>
+    </div>
+    <div class="rev-bars">
+      <div class="rbar"><span style="min-width:12px">5 ★</span><div class="rbar-fill"><div class="rbar-inner" style="width:88%"></div></div><span style="min-width:30px">88%</span></div>
+      <div class="rbar"><span style="min-width:12px">4 ★</span><div class="rbar-fill"><div class="rbar-inner" style="width:9%"></div></div><span style="min-width:30px">9%</span></div>
+      <div class="rbar"><span style="min-width:12px">3 ★</span><div class="rbar-fill"><div class="rbar-inner" style="width:2%"></div></div><span style="min-width:30px">2%</span></div>
+      <div class="rbar"><span style="min-width:12px">2 ★</span><div class="rbar-fill"><div class="rbar-inner" style="width:1%"></div></div><span style="min-width:30px">1%</span></div>
+      <div class="rbar"><span style="min-width:12px">1 ★</span><div class="rbar-fill"><div class="rbar-inner" style="width:0%"></div></div><span style="min-width:30px">0%</span></div>
+    </div>
+    <button class="btn btn-red" style="align-self:center;padding:12px 24px;white-space:nowrap" onclick="openRevModal()">✍️ Write a Review</button>
+  </div>
+
+  <!-- Launch notice -->
+  <div style="background:var(--gold-light);border:1px solid rgba(212,168,67,.3);border-radius:12px;padding:14px 20px;margin-bottom:28px;font-size:13px;color:var(--muted);text-align:center">
+    <strong style="color:var(--dark)">Launching Soon in Harrow & Newham</strong> — reviews open when we go live. Below are early tester reviews.
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-row" style="flex-direction:column;align-items:flex-start;gap:12px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted)">Filter by:</span>
+    <div class="star-filter">
+      <div class="sfilter on" onclick="filterStars(0,this)">All Stars</div>
+      <div class="sfilter" onclick="filterStars(5,this)">★★★★★ 5</div>
+      <div class="sfilter" onclick="filterStars(4,this)">★★★★☆ 4</div>
+      <div class="sfilter" onclick="filterStars(3,this)">★★★☆☆ 3</div>
+    </div>
+    <div class="fbar" style="margin:0" id="cuisine-filter"></div>
+  </div>
+
+  <!-- Reviews grid -->
+  <div class="rev-grid" id="reviews-grid"></div>
+
+</div>
+
+<!-- WRITE REVIEW CTA -->
+<div class="sec sec-alt" style="text-align:center">
+  <h2 style="font-size:26px;font-weight:800;margin-bottom:10px">Tried MechChef? Tell the world.</h2>
+  <p style="font-size:14px;color:var(--muted);margin-bottom:24px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7">Your review helps other food lovers find amazing home cooks, and it means the world to our chefs.</p>
+  <button class="btn btn-red" style="padding:13px 32px;font-size:14px;font-weight:700" onclick="openRevModal()">✍️ Write a Review</button>
+</div>
+
+<!-- WRITE REVIEW MODAL -->
+<div class="rev-modal-wrap" id="rev-modal">
+  <div class="modal-bg" onclick="closeRevModal()"></div>
+  <div class="rev-mbox">
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:4px">✍️ Write a Review</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Share your MechChef experience with the community</p>
+    <div class="fg">
+      <label>Your Rating</label>
+      <div class="star-pick" id="star-pick">
+        <span onclick="setStar(1)">☆</span>
+        <span onclick="setStar(2)">☆</span>
+        <span onclick="setStar(3)">☆</span>
+        <span onclick="setStar(4)">☆</span>
+        <span onclick="setStar(5)">☆</span>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Dish Ordered</label>
+      <select id="rev-dish">
+        <option>Butter Chicken & Basmati Rice</option>
+        <option>Jerk Chicken & Rice & Peas</option>
+        <option>Homemade Lasagne al Forno</option>
+        <option>Dim Sum Basket</option>
+        <option>Dum Chicken Biryani</option>
+        <option>Adana Lamb Kebab Wrap</option>
+        <option>Pad Thai with Silken Tofu</option>
+        <option>Slow-Cooked Lamb Karahi</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Your Name</label>
+      <input type="text" id="rev-name" placeholder="Sarah M."/>
+    </div>
+    <div class="fg">
+      <label>Your Review</label>
+      <textarea id="rev-text" rows="4" placeholder="Tell us about your experience — the food, the packaging, the delivery…" style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;outline:none;font-family:inherit;resize:vertical;width:100%;transition:border-color .15s"></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" style="flex:1;padding:12px" onclick="closeRevModal()">Cancel</button>
+      <button class="btn btn-red" style="flex:2;padding:12px;font-size:14px;font-weight:700" onclick="submitReview()">Submit Review →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart">
+  <div class="cp-hd"><h3>🛒 Your Basket</h3><button onclick="toggleCart()">✕</button></div>
+  <div class="cp-body" id="cp-body"></div>
+  <div id="cp-foot" style="display:none">
+    <div class="cp-foot">
+      <div class="cp-row"><span>Subtotal</span><span id="cp-sub">£0.00</span></div>
+      <div class="cp-row"><span>Delivery fee</span><span>£1.99</span></div>
+      <div class="cp-total"><span>Total (inc. VAT)</span><span id="cp-tot">£0.00</span></div>
+      <button class="btn btn-red cp-cta" onclick="window.location.href='meals.html'">Browse Meals →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><div class="icon">🍽</div>MechChef</div>
+      <div class="ft-desc">London's first pre-order home cook tiffin marketplace. Fresh, affordable meals from verified home cooks in Harrow &amp; Newham.</div>
+    </div>
+    <div class="ft-col"><h5>For Customers</h5><a href="meals.html">Browse Meals</a><a href="cooks.html">Find Cooks</a><a href="reviews.html">Reviews</a></div>
+    <div class="ft-col"><h5>For Cooks</h5><a href="cook-with-us.html">Become a Cook</a><a href="cook-dashboard.html">Cook Dashboard</a></div>
+    <div class="ft-col"><h5>Company</h5><a href="how-it-works.html">How It Works</a><a href="index.html">Home</a></div>
+  </div>
+  <div class="ft-bottom">
+    <span>© 2025 MechChef Ltd. Launch areas: Harrow &amp; Newham, London 🇬🇧</span>
+    <span>Pre-order home-cooked tiffins · Delivery fee £1.99</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+const REVIEWS = [
+  {name:'Sarah M.',loc:'Harrow, London',stars:5,date:'2 days ago',text:"Priya's butter chicken is absolutely incredible. Tastes exactly like my mum's home cooking in India. Arrived piping hot, packaging was perfect. Will 100% order every week!",meal:'🍛 Butter Chicken',cuisine:'Indian',av:'#fce7f3',avt:'SM',avc:'#be185d'},
+  {name:'James K.',loc:'Newham, London',stars:5,date:'4 days ago',text:"Wei's dim sum is genuinely better than any restaurant in Chinatown. Fresh, perfectly folded, the dipping sauce is incredible. Highly recommend the prawn har gow!",meal:'🥟 Dim Sum Basket',cuisine:'Chinese',av:'#dbeafe',avt:'JK',avc:'#1d4ed8'},
+  {name:'Emma T.',loc:'Harrow, London',stars:4,date:'1 week ago',text:"Fatima's biryani is the real deal — saffron-scented, perfectly spiced, generous portions. Only 4 stars because it was 10 mins late but the food made up for it!",meal:'🍚 Chicken Biryani',cuisine:'Pakistani',av:'#dcfce7',avt:'ET',avc:'#166534'},
+  {name:'Daniel R.',loc:'Newham, London',stars:5,date:'1 week ago',text:"Sofia's mezze bowl is the best lunch I've had in years. Fresh, vibrant, filling. The tahini dressing alone is worth the price. Perfect for anyone eating plant-based.",meal:'🥗 Mezze Bowl',cuisine:'Mediterranean',av:'#f3e8ff',avt:'DR',avc:'#7c3aed'},
+  {name:'Layla A.',loc:'Harrow, London',stars:5,date:'2 weeks ago',text:"Amara's jerk chicken transported me straight to Jamaica. The rice and peas were perfect. Love that MechChef supports women home cooks building real businesses.",meal:'🍗 Jerk Chicken',cuisine:'Caribbean',av:'#fef3c7',avt:'LA',avc:'#92400e'},
+  {name:'Marcus B.',loc:'Newham, London',stars:5,date:'2 weeks ago',text:"Emma's Sunday roast is the only one that comes close to my nan's. Proper crispy roasties, fluffy Yorkshire pudding, amazing gravy. Sold out every weekend for good reason!",meal:'🍗 Sunday Roast',cuisine:'British',av:'#fce7f3',avt:'MB',avc:'#be185d'},
+  {name:'Aisha R.',loc:'Harrow, London',stars:5,date:'3 weeks ago',text:"I ordered the Dal Makhani and it brought tears to my eyes — exactly like my grandmother used to make. The garlic naan was fresh and perfectly charred. Incredible.",meal:'🫘 Dal Makhani',cuisine:'Indian',av:'#fff7ed',avt:'AR',avc:'#c2410c'},
+  {name:'Tom H.',loc:'Newham, London',stars:5,date:'3 weeks ago',text:"The lasagne was a game-changer. Thick, meaty, cheesy — proper Italian home cooking. Three times cheaper than a restaurant and ten times better. I've already re-ordered.",meal:'🫕 Lasagne al Forno',cuisine:'Italian',av:'#f0f9ff',avt:'TH',avc:'#0369a1'},
+  {name:'Nadia C.',loc:'Harrow, London',stars:4,date:'1 month ago',text:"The Adana wrap was delicious — the lamb was perfectly seasoned and the flatbread was warm and fresh. Slight delay on delivery but great communication from the cook.",meal:'🥙 Adana Wrap',cuisine:'Turkish',av:'#ecfdf5',avt:'NC',avc:'#059669'},
+  {name:'Kevin O.',loc:'Newham, London',stars:5,date:'1 month ago',text:"Pad Thai was phenomenal — perfect balance of sweet, sour and savoury. The tofu was silky and everything tasted genuinely fresh. Best vegan takeaway I've ever had.",meal:'🍜 Pad Thai',cuisine:'Thai',av:'#eff6ff',avt:'KO',avc:'#2563eb'},
+  {name:'Preethi S.',loc:'Harrow, London',stars:5,date:'1 month ago',text:"The lamb karahi was outstanding. Deep, complex flavours — you could taste every single spice. Portions were huge too. This will be my weekly Friday treat from now on.",meal:'🥩 Lamb Karahi',cuisine:'Pakistani',av:'#fdf2f8',avt:'PS',avc:'#9d174d'},
+  {name:'Leo F.',loc:'Newham, London',stars:5,date:'6 weeks ago',text:"Margherita pizza from a home oven and it was better than most restaurants in London. The dough had that chewy, charred crust you only get from proper high-heat baking.",meal:'🍕 Margherita Pizza',cuisine:'Italian',av:'#f0fdf4',avt:'LF',avc:'#15803d'},
+];
+
+let activeStar = 0, activeCuisine = 'All';
+
+window.addEventListener('DOMContentLoaded', () => {
+  buildCuisineFilter();
+  renderReviews();
+});
+
+function buildCuisineFilter() {
+  const cuisines = ['All', ...new Set(REVIEWS.map(r => r.cuisine))];
+  document.getElementById('cuisine-filter').innerHTML = cuisines.map(c =>
+    `<div class="fpill ${c === activeCuisine ? 'on' : ''}" onclick="filterCuisine('${c}',this)" style="font-size:11px">${c}</div>`
+  ).join('');
+}
+
+function filterStars(n, el) {
+  activeStar = n;
+  document.querySelectorAll('.sfilter').forEach(s => s.classList.remove('on'));
+  el.classList.add('on');
+  renderReviews();
+}
+
+function filterCuisine(c, el) {
+  activeCuisine = c;
+  buildCuisineFilter();
+  renderReviews();
+}
+
+function renderReviews() {
+  let f = [...REVIEWS];
+  if (activeStar > 0) f = f.filter(r => r.stars === activeStar);
+  if (activeCuisine !== 'All') f = f.filter(r => r.cuisine === activeCuisine);
+  document.getElementById('reviews-grid').innerHTML = f.map(r => `
+    <div class="rev-card">
+      <div class="rev-head">
+        <div class="rev-av" style="background:${r.av};color:${r.avc};font-size:13px;font-weight:800">${r.avt}</div>
+        <div>
+          <div class="rev-name">${r.name} · <span style="font-weight:400;color:var(--muted)">${r.loc}</span></div>
+          <div class="rev-date">${r.date}</div>
+        </div>
+        <div style="margin-left:auto;font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:50px;padding:3px 10px;color:var(--muted)">${r.cuisine}</div>
+      </div>
+      <div class="rev-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      <div class="rev-text">${r.text}</div>
+      <div class="rev-meal">${r.meal}</div>
+    </div>`).join('');
+  if (!f.length) document.getElementById('reviews-grid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--muted)">No reviews match this filter yet.</div>';
+}
+
+// ── WRITE REVIEW ──
+let selectedStar = 0;
+function openRevModal() { document.getElementById('rev-modal').classList.add('on'); document.body.style.overflow = 'hidden'; }
+function closeRevModal() { document.getElementById('rev-modal').classList.remove('on'); document.body.style.overflow = ''; }
+function setStar(n) {
+  selectedStar = n;
+  document.querySelectorAll('.star-pick span').forEach((s, i) => { s.textContent = i < n ? '★' : '☆'; });
+}
+async function submitReview() {
+  const name = document.getElementById('rev-name').value.trim();
+  const text = document.getElementById('rev-text').value.trim();
+  const dish = document.getElementById('rev-dish').value;
+  if (!name) { toast('Please enter your name'); return; }
+  if (!selectedStar) { toast('Please select a star rating'); return; }
+  if (!text) { toast('Please write your review'); return; }
+  try {
+    await db.from('reviews').insert([{ reviewer_name:name, stars:selectedStar, text, meal:dish, created_at:new Date().toISOString() }]);
+  } catch(e) {}
+  closeRevModal();
+  toast('🎉 Review submitted! Thank you, ' + name + '!');
+  selectedStar = 0;
+  document.getElementById('rev-name').value = '';
+  document.getElementById('rev-text').value = '';
+  document.querySelectorAll('.star-pick span').forEach(s => s.textContent = '☆');
+}
+</script>
 </body>
 </html>
