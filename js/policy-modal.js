@@ -27,9 +27,19 @@ async function openPolicyModal(event, policyType) {
     const html = await response.text();
 
     const doc = new DOMParser().parseFromString(html, 'text/html');
-    const mainContent = doc.querySelector('main') || doc.querySelector('body');
+    const mainContent =
+      doc.querySelector('.policy-container') ||
+      doc.querySelector('.policy-content') ||
+      doc.querySelector('main') ||
+      doc.querySelector('article') ||
+      doc.querySelector('body');
 
-    contentBox.innerHTML = mainContent ? mainContent.innerHTML : html;
+    if (mainContent) {
+      mainContent.querySelectorAll('header, footer, nav, script, style').forEach(el => el.remove());
+      contentBox.innerHTML = mainContent.innerHTML;
+    } else {
+      contentBox.innerHTML = html;
+    }
   } catch (error) {
     contentBox.innerHTML = '<h2>Unable to load policy</h2><p>Please try again later.</p>';
   }

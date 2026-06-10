@@ -1,0 +1,59 @@
+[1mdiff --git a/index.html b/index.html[m
+[1mindex 2f73ecf..53f66ec 100644[m
+[1m--- a/index.html[m
+[1m+++ b/index.html[m
+[36m@@ -689,26 +689,21 @@[m
+       <a onclick="showComingSoon('Subscription Plans')">Subscription Plans</a>[m
+       <a onclick="showComingSoon('Gift Vouchers')">Gift Vouchers</a>[m
+       <a onclick="showComingSoon('Help & Support')">Help &amp; Support</a>[m
+[31m-      <a onclick="go('track')">Track Your Order</a>[m
+     </div>[m
+     <div class="ft-col">[m
+       <h5>For Cooks</h5>[m
+       <a onclick="go('become-cook')">Become a Cook</a>[m
+       <a href="cook-dashboard.html">Cook Dashboard</a>[m
+[31m-      <a onclick="showComingSoon('Earnings & Payouts')">Earnings &amp; Payouts</a>[m
+[31m-      <a onclick="showComingSoon('Food Hygiene Guidance')">Food Hygiene Guidance</a>[m
+[31m-      <a onclick="showComingSoon('Cook Community')">Cook Community</a>[m
+[32m+[m[32m      <a href="#" onclick="openPolicyModal(event,'foodSafety')">Food Hygiene Guidance</a>[m
+     </div>[m
+     <div class="ft-col">[m
+       <h5>Company</h5>[m
+       <a onclick="showComingSoon('About MechChef')">About MechChef</a>[m
+       <a onclick="showComingSoon('Blog & Recipes')">Blog &amp; Recipes</a>[m
+       <a onclick="showComingSoon('Careers')">Careers</a>[m
+[31m-      <a onclick="showComingSoon('Press')">Press</a>[m
+       <a href="#" onclick="openPolicyModal(event,'privacy')">Privacy Policy</a>[m
+       <a href="#" onclick="openPolicyModal(event,'terms')">Terms &amp; Conditions</a>[m
+       <a href="#" onclick="openPolicyModal(event,'cookie')">Cookie Policy</a>[m
+[31m-      <a href="#" onclick="openPolicyModal(event,'foodSafety')">Food Safety</a>[m
+       <a href="#" onclick="openPolicyModal(event,'cookGuidelines')">Cook Guidelines</a>[m
+       <a href="#" onclick="openPolicyModal(event,'refund')">Refund Policy</a>[m
+     </div>[m
+[1mdiff --git a/js/policy-modal.js b/js/policy-modal.js[m
+[1mindex b56863a..a1be62b 100644[m
+[1m--- a/js/policy-modal.js[m
+[1m+++ b/js/policy-modal.js[m
+[36m@@ -27,9 +27,19 @@[m [masync function openPolicyModal(event, policyType) {[m
+     const html = await response.text();[m
+ [m
+     const doc = new DOMParser().parseFromString(html, 'text/html');[m
+[31m-    const mainContent = doc.querySelector('main') || doc.querySelector('body');[m
+[31m-[m
+[31m-    contentBox.innerHTML = mainContent ? mainContent.innerHTML : html;[m
+[32m+[m[32m    const mainContent =[m
+[32m+[m[32m      doc.querySelector('.policy-container') ||[m
+[32m+[m[32m      doc.querySelector('.policy-content') ||[m
+[32m+[m[32m      doc.querySelector('main') ||[m
+[32m+[m[32m      doc.querySelector('article') ||[m
+[32m+[m[32m      doc.querySelector('body');[m
+[32m+[m
+[32m+[m[32m    if (mainContent) {[m
+[32m+[m[32m      mainContent.querySelectorAll('header, footer, nav, script, style').forEach(el => el.remove());[m
+[32m+[m[32m      contentBox.innerHTML = mainContent.innerHTML;[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m      contentBox.innerHTML = html;[m
+[32m+[m[32m    }[m
+   } catch (error) {[m
+     contentBox.innerHTML = '<h2>Unable to load policy</h2><p>Please try again later.</p>';[m
+   }[m
