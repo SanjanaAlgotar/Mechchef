@@ -1,0 +1,40 @@
+.policy-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 9999;
+  padding: 20px;
+}
+
+.policy-modal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.policy-modal-box {
+  background: #fff;
+  width: 100%;
+  max-width: 900px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  padding: 30px;
+  position: relative;
+}
+
+.policy-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  border: none;
+  background: none;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.policy-modal-box p,
+.policy-modal-box li {
+  line-height: 1.7;
+}
