@@ -52,7 +52,7 @@ let COOKS = COOK_PLACEHOLDERS.map((c, i) => ({
 let activeCui = 'All', activeDiet = 'All', curMeal = null, mqtyV = 1, promoOn = false;
 
 // ── STRIPE CONFIG ──
-const STRIPE_PK = 'pk_test_51TXzmGKFQGalj4g8btJktdM6Kbd5K9jWx4I7SAunjHBAKi7nx0j6qa4DlVK5CDWlCWQAWjZn44KUAM7OD38dSz8G00ve8nMlaV';
+const STRIPE_PK = 'pk_test_51TXzmGKFQGalj4g8btJktdM6Kbd5K9jWx4I7SAunjHBAKi7nx0j6qa4DlVK5CDWlCWQAWjZn44KUAM7QD38dSz8G00ve8nMlaV';
 let stripe = null, stripeElements = null, stripeCardEl = null, selectedPayMethod = 'card';
 
 // ── INIT ──
