@@ -1,7 +1,8 @@
-import Stripe from 'https://esm.sh/stripe@13.3.0?target=deno';
+import Stripe from 'https://esm.sh/stripe@14.21.0?target=deno&no-check';
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
   apiVersion: '2023-10-16',
+  httpClient: Stripe.createFetchHttpClient(),
 });
 
 Deno.serve(async (req) => {
@@ -29,7 +30,6 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ success: true, payment_intent_id: paymentIntent.id, status: paymentIntent.status }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
-
   } catch (error) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {
       status: 400,
