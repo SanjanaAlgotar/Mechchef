@@ -2,9 +2,10 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.7);
   z-index: 9999;
-  padding: 20px;
+  padding: 24px;
+  background: rgba(17, 24, 39, 0.62);
+  backdrop-filter: blur(8px);
 }
 
 .policy-modal.show {
@@ -14,27 +15,151 @@
 }
 
 .policy-modal-box {
-  background: #fff;
-  width: 100%;
-  max-width: 900px;
-  max-height: 85vh;
+  width: min(860px, 100%);
+  max-height: 86vh;
   overflow-y: auto;
-  border-radius: 16px;
-  padding: 30px;
   position: relative;
+  background: #fffaf3;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 26px;
+  padding: 34px 38px;
+  box-shadow: 0 28px 80px rgba(15, 23, 42, 0.28);
 }
 
 .policy-modal-close {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  border: none;
-  background: none;
-  font-size: 32px;
+  position: sticky;
+  top: 0;
+  float: right;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 28px;
+  line-height: 1;
   cursor: pointer;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
 }
 
-.policy-modal-box p,
-.policy-modal-box li {
+.policy-modal-close:hover {
+  background: #f97316;
+  color: white;
+}
+
+#policyModalContent {
+  clear: both;
+  font-family: inherit;
+  color: #374151;
+  font-size: 15px;
   line-height: 1.7;
+}
+
+#policyModalContent > *:first-child {
+  margin-top: 0 !important;
+}
+
+#policyModalContent h1 {
+  font-size: 30px !important;
+  line-height: 1.15 !important;
+  margin: 0 0 10px !important;
+  color: #111827 !important;
+  letter-spacing: -0.03em;
+}
+
+#policyModalContent h1::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 4px;
+  margin-top: 14px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f97316, #22c55e);
+}
+
+#policyModalContent h2 {
+  font-size: 20px !important;
+  line-height: 1.25 !important;
+  margin: 28px 0 12px !important;
+  color: #111827 !important;
+  letter-spacing: -0.015em;
+}
+
+#policyModalContent h3 {
+  font-size: 17px !important;
+  margin: 20px 0 8px !important;
+  color: #1f2937 !important;
+}
+
+#policyModalContent p,
+#policyModalContent li {
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  color: #4b5563 !important;
+}
+
+#policyModalContent p {
+  margin: 0 0 13px !important;
+}
+
+#policyModalContent ul,
+#policyModalContent ol {
+  margin: 10px 0 18px !important;
+  padding-left: 22px !important;
+}
+
+#policyModalContent li {
+  margin-bottom: 8px !important;
+}
+
+#policyModalContent a {
+  color: #16a34a !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+#policyModalContent a:hover {
+  text-decoration: underline;
+}
+
+#policyModalContent section,
+#policyModalContent .card,
+#policyModalContent .policy-card {
+  background: white;
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  border-radius: 18px;
+  padding: 18px;
+  margin: 16px 0;
+}
+
+@media (max-width: 640px) {
+  .policy-modal {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .policy-modal-box {
+    max-height: 90vh;
+    border-radius: 22px 22px 0 0;
+    padding: 24px 18px 28px;
+  }
+
+  .policy-modal-close {
+    width: 38px;
+    height: 38px;
+    font-size: 26px;
+  }
+
+  #policyModalContent h1 {
+    font-size: 24px !important;
+  }
+
+  #policyModalContent h2 {
+    font-size: 18px !important;
+  }
+
+  #policyModalContent p,
+  #policyModalContent li {
+    font-size: 14px !important;
+  }
 }

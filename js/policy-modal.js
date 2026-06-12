@@ -1,19 +1,48 @@
-function openPolicyModal(event, policyType) {
+const policyFiles = {
+  privacy: 'policy/privacy.html',
+  terms: 'policy/terms.html',
+  cookie: 'policy/cookie-policy.html',
+  foodSafety: 'policy/food-safety.html',
+  cookGuidelines: 'policy/cook-guidelines.html',
+  refund: 'policy/refund-policy.html'
+};
+
+async function openPolicyModal(event, policyType) {
   event.preventDefault();
 
-  const content = {
-    privacy: '<h2>Privacy Policy</h2><p>Privacy Policy content.</p>',
-    terms: '<h2>Terms & Conditions</h2><p>Terms content.</p>',
-    cookie: '<h2>Cookie Policy</h2><p>Cookie Policy content.</p>',
-    foodSafety: '<h2>Food Safety</h2><p>Food Safety content.</p>',
-    cookGuidelines: '<h2>Cook Guidelines</h2><p>Cook Guidelines content.</p>',
-    refund: '<h2>Refund Policy</h2><p>Refund Policy content.</p>'
-  };
+  const modal = document.getElementById('policyModal');
+  const contentBox = document.getElementById('policyModalContent');
+  const filePath = policyFiles[policyType];
 
-  document.getElementById('policyModalContent').innerHTML =
-    content[policyType] || '<h2>Policy not found</h2>';
+  modal.classList.add('show');
+  contentBox.innerHTML = '<p>Loading policy...</p>';
 
-  document.getElementById('policyModal').classList.add('show');
+  if (!filePath) {
+    contentBox.innerHTML = '<h2>Policy not found</h2>';
+    return;
+  }
+
+  try {
+    const response = await fetch(filePath);
+    const html = await response.text();
+
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const mainContent =
+      doc.querySelector('.policy-container') ||
+      doc.querySelector('.policy-content') ||
+      doc.querySelector('main') ||
+      doc.querySelector('article') ||
+      doc.querySelector('body');
+
+    if (mainContent) {
+      mainContent.querySelectorAll('header, footer, nav, script, style').forEach(el => el.remove());
+      contentBox.innerHTML = mainContent.innerHTML;
+    } else {
+      contentBox.innerHTML = html;
+    }
+  } catch (error) {
+    contentBox.innerHTML = '<h2>Unable to load policy</h2><p>Please try again later.</p>';
+  }
 }
 
 function closePolicyModal() {
