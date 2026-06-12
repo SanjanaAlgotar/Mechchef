@@ -195,20 +195,7 @@ const CUISINES = [
   {n:'British',img:'https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=120&h=120&fit=crop'},
 ];
 const DIETS = ['All','Vegan','Vegetarian','Halal','Gluten Free','Under £10','Bestsellers'];
-const MEALS = [
-  {id:1,n:'Butter Chicken & Basmati Rice',cook:'Coming Soon',cid:1,cui:'Indian',img:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop',p:8.50,tags:['Halal','Non-Veg'],desc:'Tender chicken in a rich, creamy tomato-butter sauce. Served with fragrant basmati rice.',badge:'Bestseller',badgeC:'badge-hot',e:'🍛'},
-  {id:2,n:'Jerk Chicken & Rice & Peas',cook:'Coming Soon',cid:2,cui:'Caribbean',img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop',p:9.00,tags:['Gluten Free','Non-Veg'],desc:'Authentic Jamaican jerk chicken marinated overnight. Served with coconut rice and kidney beans.',badge:'Popular',badgeC:'badge-hot',e:'🍗'},
-  {id:3,n:'Homemade Lasagne al Forno',cook:'Coming Soon',cid:3,cui:'Italian',img:'https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=600&h=400&fit=crop',p:7.50,tags:['Non-Veg'],desc:'Classic Italian lasagne with slow-cooked beef ragù, béchamel sauce, and three cheeses.',badge:'New',badgeC:'badge-new',e:'🫕'},
-  {id:4,n:'Steamed Dim Sum Basket (12 pcs)',cook:'Coming Soon',cid:4,cui:'Chinese',img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&h=400&fit=crop',p:6.50,tags:['Non-Veg'],desc:'Hand-folded pork and prawn dim sum dumplings. Steamed fresh.',badge:'Popular',badgeC:'badge-hot',e:'🥟'},
-  {id:5,n:'Dal Makhani & Garlic Naan',cook:'Coming Soon',cid:1,cui:'Indian',img:'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&h=400&fit=crop',p:7.00,tags:['Vegetarian','Halal'],desc:'Slow-cooked black lentils in a creamy tomato-butter sauce with freshly baked garlic naan.',e:'🫘'},
-  {id:6,n:'Adana Lamb Kebab Wrap',cook:'Coming Soon',cid:5,cui:'Turkish',img:'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600&h=400&fit=crop',p:8.00,tags:['Halal','Non-Veg'],desc:"Hand-minced lamb adana kebab with sumac onions and garlic yoghurt in a warm lavash wrap.",badge:"Today's Special",badgeC:'badge-special',e:'🥙'},
-  {id:7,n:'Dum Chicken Biryani',cook:'Coming Soon',cid:6,cui:'Pakistani',img:'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&h=400&fit=crop',p:9.50,tags:['Halal','Non-Veg'],desc:'Slow-cooked dum biryani with fragrant basmati, saffron, and tender chicken.',badge:'Bestseller',badgeC:'badge-hot',e:'🍚'},
-  {id:8,n:'Pad Thai with Silken Tofu',cook:'Coming Soon',cid:7,cui:'Thai',img:'https://images.unsplash.com/photo-1562565652-a0d8f0c59eb4?w=600&h=400&fit=crop',p:6.99,tags:['Vegan','Gluten Free'],desc:'Classic pad thai with rice noodles, silken tofu, bean sprouts, and roasted peanuts.',e:'🍜'},
-  {id:9,n:'Slow-Cooked Lamb Karahi',cook:'Coming Soon',cid:6,cui:'Pakistani',img:'https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?w=600&h=400&fit=crop',p:10.00,tags:['Halal','Non-Veg'],desc:'Tender lamb in a cast-iron karahi with tomatoes, green chillies, and whole spices.',badge:"Chef's Pick",badgeC:'badge-hot',e:'🥩'},
-  {id:10,n:'Classic Sunday Roast Chicken',cook:'Coming Soon',cid:8,cui:'British',img:'https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=600&h=400&fit=crop',p:9.99,tags:['Non-Veg'],desc:'Traditional British Sunday roast with free-range chicken, roasties, Yorkshire pudding and gravy.',badge:'Weekend Special',badgeC:'badge-special',e:'🍗'},
-  {id:11,n:'Wood-Fired Margherita Pizza',cook:'Coming Soon',cid:3,cui:'Italian',img:'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop',p:7.99,tags:['Vegetarian'],desc:'48-hour fermented dough with San Marzano tomato, fresh mozzarella, and torn basil.',e:'🍕'},
-  {id:12,n:'Lemon Herb Mezze Bowl',cook:'Coming Soon',cid:9,cui:'Mediterranean',img:'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=600&h=400&fit=crop',p:6.50,tags:['Vegan','Gluten Free'],desc:'Quinoa with roasted courgette, aubergine, olives, and a lemon-herb tahini dressing.',badge:'New',badgeC:'badge-new',e:'🥗'},
-];
+const MEALS = [];
 
 let activeCui = 'All', activeDiet = 'All', curMeal = null, mqtyV = 1;
 const fmt = n => `£${n.toFixed(2)}`;

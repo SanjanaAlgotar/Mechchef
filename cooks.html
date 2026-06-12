@@ -183,15 +183,7 @@ const MEALS_DATA = [
 ];
 const fmt = n => `£${n.toFixed(2)}`;
 
-let COOKS = [
-  {id:1,full_name:'Chef Priya Sharma',cuisine:'Indian',area:'Harrow',bio:'Specialising in authentic North Indian cuisine — butter chicken, biryani, and homemade breads. Cooking for 15 years.',avatar_url:'',rating:4.9,orders:320},
-  {id:2,full_name:'Chef Amara Thomas',cuisine:'Caribbean',area:'Newham',bio:'Jamaican home cook bringing jerk chicken, rice & peas, and Caribbean stews straight from my kitchen to your door.',avatar_url:'',rating:4.8,orders:210},
-  {id:3,full_name:'Chef Sofia Rossi',cuisine:'Italian',area:'Harrow',bio:'Trained in Florence, now cooking handmade pasta, lasagne and wood-fired pizzas in Harrow. Buonissimo!',avatar_url:'',rating:4.9,orders:185},
-  {id:4,full_name:'Chef Wei Liu',cuisine:'Chinese',area:'Newham',bio:'Dim sum specialist and Cantonese home cook. Handfolded dumplings, steamed bao, and classic wok dishes.',avatar_url:'',rating:4.7,orders:142},
-  {id:5,full_name:'Chef Mehmet Yilmaz',cuisine:'Turkish',area:'Harrow',bio:'Istanbul-born home cook serving adana kebabs, lahmacun, and slow-roasted lamb dishes from my Harrow kitchen.',avatar_url:'',rating:4.8,orders:98},
-  {id:6,full_name:'Chef Fatima Hussain',cuisine:'Pakistani',area:'Newham',bio:'Karachi-style home cooking — dum biryani, karahi, and seekh kebabs. Every dish made fresh on order.',avatar_url:'',rating:5.0,orders:276},
-];
-
+let COOKS = [];
 let activeArea = 'All', activeCuisine = 'All';
 
 window.addEventListener('DOMContentLoaded', async () => {
