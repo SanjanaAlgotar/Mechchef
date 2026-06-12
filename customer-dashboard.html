@@ -213,7 +213,7 @@ input:checked+.toggle-sl:before{transform:translateX(18px)}
     <a href="index.html" class="nav-btn nav-btn-ghost">🛒 Browse Meals</a>
     <button class="nav-btn nav-btn-red" onclick="logout()">Log Out</button>
   </div>
-  <button class="hamburger" id="dash-hamburger" onclick="document.getElementById('dash-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+  <button class="hamburger" id="dash-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
   <div class="mobile-menu" id="dash-mobile-menu">
     <button class="mob-link" onclick="showTab('overview',document.querySelector('.snav-item'));document.getElementById('dash-mobile-menu').classList.remove('open')">🏠 Overview</button>
     <button class="mob-link" onclick="showTab('orders',document.querySelector('.snav-item:nth-child(2)'));document.getElementById('dash-mobile-menu').classList.remove('open')">📦 My Orders</button>
@@ -787,6 +787,8 @@ function showToast(msg){
 // Profiles addresses column add karo agar nahi hai
 init();
 </script>
+function toggleMobileMenu(){document.getElementById('dash-mobile-menu').classList.toggle('open')}
+function closeMobileMenu(){document.getElementById('dash-mobile-menu').classList.remove('open')}
 <script src="js/main.js"></script>
 </body>
 </html>
