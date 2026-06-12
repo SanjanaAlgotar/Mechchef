@@ -19,7 +19,7 @@
 body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);min-height:100vh}
 
 /* NAV */
-nav{background:var(--dark);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+nav{background:var(--dark);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;overflow:visible;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.2)}
 .logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#fff;text-decoration:none;letter-spacing:-.5px}
 .logo span{color:var(--red2)}
 .nav-right{display:flex;align-items:center;gap:10px}
@@ -202,13 +202,7 @@ input:checked+.toggle-sl:before{transform:translateX(18px)}
 .empty-icon{font-size:40px;margin-bottom:12px}
 .empty h4{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
 .empty p{font-size:13px;margin-bottom:16px}
-
-@media(max-width:768px){
-  .wrap{grid-template-columns:1fr}
-  .sidebar{position:static}
-  .stats-row{grid-template-columns:1fr 1fr}
-  .form-grid{grid-template-columns:1fr}
-}
+@media(max-width:768px){.wrap{grid-template-columns:1fr;padding:16px 12px}.sidebar{display:none}.stats-row{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.nav-right{display:none}.hamburger{display:block;color:#fff;background:none;border:none;font-size:24px;cursor:pointer;padding:8px}#dash-mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;width:100%;background:#1a1208;z-index:9999;padding:12px 16px;gap:4px;flex-direction:column;border-top:1px solid rgba(255,255,255,.15)}#dash-mobile-menu.open{display:flex}#dash-mobile-menu .mob-link{color:rgba(255,255,255,.85) !important;width:100%;display:block}}@media(min-width:769px){#dash-hamburger{display:none}#dash-mobile-menu{display:none}}
 </style>
 </head>
 <body>
@@ -218,6 +212,16 @@ input:checked+.toggle-sl:before{transform:translateX(18px)}
   <div class="nav-right">
     <a href="index.html" class="nav-btn nav-btn-ghost">🛒 Browse Meals</a>
     <button class="nav-btn nav-btn-red" onclick="logout()">Log Out</button>
+  </div>
+  <button class="hamburger" id="dash-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+  <div class="mobile-menu" id="dash-mobile-menu" style="color:white">
+    <button class="mob-link" style="background:transparent;color:white" style="color:rgba(255,255,255,.85)" onclick="showTab('overview',document.querySelector('.snav-item'));document.getElementById('dash-mobile-menu').classList.remove('open')">🏠 Overview</button>
+    <button class="mob-link" style="background:transparent;color:white" style="color:rgba(255,255,255,.85)" onclick="showTab('orders',document.querySelector('.snav-item:nth-child(2)'));document.getElementById('dash-mobile-menu').classList.remove('open')">📦 My Orders</button>
+    <button class="mob-link" style="background:transparent;color:white" style="color:rgba(255,255,255,.85)" onclick="showTab('profile',document.querySelector('.snav-item:nth-child(3)'));document.getElementById('dash-mobile-menu').classList.remove('open')">👤 My Profile</button>
+    <button class="mob-link" style="background:transparent;color:white" style="color:rgba(255,255,255,.85)" onclick="showTab('addresses',document.querySelector('.snav-item:nth-child(4)'));document.getElementById('dash-mobile-menu').classList.remove('open')">📍 Addresses</button>
+    <button class="mob-link" style="background:transparent;color:white" style="color:rgba(255,255,255,.85)" onclick="showTab('payments',document.querySelector('.snav-item:nth-child(5)'));document.getElementById('dash-mobile-menu').classList.remove('open')">💳 Payments</button>
+    <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
+    <button class="mob-link" style="background:transparent;color:#e85a3d" onclick="logout()">↩ Log Out</button>
   </div>
 </nav>
 
@@ -458,14 +462,9 @@ input:checked+.toggle-sl:before{transform:translateX(18px)}
 
 <div class="toast" id="toast"></div>
 
+<script src="js/main.js"></script>
 <script>
-const SUPABASE_URL='https://ccatfstzthkwridxwzfg.supabase.co';
-const SUPABASE_ANON='sb_publishable_B2MAOdQRfp8Zf9HR1GIhUA_VFmUax0-';
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
 
-let currentUser=null;
-let allOrders=[];
-let realtimeSub=null;
 
 const STATUS_LABELS={
   pending:'⏳ Pending',
@@ -782,7 +781,8 @@ function showToast(msg){
 
 // Profiles addresses column add karo agar nahi hai
 init();
+function toggleMobileMenu(){document.getElementById('dash-mobile-menu').classList.toggle('open')}
+function closeMobileMenu(){document.getElementById('dash-mobile-menu').classList.remove('open')}
 </script>
-<script src="js/main.js"></script>
 </body>
 </html>
