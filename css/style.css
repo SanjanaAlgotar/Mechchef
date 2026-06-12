@@ -285,7 +285,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.5);padding:64px 40px 28px;
 .hamburger{display:none;background:none;border:none;font-size:24px;cursor:pointer;padding:8px;color:var(--dark)}
 .mobile-menu{display:none;position:absolute;top:60px;left:0;right:0;background:var(--white);border-bottom:1px solid var(--border);padding:12px 16px;flex-direction:column;gap:4px;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.1)}
 @media(max-width:768px){.mobile-menu.open{display:flex}#dash-mobile-menu.open{display:flex;position:fixed;top:64px;left:0;right:0;background:#1a1208;border-top:1px solid rgba(255,255,255,.15);z-index:9999}}
-#dash-mobile-menu .mob-link{background:transparent;border-radius:0;color:rgba(255,255,255,.85)}
 .mob-link{background:none;border:none;text-align:left;padding:12px 16px;font-size:15px;font-weight:500;color:var(--dark);cursor:pointer;border-radius:8px;font-family:'DM Sans',sans-serif;width:100%}
 nav #dash-mobile-menu .mob-link{color:rgba(255,255,255,.85)}
 #dash-mobile-menu .mob-link{color:rgba(255,255,255,.85)}
