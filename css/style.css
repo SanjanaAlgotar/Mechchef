@@ -295,3 +295,4 @@ footer{background:var(--dark);color:rgba(255,255,255,.5);padding:64px 40px 28px;
   nav{position:relative}
 }
 #dash-mobile-menu.open{display:flex;top:64px;background:var(--dark);border-top:1px solid rgba(255,255,255,.15)}#dash-mobile-menu .mob-link{color:rgba(255,255,255,.85)}
+#dash-mobile-menu .mob-link{color:rgba(255,255,255,.85)}
