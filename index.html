@@ -194,6 +194,14 @@
       <button class="btn btn-red" onclick="window.location.href='auth.html'">Sign up</button>
     </div>
   </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="mob-link" onclick="go('browse');closeMobileMenu()">Browse Meals</button>
+    <button class="mob-link" onclick="go('cooks');closeMobileMenu()">Find Cooks</button>
+    <button class="mob-link" onclick="go('how');closeMobileMenu()">How It Works</button>
+    <button class="mob-link" onclick="go('reviews');closeMobileMenu()">Reviews</button>
+    <button class="mob-link" onclick="go('become-cook');closeMobileMenu()">Cook with us 🍳</button>
+  </div>
 </nav>
 
 <!-- ══════════ HOME PAGE ══════════ -->

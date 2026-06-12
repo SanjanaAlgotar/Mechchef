@@ -516,3 +516,10 @@ async function submitCookInterest() {
   toast("🎉 You're on the list! We'll be in touch soon.");
   ['cook-name','cook-email','cook-phone'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
 }
+
+function toggleMobileMenu(){
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+function closeMobileMenu(){
+  document.getElementById('mobile-menu').classList.remove('open');
+}
