@@ -201,6 +201,15 @@
     <button class="mob-link" onclick="go('how');closeMobileMenu()">How It Works</button>
     <button class="mob-link" onclick="go('reviews');closeMobileMenu()">Reviews</button>
     <button class="mob-link" onclick="go('become-cook');closeMobileMenu()">Cook with us 🍳</button>
+    <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
+    <div id="mob-auth-links">
+      <button class="mob-link" onclick="window.location.href='auth.html'">🔑 Log in</button>
+      <button class="mob-link" style="color:var(--red);font-weight:700" onclick="window.location.href='auth.html'">Sign up →</button>
+    </div>
+    <div id="mob-user-links" style="display:none">
+      <button class="mob-link" onclick="go('account');closeMobileMenu()">👤 My Account</button>
+      <button class="mob-link" style="color:var(--red)" onclick="signOut();closeMobileMenu()">Log out</button>
+    </div>
   </div>
 </nav>
 

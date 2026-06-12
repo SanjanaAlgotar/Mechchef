@@ -25,6 +25,7 @@ async function initAuth() {
       <button class="btn btn-ghost" onclick="window.location.href='customer-dashboard.html'" style="font-size:12px;padding:7px 14px">My Account</button>
       <button class="btn btn-ghost" onclick="signOut()" style="font-size:12px;padding:7px 14px">Log out</button>
     `;
+    const mobAuth = document.getElementById('mob-auth-links'); const mobUser = document.getElementById('mob-user-links'); if(mobAuth) mobAuth.style.display='none'; if(mobUser) mobUser.style.display='block';
     if (role === 'cook') window.location.href = 'cook-dashboard.html';
     if (role === 'admin') window.location.href = 'admin.html';
   }
