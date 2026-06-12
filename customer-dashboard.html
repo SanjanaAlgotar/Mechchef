@@ -203,13 +203,9 @@ input:checked+.toggle-sl:before{transform:translateX(18px)}
 .empty h4{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
 .empty p{font-size:13px;margin-bottom:16px}
 
-@media(max-width:768px){
-  .wrap{grid-template-columns:1fr}
-  .sidebar{position:static}
-  .stats-row{grid-template-columns:1fr 1fr}
-  .form-grid{grid-template-columns:1fr}
-}
-</style>
+@media(max-width:768px){.wrap{grid-template-columns:1fr;padding:16px 12px 80px}.sidebar{display:none}.stats-row{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.bottom-nav{display:flex}}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--dark);border-top:1px solid rgba(255,255,255,.1);z-index:300;align-items:stretch;justify-content:space-around}
+.bnav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-family:"DM Sans",sans-serif;font-size:10px;font-weight:600;transition:.15s;padding:0}.bnav-btn.active{color:var(--red2)}.bnav-icon{font-size:20px;line-height:1}
 </head>
 <body>
 
@@ -784,5 +780,6 @@ function showToast(msg){
 init();
 </script>
 <script src="js/main.js"></script>
+<div class="bottom-nav"><button class="bnav-btn active" onclick="showTab('overview',document.querySelector('.snav-item'));this.parentNode.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')"><span class="bnav-icon">🏠</span>Home</button><button class="bnav-btn" onclick="showTab('orders',document.querySelector('.snav-item:nth-child(2)'));this.parentNode.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')"><span class="bnav-icon">📦</span>Orders</button><button class="bnav-btn" onclick="showTab('profile',document.querySelector('.snav-item:nth-child(3)'));this.parentNode.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')"><span class="bnav-icon">👤</span>Account</button></div>
 </body>
 </html>
