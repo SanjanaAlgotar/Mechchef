@@ -5,7 +5,39 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>MechChef — Cook Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js">
+function toggleTiffinCalc(){
+  const body=document.getElementById('tiffin-calc-body');
+  const icon=document.getElementById('calc-toggle-icon');
+  const open=body.style.display==='none';
+  body.style.display=open?'block':'none';
+  icon.textContent=open?'▲ close':'▼ open';
+}
+function calcTiffin(){
+  const ing=parseFloat(document.getElementById('tc-ingredients').value)||0;
+  const portions=Math.max(1,parseFloat(document.getElementById('tc-portions').value)||1);
+  const pkg=parseFloat(document.getElementById('tc-packaging').value)||0;
+  const time=parseFloat(document.getElementById('tc-time').value)||0;
+  const energyCost=time*0.40;
+  const costPerPortion=(ing/portions)+pkg+(energyCost/portions);
+  const afterFee=costPerPortion/(1-0.15);
+  const suggested=Math.min(10,Math.max(5,Math.ceil(afterFee*2)/2));
+  document.getElementById('tc-cost').textContent='£'+costPerPortion.toFixed(2);
+  document.getElementById('tc-after-fee').textContent='£'+afterFee.toFixed(2);
+  document.getElementById('tc-suggested').textContent='£'+suggested.toFixed(2);
+  const advice=afterFee<5?'✅ Great margin at £5! Budget tiffin pricing.':afterFee<7?'✅ Good — set price at £'+suggested.toFixed(2)+' for healthy profit.':afterFee<9?'⚠️ Costs are high — try reducing ingredients or making more portions.':'❌ Cost too high for tiffin range. Review ingredients.';
+  document.getElementById('tc-advice').textContent=advice;
+  document.getElementById('tc-result').style.display='block';
+}
+function useSuggestedPrice(){
+  const suggested=parseFloat(document.getElementById('tc-suggested').textContent.replace('£',''));
+  const slider=document.getElementById('m-price-slider');
+  slider.value=suggested;
+  updatePriceInput(suggested);
+  document.getElementById('tiffin-calc-body').style.display='none';
+  document.getElementById('calc-toggle-icon').textContent='▼ open';
+}
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
