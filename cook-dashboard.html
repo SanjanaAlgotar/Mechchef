@@ -996,6 +996,32 @@ label.day-sel span{color:#fff!important}
       <div class="form-row"><label>Meal Name *</label><input id="m-name" placeholder="e.g. Chicken Biryani, Dal Makhani, Aloo Gobi"></div>
       <div class="form-row"><label>Description <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">— ingredients, portion size, what's special</span></label><textarea id="m-desc" placeholder="e.g. Home-style chicken biryani with basmati rice, slow-cooked masala. Serves 1. Comes with raita and salad."></textarea></div>
 
+      <!-- Tiffin Cost Calculator -->
+      <div class="form-row" id="tiffin-calc-section">
+        <label style="cursor:pointer;display:flex;align-items:center;gap:8px" onclick="toggleTiffinCalc()">
+          🧮 <span>Calculate your price</span>
+          <span style="font-weight:400;color:var(--muted);font-size:11px;text-transform:none;letter-spacing:0">— optional helper</span>
+          <span id="calc-toggle-icon" style="margin-left:auto;font-size:12px;color:var(--red)">▼ open</span>
+        </label>
+        <div id="tiffin-calc-body" style="display:none;background:var(--surface2);border-radius:12px;padding:16px;margin-top:8px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div><div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">INGREDIENTS TOTAL (£)</div><input type="number" id="tc-ingredients" min="0" step="0.10" placeholder="e.g. 2.50" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--white)" oninput="calcTiffin()"></div>
+            <div><div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">PORTIONS MADE</div><input type="number" id="tc-portions" min="1" max="20" placeholder="e.g. 4" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--white)" oninput="calcTiffin()"></div>
+            <div><div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">PACKAGING PER PORTION (£)</div><input type="number" id="tc-packaging" min="0" step="0.05" placeholder="e.g. 0.40" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--white)" oninput="calcTiffin()"></div>
+            <div><div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">COOK TIME (hours)</div><input type="number" id="tc-time" min="0" step="0.25" placeholder="e.g. 1.5" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--white)" oninput="calcTiffin()"></div>
+          </div>
+          <div id="tc-result" style="display:none;background:var(--white);border-radius:10px;padding:12px 14px;margin-top:4px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+              <div style="text-align:center"><div style="font-size:10px;color:var(--muted);font-weight:600">COST PER PORTION</div><div style="font-size:18px;font-weight:700;color:var(--text)" id="tc-cost">£0.00</div></div>
+              <div style="text-align:center"><div style="font-size:10px;color:var(--muted);font-weight:600">AFTER 15% FEE</div><div style="font-size:18px;font-weight:700;color:var(--amber)" id="tc-after-fee">£0.00</div></div>
+              <div style="text-align:center"><div style="font-size:10px;color:var(--muted);font-weight:600">SUGGESTED PRICE</div><div style="font-size:18px;font-weight:700;color:var(--green)" id="tc-suggested">£0.00</div></div>
+            </div>
+            <div id="tc-advice" style="font-size:12px;color:var(--muted);margin-bottom:10px;text-align:center"></div>
+            <button onclick="useSuggestedPrice()" style="width:100%;padding:9px;background:var(--red);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Use this price</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Price: fixed £5–£10 slider -->
       <div class="form-row">
         <label>Price *
