@@ -293,7 +293,7 @@ nav #dash-mobile-menu .mob-link{color:rgba(255,255,255,.85)}
 .mob-link:hover{background:var(--surface2)}
 @media(max-width:768px){
   .hamburger{display:block}
-  .nav-right{display:none}.nav-right .cart-bubble{display:flex !important}
+  .nav-right{display:none}#mob-cart-btn{display:flex !important}
   body{overflow-x:hidden}
   nav{overflow:visible}
   nav{position:relative}

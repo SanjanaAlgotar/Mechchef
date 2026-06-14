@@ -73,7 +73,7 @@ function renderCart() {
   const sub = cart.reduce((s, i) => s + i.p * i.qty, 0);
   const cnt = cart.reduce((s, i) => s + i.qty, 0);
   const cn = document.getElementById('cn');
-  if (cn) { cn.textContent = cnt; cn.style.display = cnt ? 'flex' : 'none'; }
+  if (cn) { cn.textContent = cnt; cn.style.display = cnt ? 'flex' : 'none'; } const cn2 = document.getElementById('cn2'); if (cn2) { cn2.textContent = cnt; cn2.style.display = cnt ? 'flex' : 'none'; }
   const body = document.getElementById('cp-body');
   const foot = document.getElementById('cp-foot');
   if (!body) return;

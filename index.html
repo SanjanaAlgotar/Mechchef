@@ -194,7 +194,7 @@
       <button class="btn btn-red" onclick="window.location.href='auth.html'">Sign up</button>
     </div>
   </div>
-  <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+  <button id="mob-cart-btn" onclick="toggleCart()" style="display:none;background:var(--dark);border:none;border-radius:10px;width:40px;height:40px;font-size:17px;cursor:pointer;align-items:center;justify-content:center;position:relative;margin-right:4px">🛒<span class="cart-num" id="cn2" style="position:absolute;top:-4px;right:-4px;background:#e86c2f;color:#fff;font-size:10px;font-weight:700;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center">0</span></button><button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
   <div class="mobile-menu" id="mobile-menu">
     <button class="mob-link" onclick="go('browse');closeMobileMenu()">Browse Meals</button>
     <button class="mob-link" onclick="go('cooks');closeMobileMenu()">Find Cooks</button>
