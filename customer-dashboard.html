@@ -210,7 +210,7 @@ input:checked+.toggle-sl:before{transform:translateX(18px)}
 <body>
 
 <nav>
-  <a href="index.html" class="logo">Mech<span>Chef</span></a>
+  <a href="index.html" class="logo">Mech<span>Chef</span></a><span id="nav-cust-name" style="color:rgba(255,255,255,.75);font-size:14px;font-weight:500;margin-left:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;display:inline-block;vertical-align:middle"></span>
   <div class="nav-right">
     <a href="index.html" class="nav-btn nav-btn-ghost">🛒 Browse Meals</a>
     <button class="nav-btn nav-btn-red" onclick="logout()">Log Out</button>
@@ -494,7 +494,7 @@ async function loadProfile(){
   const initials=name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
   document.getElementById('dash-av').textContent=initials;
   document.getElementById('dash-name').textContent=name;
-  document.getElementById('dash-email').textContent=currentUser.email;
+  document.getElementById('dash-email').textContent=currentUser.email;document.getElementById('nav-cust-name').textContent='Hi, '+name;
   document.getElementById('fn').value=name.split(' ')[0]||'';
   document.getElementById('ln').value=name.split(' ').slice(1).join(' ')||'';
   document.getElementById('p-email').value=currentUser.email;
