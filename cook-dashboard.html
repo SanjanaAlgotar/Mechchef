@@ -280,7 +280,10 @@ label.day-sel span{color:#fff!important}
 .filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .filter-bar select,.filter-bar input{padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--white);outline:none}
 .filter-bar select:focus,.filter-bar input:focus{border-color:var(--red)}
+.hamburger{display:none;background:none;border:none;font-size:24px;cursor:pointer;padding:8px;color:var(--dark)}
+#cook-mobile-menu{display:none}
 
+@media(max-width:768px){.hamburger{display:block}#cook-mobile-menu.open{display:flex;position:fixed;top:54px;left:0;right:0;background:var(--dark);z-index:9999;padding:12px 16px;flex-direction:column;gap:4px;border-top:1px solid rgba(255,255,255,.15)}#cook-mobile-menu .mob-link{background:transparent;border:none;text-align:left;width:100%;padding:12px 16px;font-size:15px;font-weight:500;color:rgba(255,255,255,.85);cursor:pointer;border-radius:8px;font-family:'DM Sans',sans-serif}#cook-mobile-menu .mob-link:hover{background:rgba(255,255,255,.1)}}
 /* ── MOBILE RESPONSIVE ── */ @media(max-width:768px){   .sidebar{display:none}   .main{margin-left:0}   .topbar{padding:0 14px;height:54px}   .topbar-title{font-size:15px}   .topbar-right .btn-ghost{display:none}   .content{padding:16px 14px}   .stats-grid{grid-template-columns:1fr 1fr;gap:10px}   .stat-card{padding:14px}   .stat-val{font-size:20px}   .analytics-grid{grid-template-columns:1fr}   .meals-grid{grid-template-columns:1fr 1fr}   .week-grid{grid-template-columns:repeat(4,1fr)}   .card-header{padding:12px 14px}   .card-body{padding:14px}   .tabs{flex-wrap:wrap}   .form-cols{grid-template-columns:1fr}   .modal{width:95%;max-width:95%}   .profile-tabs{flex-wrap:wrap;gap:4px}   .profile-tab{font-size:11px;padding:6px 10px}   #ptab-personal>div{grid-template-columns:1fr!important}   #ptab-preview>div{grid-template-columns:1fr!important}   .preview-stats{grid-template-columns:1fr 1fr 1fr}   .week-grid>div{padding:8px 4px}   .order-footer{flex-direction:column;gap:8px}   .order-actions{flex-wrap:wrap}    /* Mobile bottom nav */   .mob-nav{display:flex!important} } .mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--dark);border-top:1px solid rgba(255,255,255,.1);z-index:200;padding:8px 0 12px} .mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;border:none;background:transparent;font-family:'DM Sans',sans-serif;padding:4px 0} .mob-nav-item.active{color:var(--red2)} .mob-nav-item span:first-child{font-size:18px}  /* ── Profile tabs ── */
 .profile-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:10px;padding:4px;margin-bottom:20px}
 .profile-tab{padding:8px 16px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;transition:.15s}
@@ -326,7 +329,7 @@ label.day-sel span{color:#fff!important}
     </div>
     <button class="btn-logout" onclick="handleLogout()">🚪 Log out</button>
   </div>
-</aside>  <!-- MOBILE BOTTOM NAV --> <div class="mob-nav" style="overflow-x:auto;justify-content:flex-start;padding:8px 4px 12px;gap:0">   <button class="mob-nav-item active" onclick="showPage('dashboard')">     <span>📊</span><span>Home</span>   </button>   <button class="mob-nav-item" onclick="showPage('orders')">     <span>🛒</span><span>Orders</span>   </button>   <button class="mob-nav-item" onclick="showPage('meals')">     <span>🍽️</span><span>Meals</span>   </button>   <button class="mob-nav-item" onclick="showPage('schedule')">     <span>📅</span><span>Schedule</span>   </button>   <button class="mob-nav-item" onclick="showPage('analytics')">     <span>📈</span><span>Analytics</span>   </button>   <button class="mob-nav-item" onclick="showPage('notifications')">     <span>🔔</span><span>Alerts</span>   </button>   <button class="mob-nav-item" onclick="showPage('profile')">     <span>👤</span><span>Profile</span>   </button> </div> <div class="mob-nav">   <button class="mob-nav-item active" onclick="showPage('dashboard')">     <span>📊</span><span>Home</span>   </button>   <button class="mob-nav-item" onclick="showPage('orders')">     <span>🛒</span><span>Orders</span>   </button>   <button class="mob-nav-item" onclick="showPage('meals')">     <span>🍽️</span><span>Meals</span>   </button>   <button class="mob-nav-item" onclick="showPage('schedule')">     <span>📅</span><span>Schedule</span>   </button>   <button class="mob-nav-item" onclick="showPage('analytics')">     <span>📈</span><span>Analytics</span>   </button>   <button class="mob-nav-item" onclick="showPage('notifications')">     <span>🔔</span><span>Alerts</span>   </button>   <button class="mob-nav-item" onclick="showPage('profile')">     <span>👤</span><span>Profile</span>   </button> </div>
+</aside>
 
 <!-- ── MAIN ── -->
 <div class="main">
@@ -336,7 +339,20 @@ label.day-sel span{color:#fff!important}
       <span style="font-size:12px;color:var(--muted)"><span class="live-dot"></span>Live</span>
       <button class="btn btn-ghost btn-sm" onclick="openPublicProfile()" title="Preview your public profile">👁 Preview Profile</button>
       <button class="btn btn-red" onclick="openMealModal()">+ Add Meal</button>
+      <button class="hamburger" id="cook-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
     </div>
+  </div>
+  <div class="mobile-menu" id="cook-mobile-menu">
+    <button class="mob-link" onclick="showPage('dashboard');closeMobileMenu()">📊 Dashboard</button>
+    <button class="mob-link" onclick="showPage('orders');closeMobileMenu()">🛒 Orders</button>
+    <button class="mob-link" onclick="showPage('meals');closeMobileMenu()">🍽️ My Meals</button>
+    <button class="mob-link" onclick="showPage('schedule');closeMobileMenu()">📅 Weekly Schedule</button>
+    <button class="mob-link" onclick="showPage('analytics');closeMobileMenu()">📈 Analytics</button>
+    <button class="mob-link" onclick="showPage('notifications');closeMobileMenu()">🔔 Notifications</button>
+    <button class="mob-link" onclick="showPage('profile');closeMobileMenu()">👤 Profile</button>
+    <div style="border-top:1px solid rgba(255,255,255,.15);margin:8px 0"></div>
+    <button class="mob-link" onclick="toggleAvailability();closeMobileMenu()">🟢 Toggle Availability</button>
+    <button class="mob-link" onclick="handleLogout()">🚪 Log out</button>
   </div>
   <div class="content">
 
@@ -1067,12 +1083,11 @@ label.day-sel span{color:#fff!important}
 
 <div class="toast" id="toast"></div>
 
+<script src="js/main.js"></script>
 <script>
-const SUPABASE_URL='https://ccatfstzthkwridxwzfg.supabase.co';
-const SUPABASE_ANON='sb_publishable_B2MAOdQRfp8Zf9HR1GIhUA_VFmUax0-';
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+function toggleMobileMenu(){document.getElementById('cook-mobile-menu').classList.toggle('open')}
+function closeMobileMenu(){document.getElementById('cook-mobile-menu').classList.remove('open')}
 
-let currentUser=null;
 let allOrders=[];
 let allMeals=[];
 let editingMealId=null;
@@ -2019,6 +2034,5 @@ function showToast(msg){
 // ── Start ──
 init();
 </script>
-<script src="js/main.js"></script>
 </body>
 </html>
