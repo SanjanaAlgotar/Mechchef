@@ -291,7 +291,7 @@ label.day-sel span{color:#fff!important}
 .profile-section{display:none}
 .profile-section.active{display:block}
 </style>
-</head>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#e86c2f"></head>
 <body>
 
 <!-- ── SIDEBAR ── -->
@@ -2034,5 +2034,5 @@ function showToast(msg){
 // ── Start ──
 init();
 </script>
-</body>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script></body>
 </html>

@@ -26,7 +26,7 @@
       .sticky-bar{padding:12px 16px}
     }
   </style>
-</head>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#e86c2f"></head>
 <body>
 
 <!-- TOP BAR -->
@@ -322,5 +322,5 @@ function mQty(d) { mqtyV = Math.max(1, mqtyV + d); document.getElementById('mqty
 function addFromModal() { addToCart(curMeal, mqtyV); closeModal(); }
 function quickAdd(id) { addToCart(MEALS.find(m => String(m.id) === String(id)), 1); }
 </script>
-</body>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script></body>
 </html>

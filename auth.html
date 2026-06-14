@@ -159,7 +159,7 @@ nav{background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1
   .auth-right{padding:32px 20px}
 }
 </style>
-</head>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#e86c2f"></head>
 <body>
 
 <!-- TOP BAR -->
@@ -597,5 +597,5 @@ if (window.location.search.includes('reset=true')) {
 // Init
 initSupabase();
 </script>
-</body>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script></body>
 </html>

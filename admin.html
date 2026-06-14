@@ -297,7 +297,7 @@
   .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--red); }
   .fgrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 </style>
-</head>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#e86c2f"></head>
 <body>
 
 <!-- SIDEBAR -->
@@ -1412,5 +1412,5 @@ window.addEventListener('load', function() {
 });
 </script>
 <script src="js/main.js"></script>
-</body>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script></body>
 </html>

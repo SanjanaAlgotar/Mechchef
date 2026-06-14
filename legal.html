@@ -89,7 +89,7 @@ nav{background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1
 .policy-footer a{color:rgba(255,255,255,.8);text-decoration:none}
 @media(max-width:768px){nav{padding:0 16px}.policy-hero{padding:32px 20px}.policy-hero h1{font-size:26px}.tab-btn{padding:12px 14px;font-size:12px}.rights-grid{grid-template-columns:1fr 1fr}.allergen-grid{grid-template-columns:repeat(3,1fr)}.do-dont{grid-template-columns:1fr}.scenario-table{font-size:12px}}
 </style>
-</head>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#e86c2f"></head>
 <body>
 
 <nav>
@@ -476,5 +476,5 @@ const hash = window.location.hash.replace('#','');
 if(hash) showTab(hash);
 </script>
 
-</body>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script></body>
 </html>

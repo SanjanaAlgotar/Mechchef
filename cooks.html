@@ -37,7 +37,7 @@
       .page-hero h1{font-size:24px}
     }
   </style>
-</head>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#e86c2f"></head>
 <body>
 
 <!-- TOP BAR -->
@@ -279,5 +279,5 @@ function closeProfileModal() {
   document.body.style.overflow = '';
 }
 </script>
-</body>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script></body>
 </html>

@@ -36,7 +36,7 @@
       .step-num-big{width:48px;height:48px;font-size:18px}
     }
   </style>
-</head>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#e86c2f"></head>
 <body>
 
 <!-- TOP BAR -->
@@ -243,5 +243,5 @@ function toggleFaq(el) {
   icon.textContent = answer.classList.contains('open') ? '−' : '+';
 }
 </script>
-</body>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script></body>
 </html>
