@@ -296,6 +296,12 @@
   .fg input, .fg select, .fg textarea { border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 13px; outline: none; font-family: 'DM Sans', sans-serif; background: var(--white); transition: border-color .15s; color: var(--text); width: 100%; }
   .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--red); }
   .fgrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hamburger{display:none;background:none;border:none;font-size:24px;cursor:pointer;padding:8px;color:#fff}
+#admin-mobile-menu{display:none}
+.mob-link{background:none;border:none;text-align:left;padding:12px 16px;font-size:15px;font-weight:500;cursor:pointer;border-radius:8px;font-family:'DM Sans',sans-serif;width:100%;color:rgba(255,255,255,.85)}
+.mob-link:hover{background:rgba(255,255,255,.1)}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.topbar{padding:0 14px}.topbar-search{display:none}.date-chip{display:none}.hamburger{display:block}#admin-mobile-menu.open{display:flex;position:fixed;top:60px;left:0;right:0;background:var(--dark);z-index:9999;padding:12px 16px;flex-direction:column;gap:4px;border-top:1px solid rgba(255,255,255,.15)}}
+@media(min-width:769px){#admin-hamburger{display:none}#admin-mobile-menu{display:none}}
 </style>
 <link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#e86c2f"></head>
 <body>
@@ -378,6 +384,7 @@
 <div class="main">
   <!-- TOPBAR -->
   <div class="topbar">
+    <button class="hamburger" id="admin-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
     <div class="topbar-title" id="page-title">Dashboard</div>
     <div class="topbar-search">
       <i class="ti ti-search" style="font-size:15px;"></i>
@@ -391,6 +398,16 @@
         <i class="ti ti-logout"></i> Logout
       </button>
     </div>
+  </div>
+  <div class="mobile-menu" id="admin-mobile-menu">
+    <button class="mob-link" onclick="showPage('dashboard');closeMobileMenu()"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
+    <button class="mob-link" onclick="showPage('waitlist');closeMobileMenu()"><i class="ti ti-chef-hat"></i> Cook Waitlist</button>
+    <button class="mob-link" onclick="showPage('cooks');closeMobileMenu()"><i class="ti ti-users-group"></i> Cook Management</button>
+    <button class="mob-link" onclick="showPage('customers');closeMobileMenu()"><i class="ti ti-users"></i> Customer Management</button>
+    <button class="mob-link" onclick="showPage('dishes');closeMobileMenu()"><i class="ti ti-bowl"></i> Dishes & Menus</button>
+    <button class="mob-link" onclick="showPage('settings');closeMobileMenu()"><i class="ti ti-settings"></i> Settings</button>
+    <div style="border-top:1px solid rgba(255,255,255,.15);margin:8px 0"></div>
+    <button class="mob-link" onclick="adminLogout()"><i class="ti ti-logout"></i> Logout</button>
   </div>
 
   <div class="content">
@@ -837,12 +854,11 @@
 
 <div class="admin-toast" id="admin-toast"></div>
 
+<script src="js/main.js"></script>
 <script>
+function toggleMobileMenu(){document.getElementById('admin-mobile-menu').classList.toggle('open')}
+function closeMobileMenu(){document.getElementById('admin-mobile-menu').classList.remove('open')}
 // ── SUPABASE ──
-const SUPABASE_URL  = 'https://ccatfstzthkwridxwzfg.supabase.co';
-const SUPABASE_ANON = 'sb_publishable_B2MAOdQRfp8Zf9HR1GIhUA_VFmUax0-';
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 async function adminLogout() {
   await db.auth.signOut();
@@ -1411,6 +1427,5 @@ window.addEventListener('load', function() {
   setInterval(updateDashStats, 5000);
 });
 </script>
-<script src="js/main.js"></script>
 <script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script></body>
 </html>
