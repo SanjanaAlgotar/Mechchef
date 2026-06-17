@@ -1800,7 +1800,7 @@ async function saveProfile(){
   let lat=null,lng=null;
   if(postcode){
     try{
-      const gr=await fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(postcode+' UK')+'&key='+GOOGLE_GEO_KEY);
+      const gr=await fetch('/api/geocode?address='+encodeURIComponent(postcode+' UK'));
       const gd=await gr.json();
       if(gd.status==='OK'){lat=gd.results[0].geometry.location.lat;lng=gd.results[0].geometry.location.lng;}
     }catch(e){console.error('Geocoding error',e);}

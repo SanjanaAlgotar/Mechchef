@@ -543,7 +543,7 @@ async function heroSearch() {
   const cui = document.getElementById('h-cuisine').value;
   if (!zip) { alert('Please enter your postcode e.g. HA1 1AA'); return; }
   try {
-    const gr = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(zip + ' UK') + '&key=' + GOOGLE_GEO_KEY);
+    const gr = await fetch('/api/geocode?address=' + encodeURIComponent(zip + ' UK'));
     const gd = await gr.json();
     if (gd.status !== 'OK') { alert('Postcode not found. Please check and try again.'); return; }
     const loc = gd.results[0].geometry.location;
