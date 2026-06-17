@@ -242,6 +242,9 @@ function renderBrowse() {
 }
 
 function searchMeals(q) {
+  const userLat = parseFloat(localStorage.getItem('userLat'));
+  const userLng = parseFloat(localStorage.getItem('userLng'));
+  const hasLocation = !isNaN(userLat) && !isNaN(userLng);
   const s = q.toLowerCase().trim();
   let f = [...MEALS];
   if (activeCui !== 'All') f = f.filter(m => m.cui === activeCui);
@@ -260,6 +263,9 @@ function searchMeals(q) {
 }
 
 function sortMeals(v) {
+  const userLat = parseFloat(localStorage.getItem('userLat'));
+  const userLng = parseFloat(localStorage.getItem('userLng'));
+  const hasLocation = !isNaN(userLat) && !isNaN(userLng);
   let f = [...MEALS];
   if (activeCui !== 'All') f = f.filter(m => m.cui === activeCui);
   if (v === 'price-asc') f.sort((a, b) => a.p - b.p);
