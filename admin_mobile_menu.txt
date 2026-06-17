@@ -1,0 +1,10 @@
+  <div class="mobile-menu" id="admin-mobile-menu">
+    <button class="mob-link" onclick="showPage('dashboard');closeMobileMenu()"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
+    <button class="mob-link" onclick="showPage('waitlist');closeMobileMenu()"><i class="ti ti-chef-hat"></i> Cook Waitlist</button>
+    <button class="mob-link" onclick="showPage('cooks');closeMobileMenu()"><i class="ti ti-users-group"></i> Cook Management</button>
+    <button class="mob-link" onclick="showPage('customers');closeMobileMenu()"><i class="ti ti-users"></i> Customer Management</button>
+    <button class="mob-link" onclick="showPage('dishes');closeMobileMenu()"><i class="ti ti-bowl"></i> Dishes & Menus</button>
+    <button class="mob-link" onclick="showPage('settings');closeMobileMenu()"><i class="ti ti-settings"></i> Settings</button>
+    <div style="border-top:1px solid rgba(255,255,255,.15);margin:8px 0"></div>
+    <button class="mob-link" onclick="adminLogout()"><i class="ti ti-logout"></i> Logout</button>
+  </div>

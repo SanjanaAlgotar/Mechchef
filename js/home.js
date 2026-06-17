@@ -99,13 +99,13 @@ async function loadMealsFromSupabase() {
 async function loadCooksFromSupabase() {
   try {
     const { data, error } = await db.from('profiles')
-      .select('id, full_name, cuisine, address, bio, avatar_url, approval_status')
+      .select('id, full_name, cuisine, address, bio, avatar_url, approval_status, lat, lng, delivery_radius')
       .eq('role', 'cook').eq('approval_status', 'approved');
     if (error) { console.error('Cooks error:', error); return; }
     if (!data || !data.length) return;
     COOKS = data.map(c => ({
       id: c.id, full_name: c.full_name, bio: c.bio || '',
-      cuisine: c.cuisine || '', area: c.address || 'London', avatar_url: c.avatar_url || '',
+      cuisine: c.cuisine || '', area: c.address || 'London', avatar_url: c.avatar_url || '', lat: c.lat || null, lng: c.lng || null, delivery_radius: c.delivery_radius || 5,
     }));
     const cookCards = COOKS.map(ckCard);
     document.getElementById('home-cooks').innerHTML = cookCards.slice(0, 4).join('');
@@ -217,6 +217,9 @@ function mCard(m) {
 
 function renderHomeMeals() { document.getElementById('home-meals').innerHTML = MEALS.slice(0, 8).map(mCard).join(''); }
 function renderBrowse() {
+  const userLat = parseFloat(localStorage.getItem('userLat'));
+  const userLng = parseFloat(localStorage.getItem('userLng'));
+  const hasLocation = !isNaN(userLat) && !isNaN(userLng);
   let f = [...MEALS];
   if (activeCui !== 'All') f = f.filter(m => m.cui === activeCui);
   if (activeDiet === 'Vegan') f = f.filter(m => m.tags.includes('Vegan'));
@@ -225,6 +228,14 @@ function renderBrowse() {
   else if (activeDiet === 'Gluten Free') f = f.filter(m => m.tags.includes('Gluten Free'));
   else if (activeDiet === 'Under £10') f = f.filter(m => m.p <= 10);
   else if (activeDiet === 'Bestsellers') f = f.filter(m => m.badge === 'Bestseller' || m.badge === 'Popular');
+  if (hasLocation) {
+    f = f.filter(m => {
+      const cook = COOKS.find(c => String(c.id) === String(m.cid));
+      if (!cook || !cook.lat || !cook.lng) return true;
+      const dist = haversine(userLat, userLng, cook.lat, cook.lng);
+      return dist <= (cook.delivery_radius || 5);
+    });
+  }
   const el = document.getElementById('browse-meals'), nr = document.getElementById('no-results');
   if (!f.length) { el.innerHTML = ''; nr.style.display = 'block'; }
   else { nr.style.display = 'none'; el.innerHTML = f.map(mCard).join(''); }
@@ -235,6 +246,14 @@ function searchMeals(q) {
   let f = [...MEALS];
   if (activeCui !== 'All') f = f.filter(m => m.cui === activeCui);
   if (s) f = f.filter(m => m.n.toLowerCase().includes(s) || m.cook.toLowerCase().includes(s) || m.cui.toLowerCase().includes(s) || m.tags.some(t => t.toLowerCase().includes(s)));
+  if (hasLocation) {
+    f = f.filter(m => {
+      const cook = COOKS.find(c => String(c.id) === String(m.cid));
+      if (!cook || !cook.lat || !cook.lng) return true;
+      const dist = haversine(userLat, userLng, cook.lat, cook.lng);
+      return dist <= (cook.delivery_radius || 5);
+    });
+  }
   const el = document.getElementById('browse-meals'), nr = document.getElementById('no-results');
   if (!f.length) { el.innerHTML = ''; nr.style.display = 'block'; }
   else { nr.style.display = 'none'; el.innerHTML = f.map(mCard).join(''); }
@@ -278,6 +297,14 @@ function filterByCook(cookId) {
   const filtered = MEALS.filter(m => String(m.cid) === String(cookId));
   go('browse');
   setTimeout(() => {
+  if (hasLocation) {
+    f = f.filter(m => {
+      const cook = COOKS.find(c => String(c.id) === String(m.cid));
+      if (!cook || !cook.lat || !cook.lng) return true;
+      const dist = haversine(userLat, userLng, cook.lat, cook.lng);
+      return dist <= (cook.delivery_radius || 5);
+    });
+  }
     const el = document.getElementById('browse-meals'), nr = document.getElementById('no-results');
     if (!filtered.length) { el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted)"><div style="font-size:36px;margin-bottom:10px">🍽️</div><p>${esc(cookName)} has no meals yet</p></div>`; nr.style.display = 'none'; }
     else { nr.style.display = 'none'; el.innerHTML = filtered.map(mCard).join(''); }
@@ -498,8 +525,30 @@ function submitReview() {
   toast('🎉 Review submitted! Thank you for your feedback.');
 }
 
+// ── HAVERSINE DISTANCE ──
+function haversine(lat1,lng1,lat2,lng2){
+  const R=3958.8,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
 // ── HERO SEARCH ──
-function heroSearch() { const zip = document.getElementById('h-zip').value.trim().toUpperCase(); const cui = document.getElementById('h-cuisine').value; if (!zip) { alert('Please enter your postcode e.g. HA1 1AA'); return; } const harrow = ["HA1","HA2","HA3","HA4","HA5","HA6","HA7","HA8","HA9"]; const newham = ["E6","E7","E12","E13","E15","E16"]; const prefix = zip.split(" ")[0]; const validArea = harrow.includes(prefix) || newham.includes(prefix); if (!validArea) { alert('Sorry! MechChef is currently only available in Harrow (HA) and Newham (E6-E16). We are expanding soon!'); return; } localStorage.setItem('userPostcode', zip); if (cui) setCuisine(cui); go('browse'); renderBrowse(); }
+async function heroSearch() {
+  const zip = document.getElementById('h-zip').value.trim().toUpperCase();
+  const cui = document.getElementById('h-cuisine').value;
+  if (!zip) { alert('Please enter your postcode e.g. HA1 1AA'); return; }
+  try {
+    const gr = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(zip + ' UK') + '&key=' + GOOGLE_GEO_KEY);
+    const gd = await gr.json();
+    if (gd.status !== 'OK') { alert('Postcode not found. Please check and try again.'); return; }
+    const loc = gd.results[0].geometry.location;
+    localStorage.setItem('userLat', loc.lat);
+    localStorage.setItem('userLng', loc.lng);
+    localStorage.setItem('userPostcode', zip);
+    if (cui) setCuisine(cui);
+    go('browse');
+    renderBrowse();
+  } catch(e) { alert('Location error. Please try again.'); console.error(e); }
+}
 
 // ── COOK INTEREST FORM ──
 async function submitCookInterest() {

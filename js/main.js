@@ -8,6 +8,7 @@ const SUPABASE_URL  = 'https://ccatfstzthkwridxwzfg.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_B2MAOdQRfp8Zf9HR1GIhUA_VFmUax0-';
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+const GOOGLE_GEO_KEY = 'AIzaSyAvomPdUJ1vXY4O41eZOYF_5mjnTzwcyfY';
 
 let currentUser = null;
 

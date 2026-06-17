@@ -1796,15 +1796,25 @@ async function removeProfilePhoto(){
 async function saveProfile(){
   const fname=document.getElementById('p-fname').value.trim();
   const lname=document.getElementById('p-lname').value.trim();
+  const postcode=document.getElementById('p-postcode').value.trim();
+  let lat=null,lng=null;
+  if(postcode){
+    try{
+      const gr=await fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(postcode+' UK')+'&key='+GOOGLE_GEO_KEY);
+      const gd=await gr.json();
+      if(gd.status==='OK'){lat=gd.results[0].geometry.location.lat;lng=gd.results[0].geometry.location.lng;}
+    }catch(e){console.error('Geocoding error',e);}
+  }
   const{error}=await db.from('profiles').upsert({
     id:currentUser.id,role:'cook',
     full_name:(fname+' '+lname).trim(),
     bio:document.getElementById('p-bio').value,
     cuisine:document.getElementById('p-cuisine').value,
-    address:document.getElementById('p-postcode').value,
+    address:postcode,
     phone:document.getElementById('p-phone').value,
     experience:document.getElementById('p-experience').value,
-    languages:document.getElementById('p-languages').value
+    languages:document.getElementById('p-languages').value,
+    lat:lat,lng:lng
   });
   if(error){showProfileAlert('Error: '+error.message,'error');return;}
   await db.auth.updateUser({data:{full_name:(fname+' '+lname).trim()}});

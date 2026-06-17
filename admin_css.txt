@@ -1,0 +1,6 @@
+.hamburger{display:none;background:none;border:none;font-size:24px;cursor:pointer;padding:8px;color:#fff}
+#admin-mobile-menu{display:none}
+.mob-link{background:none;border:none;text-align:left;padding:12px 16px;font-size:15px;font-weight:500;cursor:pointer;border-radius:8px;font-family:'DM Sans',sans-serif;width:100%;color:rgba(255,255,255,.85)}
+.mob-link:hover{background:rgba(255,255,255,.1)}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.topbar{padding:0 14px}.topbar-search{display:none}.date-chip{display:none}.hamburger{display:block}#admin-mobile-menu.open{display:flex;position:fixed;top:60px;left:0;right:0;background:var(--dark);z-index:9999;padding:12px 16px;flex-direction:column;gap:4px;border-top:1px solid rgba(255,255,255,.15)}}
+@media(min-width:769px){#admin-hamburger{display:none}#admin-mobile-menu{display:none}}
