@@ -4,7 +4,11 @@ export default async function handler(req, res) {
   const key = process.env.GOOGLE_GEO_KEY;
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${key}`;
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'Referer': 'https://mechchef.vercel.app'
+      }
+    });
     const data = await response.json();
     res.status(200).json(data);
   } catch (e) {
