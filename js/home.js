@@ -499,7 +499,7 @@ function submitReview() {
 }
 
 // ── HERO SEARCH ──
-function heroSearch() { const cui = document.getElementById('h-cuisine').value; if (cui) setCuisine(cui); go('browse'); renderBrowse(); }
+function heroSearch() { const zip = document.getElementById('h-zip').value.trim().toUpperCase(); const cui = document.getElementById('h-cuisine').value; if (!zip) { alert('Please enter your postcode e.g. HA1 1AA'); return; } const harrow = ["HA1","HA2","HA3","HA4","HA5","HA6","HA7","HA8","HA9"]; const newham = ["E6","E7","E12","E13","E15","E16"]; const prefix = zip.split(" ")[0]; const validArea = harrow.includes(prefix) || newham.includes(prefix); if (!validArea) { alert('Sorry! MechChef is currently only available in Harrow (HA) and Newham (E6-E16). We're expanding soon!'); return; } localStorage.setItem('userPostcode', zip); if (cui) setCuisine(cui); go('browse'); renderBrowse(); }
 
 // ── COOK INTEREST FORM ──
 async function submitCookInterest() {
