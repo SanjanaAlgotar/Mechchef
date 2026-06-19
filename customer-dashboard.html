@@ -594,7 +594,7 @@ function orderRow(o,showActions=false){
     : '';
   const actions=showActions?`<div class="order-actions">
     ${o.status==='delivered'?`<button class="btn btn-ghost btn-sm" onclick="reorder('${o.id}')">🔄 Reorder</button>`:''}
-    ${['pending','accepted','cooking','ready'].includes(o.status)?`<button class="btn btn-ghost btn-sm">📍 Track</button>`:''}
+    ${['pending','accepted','cooking','ready'].includes(o.status)?`<button class="btn btn-ghost btn-sm" onclick="trackOrder('${o.id}')">📍 Track</button>`:''}
   </div>`:'';
   return `<div class="order-item">
     <div class="order-em">🍛</div>
