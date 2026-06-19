@@ -1,2 +1,0 @@
-function toggleMobileMenu(){document.getElementById('cook-mobile-menu').classList.toggle('open')}
-function closeMobileMenu(){document.getElementById('cook-mobile-menu').classList.remove('open')}

@@ -1,2 +1,0 @@
-.hamburger{display:none;background:none;border:none;font-size:24px;cursor:pointer;padding:8px;color:var(--dark)}
-#cook-mobile-menu{display:none}
