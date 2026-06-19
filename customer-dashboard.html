@@ -535,7 +535,11 @@ function updateStats(){
 }
 
 function trackOrder(id){
-  document.getElementById('active-order-wrap').scrollIntoView({behavior:'smooth',block:'start'});
+  const ovBtn=document.querySelector(".snav-item[onclick*=\"overview\"]");
+  showTab("overview",ovBtn);
+  setTimeout(()=>{
+    document.getElementById("active-order-wrap").scrollIntoView({behavior:"smooth",block:"start"});
+  },350);
 }
 
 function renderActiveOrder(){
