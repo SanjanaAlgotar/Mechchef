@@ -390,7 +390,7 @@ function updateCoTotals() {
   const vat = 0;
   const tot = sub - disc + 1.99;
   document.getElementById('co-sub').textContent = fmt(sub);
-  document.getElementById('co-tax').textContent = fmt(vat);
+  
   document.getElementById('co-disc').textContent = `-${fmt(sub * .2)}`;
   document.getElementById('co-total').textContent = fmt(tot);
   document.getElementById('co-disc-row').style.display = promoOn ? 'flex' : 'none';
