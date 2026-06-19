@@ -387,8 +387,8 @@ function buildCoSummary() {
 function updateCoTotals() {
   const sub = cart.reduce((s, i) => s + i.p * i.qty, 0);
   const disc = promoOn ? sub * .2 : 0;
-  const vat = (sub - disc) * .2;
-  const tot = sub - disc + 1.99 + vat;
+  const vat = 0;
+  const tot = sub - disc + 1.99;
   document.getElementById('co-sub').textContent = fmt(sub);
   document.getElementById('co-tax').textContent = fmt(vat);
   document.getElementById('co-disc').textContent = `-${fmt(sub * .2)}`;
@@ -495,8 +495,8 @@ function getSelectedDelivery() {
 async function placeOrder() {
   const sub = cart.reduce((s, i) => s + i.p * i.qty, 0);
   const disc = promoOn ? sub * .2 : 0;
-  const vat = (sub - disc) * .2;
-  const tot = sub - disc + 1.99 + vat;
+  const vat = 0;
+  const tot = sub - disc + 1.99;
   const slot = getSelectedDelivery() || '12:00 – 13:00';
   const btn = document.querySelector('.cp-cta');
   if (!cart.length) { toast('Your basket is empty!'); return; }
@@ -514,7 +514,7 @@ async function placeOrder() {
       await db.from('orders').insert([{ customer_id:user.id, cook_id:cart[0]?.cid||null, items:cart.map(i=>({id:i.id,name:i.n,qty:i.qty,price:i.p,cook:i.cook})), total:parseFloat(tot.toFixed(2)), subtotal:parseFloat(sub.toFixed(2)), delivery_fee:1.99, vat:parseFloat(vat.toFixed(2)), slot, status:'pending', payment_method:selectedPayMethod, promo:promoOn?'MECH20':null, created_at:new Date().toISOString() }]);
     }
   } catch(e) { if (btn) { btn.disabled = false; btn.textContent = 'Place Order 🎉'; } toast('Order failed: ' + (e.message || 'Try again')); return; }
-  document.getElementById('succ-info').innerHTML = `<div><span>Subtotal</span><span>${fmt(sub)}</span></div>${promoOn ? `<div style="color:var(--green)"><span>Promo (MECH20)</span><span>-${fmt(sub*.2)}</span></div>` : ''}<div><span>Delivery fee</span><span>£1.99</span></div><div><span>VAT (20%)</span><span>${fmt(vat)}</span></div><div><span>Total Paid</span><span style="color:var(--green);font-weight:800">${fmt(tot)}</span></div><div><span>Slot</span><span>${slot}</span></div><div><span>Payment</span><span>${selectedPayMethod === 'card' ? '💳 Card' : '🔗 ' + selectedPayMethod}</span></div>`;
+  document.getElementById('succ-info').innerHTML = `<div><span>Subtotal</span><span>${fmt(sub)}</span></div>${promoOn ? `<div style="color:var(--green)"><span>Promo (MECH20)</span><span>-${fmt(sub*.2)}</span></div>` : ''}<div><span>Delivery fee</span><span>£1.99</span></div><div><span>Total Paid</span><span style="color:var(--green);font-weight:800">${fmt(tot)}</span></div><div><span>Slot</span><span>${slot}</span></div><div><span>Payment</span><span>${selectedPayMethod === 'card' ? '💳 Card' : '🔗 ' + selectedPayMethod}</span></div>`;
   cart = []; promoOn = false; renderCart();
   if (btn) { btn.disabled = false; btn.textContent = 'Place Order 🎉'; }
   go('success');
