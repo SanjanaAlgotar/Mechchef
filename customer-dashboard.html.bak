@@ -534,10 +534,6 @@ function updateStats(){
   else{badge.style.display='none';}
 }
 
-function trackOrder(id){
-  document.getElementById('active-order-wrap').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
 function renderActiveOrder(){
   const active=allOrders.find(o=>['pending','accepted','cooking','ready'].includes(o.status));
   const wrap=document.getElementById('active-order-wrap');
