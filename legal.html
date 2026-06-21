@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Legal & Policies – MechChef</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#C8472B;--red-dark:#a8391f;--red-light:#fdf2ee;--dark:#1a1a18;--dark2:#2e2e2b;--surface:#faf9f7;--surface2:#f2f0eb;--green:#2d7d5a;--green-light:#e8f5ee;--amber:#D4A843;--border:#e5e2da;--muted:#7a7a70;--white:#fff;--text:#1a1a18;--cream:#faf9f7;}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);background:var(--cream);line-height:1.7}
+nav{background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-icon{width:38px;height:38px;background:var(--dark);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-text{font-size:20px;font-weight:700;color:var(--dark);letter-spacing:-.5px;font-family:'Playfair Display',serif}
+.logo-text span{color:var(--red)}
+.policy-hero{background:var(--dark);color:#fff;padding:48px 40px 40px;text-align:center}
+.policy-hero h1{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;margin-bottom:10px}
+.policy-hero p{font-size:14px;color:rgba(255,255,255,.6);max-width:500px;margin:0 auto}
+
+/* TABS */
+.tabs-wrap{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:68px;z-index:100}
+.tabs{display:flex;max-width:900px;margin:0 auto;overflow-x:auto;gap:0}
+.tab-btn{padding:14px 20px;font-size:13px;font-weight:600;color:var(--muted);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all .15s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--red);border-bottom-color:var(--red)}
+
+/* CONTENT */
+.tab-content{display:none}
+.tab-content.active{display:block}
+.policy-body{max-width:780px;margin:0 auto;padding:48px 24px 80px}
+.policy-section{margin-bottom:40px;scroll-margin-top:140px}
+.policy-section h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px}
+.policy-section h2 .sec-num{background:var(--red);color:#fff;border-radius:6px;padding:2px 9px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700}
+.policy-section h2 .sec-num.green{background:var(--green)}
+.policy-section h2 .sec-num.amber{background:var(--amber);color:var(--dark)}
+.policy-section h3{font-size:15px;font-weight:700;color:var(--dark);margin:20px 0 8px}
+.policy-section p{font-size:14px;color:#3a3a35;margin-bottom:12px}
+.policy-section ul,.policy-section ol{padding-left:20px;margin-bottom:12px}
+.policy-section li{font-size:14px;color:#3a3a35;margin-bottom:6px}
+.policy-section a{color:var(--red);text-decoration:none}
+.policy-toc{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:40px}
+.policy-toc h3{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px}
+.policy-toc ol{padding-left:18px}
+.policy-toc li{margin-bottom:6px}
+.policy-toc a{color:var(--red);text-decoration:none;font-size:13px;font-weight:500}
+.highlight-box{background:var(--red-light);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+.highlight-box p{color:var(--red-dark);font-size:13px;margin:0;font-weight:500}
+.info-box{background:var(--green-light);border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+.info-box p{color:var(--green);font-size:13px;margin:0;font-weight:500}
+.warn-box{background:#fff9ec;border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+.warn-box p{color:#7a5c0a;font-size:13px;margin:0;font-weight:500}
+.rights-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:16px 0}
+.right-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:16px}
+.right-card .icon{font-size:22px;margin-bottom:8px}
+.right-card h4{font-size:13px;font-weight:700;margin-bottom:4px}
+.right-card p{font-size:12px;color:var(--muted);margin:0}
+.allergen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:16px 0}
+.allergen-pill{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.allergen-pill .icon{font-size:18px}
+.scenario-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.scenario-table th{background:var(--dark);color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+.scenario-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+.scenario-table tr:nth-child(even) td{background:var(--surface2)}
+.refund-yes{color:var(--green);font-weight:700}
+.refund-no{color:var(--red);font-weight:700}
+.refund-maybe{color:var(--amber);font-weight:700}
+.cookie-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.cookie-table th{background:var(--dark);color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+.cookie-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+.cookie-table tr:nth-child(even) td{background:var(--surface2)}
+.cookie-table .tag{display:inline-block;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700}
+.tag-essential{background:var(--green-light);color:var(--green)}
+.tag-analytics{background:#fff9ec;color:#7a5c0a}
+.step-list{counter-reset:steps;list-style:none;padding:0;margin:16px 0}
+.step-list li{counter-increment:steps;display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
+.step-list li::before{content:counter(steps);background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;min-width:26px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin-top:2px}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.do-box,.dont-box{border-radius:12px;padding:18px 20px}
+.do-box{background:var(--green-light);border:1.5px solid var(--green)}
+.dont-box{background:var(--red-light);border:1.5px solid var(--red)}
+.do-box h4{color:var(--green);font-size:13px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.dont-box h4{color:var(--red);font-size:13px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.do-box ul,.dont-box ul{padding-left:16px;margin:0}
+.do-box li,.dont-box li{font-size:13px;margin-bottom:5px}
+.do-box li{color:#1a4a2e}
+.dont-box li{color:var(--red-dark)}
+.last-updated{font-size:12px;color:var(--muted);margin-top:32px;text-align:center;padding-top:20px;border-top:1px solid var(--border)}
+.policy-footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;padding:32px 24px;font-size:13px}
+.policy-footer a{color:rgba(255,255,255,.8);text-decoration:none}
+@media(max-width:768px){nav{padding:0 16px}.policy-hero{padding:32px 20px}.policy-hero h1{font-size:26px}.tab-btn{padding:12px 14px;font-size:12px}.rights-grid{grid-template-columns:1fr 1fr}.allergen-grid{grid-template-columns:repeat(3,1fr)}.do-dont{grid-template-columns:1fr}.scenario-table{font-size:12px}}
+</style>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#e86c2f"></head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">🍱</div>
+    <div class="logo-text">Mech<span>Chef</span></div>
+  </a>
+  <a href="index.html" style="font-size:13px;font-weight:600;color:var(--muted);text-decoration:none">← Back to Home</a>
+</nav>
+
+<div class="policy-hero">
+  <h1>Legal & Policies</h1>
+  <p>Everything you need to know about how MechChef works, your rights, and our responsibilities.</p>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('privacy')">🔒 Privacy Policy</button>
+    <button class="tab-btn" onclick="showTab('terms')">📋 Terms & Conditions</button>
+    <button class="tab-btn" onclick="showTab('cookie')">🍪 Cookie Policy</button>
+    <button class="tab-btn" onclick="showTab('refund')">💰 Refund Policy</button>
+    <button class="tab-btn" onclick="showTab('food-safety')">🍽 Food Safety</button>
+    <button class="tab-btn" onclick="showTab('cook-guidelines')">👨‍🍳 Cook Guidelines</button>
+  </div>
+</div>
+
+<!-- ══════════ PRIVACY POLICY ══════════ -->
+<div id="tab-privacy" class="tab-content active">
+<div class="policy-body">
+  <div class="policy-toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#p1">Who We Are</a></li>
+      <li><a href="#p2">What Data We Collect</a></li>
+      <li><a href="#p3">How We Use Your Data</a></li>
+      <li><a href="#p4">Legal Basis for Processing</a></li>
+      <li><a href="#p5">Who We Share Data With</a></li>
+      <li><a href="#p6">Data Retention</a></li>
+      <li><a href="#p7">Your Rights</a></li>
+      <li><a href="#p8">Cookies</a></li>
+      <li><a href="#p9">Data Security</a></li>
+      <li><a href="#p10">Contact & Complaints</a></li>
+    </ol>
+  </div>
+  <div class="policy-section" id="p1">
+    <h2><span class="sec-num">1</span> Who We Are</h2>
+    <p>MechChef is the data controller responsible for your personal data. We operate the MechChef food delivery platform connecting home cooks with customers in London.</p>
+    <p><strong>Contact:</strong> <a href="mailto:privacy@mechchef.co.uk">privacy@mechchef.co.uk</a></p>
+    <div class="info-box"><p>✅ MechChef is committed to processing your data lawfully, fairly, and transparently in accordance with UK GDPR and the Data Protection Act 2018.</p></div>
+  </div>
+  <div class="policy-section" id="p2">
+    <h2><span class="sec-num">2</span> What Data We Collect</h2>
+    <h3>Account Information</h3>
+    <ul><li>Name, email address, phone number</li><li>Delivery address(es)</li><li>Role (customer or cook)</li><li>Profile photo (optional)</li></ul>
+    <h3>Order Information</h3>
+    <ul><li>Meals ordered, quantities, and special requests</li><li>Delivery address and slot preferences</li><li>Payment method type (we do not store card numbers — these are handled by Stripe)</li><li>Order status and history</li></ul>
+    <h3>Cook-Specific Data</h3>
+    <ul><li>Food Hygiene Certificate details</li><li>Kitchen address and availability schedule</li><li>Meal listings, photos, and pricing</li><li>Earnings and payout information</li></ul>
+    <h3>Technical Data</h3>
+    <ul><li>IP address and browser type</li><li>Device information</li><li>Cookies and usage data (see Section 8)</li></ul>
+  </div>
+  <div class="policy-section" id="p3">
+    <h2><span class="sec-num">3</span> How We Use Your Data</h2>
+    <ul><li>To create and manage your account</li><li>To process and fulfil your orders</li><li>To process payments via Stripe</li><li>To send order confirmations and status updates</li><li>To verify cook credentials and manage approvals</li><li>To improve our platform and user experience</li><li>To comply with legal obligations (e.g. food safety regulations)</li><li>To send marketing communications (only with your consent, which you can withdraw at any time)</li></ul>
+    <div class="highlight-box"><p>⚠️ We will never sell your personal data to third parties for marketing purposes.</p></div>
+  </div>
+  <div class="policy-section" id="p4">
+    <h2><span class="sec-num">4</span> Legal Basis for Processing</h2>
+    <ul><li><strong>Contract performance</strong> — to provide our service, process orders, and manage your account</li><li><strong>Legal obligation</strong> — to comply with food safety laws, financial regulations, and HMRC requirements</li><li><strong>Legitimate interests</strong> — to improve our platform, prevent fraud, and ensure security</li><li><strong>Consent</strong> — for marketing emails and optional cookies. You may withdraw consent at any time.</li></ul>
+  </div>
+  <div class="policy-section" id="p5">
+    <h2><span class="sec-num">5</span> Who We Share Data With</h2>
+    <ul><li><strong>Stripe</strong> — for secure payment processing. Stripe is PCI-DSS compliant.</li><li><strong>Supabase</strong> — our database and authentication provider, hosted on secure EU/UK servers.</li><li><strong>Vercel</strong> — our hosting provider.</li><li><strong>Cooks</strong> — we share customer delivery address and order details with the relevant cook to fulfil your order.</li><li><strong>Law enforcement</strong> — if required by law or to protect rights and safety.</li></ul>
+    <p>All third-party processors are required to handle your data in accordance with UK GDPR.</p>
+  </div>
+  <div class="policy-section" id="p6">
+    <h2><span class="sec-num">6</span> Data Retention</h2>
+    <ul><li><strong>Account data</strong> — retained for as long as your account is active, plus 2 years after deletion for legal purposes.</li><li><strong>Order data</strong> — retained for 6 years to comply with HMRC financial record-keeping requirements.</li><li><strong>Marketing consent</strong> — retained until you withdraw consent.</li><li><strong>Technical logs</strong> — retained for up to 90 days.</li></ul>
+  </div>
+  <div class="policy-section" id="p7">
+    <h2><span class="sec-num">7</span> Your Rights</h2>
+    <p>Under UK GDPR, you have the following rights regarding your personal data:</p>
+    <div class="rights-grid">
+      <div class="right-card"><div class="icon">👁️</div><h4>Right to Access</h4><p>Request a copy of all personal data we hold about you</p></div>
+      <div class="right-card"><div class="icon">✏️</div><h4>Right to Rectification</h4><p>Request correction of inaccurate or incomplete data</p></div>
+      <div class="right-card"><div class="icon">🗑️</div><h4>Right to Erasure</h4><p>Request deletion of your data ("right to be forgotten")</p></div>
+      <div class="right-card"><div class="icon">⏸️</div><h4>Right to Restrict</h4><p>Request restriction of processing in certain circumstances</p></div>
+      <div class="right-card"><div class="icon">📦</div><h4>Right to Portability</h4><p>Receive your data in a portable, machine-readable format</p></div>
+      <div class="right-card"><div class="icon">🚫</div><h4>Right to Object</h4><p>Object to processing based on legitimate interests or for marketing</p></div>
+    </div>
+    <p>To exercise any of these rights, email <a href="mailto:privacy@mechchef.co.uk">privacy@mechchef.co.uk</a>. We will respond within 30 days.</p>
+  </div>
+  <div class="policy-section" id="p8">
+    <h2><span class="sec-num">8</span> Cookies</h2>
+    <p>We use essential cookies to keep you logged in and remember your preferences. We also use analytics cookies to understand how people use our platform. See our Cookie Policy tab for full details.</p>
+  </div>
+  <div class="policy-section" id="p9">
+    <h2><span class="sec-num">9</span> Data Security</h2>
+    <ul><li>SSL/TLS encryption for all data in transit</li><li>Secure authentication via Supabase Auth with row-level security</li><li>Payment data handled solely by Stripe — we never store card details</li><li>Regular security reviews of our platform</li></ul>
+    <p>In the event of a data breach, we will notify the ICO within 72 hours and affected users as required by UK GDPR.</p>
+  </div>
+  <div class="policy-section" id="p10">
+    <h2><span class="sec-num">10</span> Contact & Complaints</h2>
+    <p>For any privacy-related queries, contact us at <a href="mailto:privacy@mechchef.co.uk">privacy@mechchef.co.uk</a>.</p>
+    <p>If you are not satisfied with how we handle your data, you have the right to lodge a complaint with the <strong>Information Commissioner's Office (ICO)</strong>:</p>
+    <ul><li>Website: <a href="https://ico.org.uk" target="_blank">ico.org.uk</a></li><li>Helpline: 0303 123 1113</li></ul>
+    <div class="last-updated">Last updated: June 2026 · Questions? Email <a href="mailto:privacy@mechchef.co.uk">privacy@mechchef.co.uk</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ TERMS & CONDITIONS ══════════ -->
+<div id="tab-terms" class="tab-content">
+<div class="policy-body">
+  <div class="policy-toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#s1">About MechChef</a></li><li><a href="#s2">Using Our Platform</a></li><li><a href="#s3">Customer Terms</a></li><li><a href="#s4">Cook Terms</a></li><li><a href="#s5">Orders & Payments</a></li><li><a href="#s6">Cancellations & Refunds</a></li><li><a href="#s7">Food Safety & Allergens</a></li><li><a href="#s8">Liability</a></li><li><a href="#s9">Intellectual Property</a></li><li><a href="#s10">Governing Law</a></li>
+    </ol>
+  </div>
+  <div class="policy-section" id="s1">
+    <h2><span class="sec-num">1</span> About MechChef</h2>
+    <p>MechChef ("we", "our", "us") is a food delivery marketplace connecting home cooks with customers in the Harrow and Newham areas of London, United Kingdom.</p>
+    <p>Our platform is available at <a href="https://mechchef.vercel.app">mechchef.vercel.app</a>. By accessing or using MechChef, you agree to be bound by these Terms & Conditions.</p>
+    <div class="info-box"><p>✅ MechChef acts as a marketplace platform. The contract for food is between the customer and the cook. MechChef facilitates the transaction and delivery service.</p></div>
+  </div>
+  <div class="policy-section" id="s2">
+    <h2><span class="sec-num">2</span> Using Our Platform</h2>
+    <h3>Eligibility</h3>
+    <ul><li>You must be at least 18 years old to create an account.</li><li>You must provide accurate, truthful information when registering.</li><li>You are responsible for maintaining the security of your account and password.</li></ul>
+    <h3>Prohibited Use</h3>
+    <ul><li>Provide false or misleading information about meals, ingredients, or allergens</li><li>Engage in any fraudulent activity or misrepresentation</li><li>Violate any UK laws or regulations</li><li>Harass, abuse, or harm other users</li><li>Attempt to hack, disrupt, or damage our systems</li></ul>
+    <div class="highlight-box"><p>⚠️ MechChef reserves the right to suspend or permanently ban any account that violates these terms without prior notice.</p></div>
+  </div>
+  <div class="policy-section" id="s3">
+    <h2><span class="sec-num">3</span> Customer Terms</h2>
+    <h3>Placing Orders</h3>
+    <ul><li>Orders are subject to cook availability and confirmed delivery slots.</li><li>You must provide an accurate delivery address within our service areas (Harrow, Newham).</li><li>You are responsible for being available to receive your order at the selected delivery time.</li></ul>
+    <h3>Allergen Responsibility</h3>
+    <ul><li>You must check allergen information displayed on each meal listing before ordering.</li><li>If you have a severe allergy, you must contact the cook directly before ordering.</li><li>MechChef cannot guarantee meals are free from cross-contamination in home kitchen environments.</li></ul>
+    <div class="highlight-box"><p>⚠️ If you have a life-threatening food allergy, please do not order from home kitchen cooks without speaking to them directly.</p></div>
+  </div>
+  <div class="policy-section" id="s4">
+    <h2><span class="sec-num">4</span> Cook Terms</h2>
+    <h3>Registration & Approval</h3>
+    <ul><li>All cooks must complete our verification process before going live on the platform.</li><li>You must hold a valid Food Hygiene Certificate (Level 2 minimum) from an accredited UK provider.</li><li>You must register with your local council as a food business operator if required by law.</li></ul>
+    <h3>Meal Listings</h3>
+    <ul><li>All meal information must be accurate, including ingredients, allergens, and serving sizes.</li><li>Meals must comply with UK food labelling laws including Natasha's Law.</li><li>Prices must be between £5.00 and £10.00 per meal.</li></ul>
+    <div class="warn-box"><p>⚠️ Cooks are independent contractors, not employees of MechChef. You are responsible for declaring any income earned through the platform to HMRC.</p></div>
+  </div>
+  <div class="policy-section" id="s5">
+    <h2><span class="sec-num">5</span> Orders & Payments</h2>
+    <ul><li>All prices are shown in GBP (£) and include any applicable charges.</li><li>A delivery fee of £1.99 applies to all orders.</li><li>Payments are processed securely via Stripe. MechChef does not store card details.</li><li>Payment is taken at the time of order placement.</li></ul>
+  </div>
+  <div class="policy-section" id="s6">
+    <h2><span class="sec-num">6</span> Cancellations & Refunds</h2>
+    <ul><li>You may cancel an order within 15 minutes of placing it for a full refund.</li><li>If a cook cancels your order, you will receive a full refund including delivery fee.</li><li>Refunds are processed within 5–10 business days depending on your bank.</li></ul>
+    <div class="info-box"><p>✅ We want every order to be brilliant. If something goes wrong, contact us within 24 hours at <a href="mailto:support@mechchef.co.uk">support@mechchef.co.uk</a>.</p></div>
+  </div>
+  <div class="policy-section" id="s7">
+    <h2><span class="sec-num">7</span> Food Safety & Allergens</h2>
+    <p>All cooks on our platform are required to hold a valid Level 2 Food Hygiene Certificate, declare all 14 major allergens, and comply with Natasha's Law. As food is prepared in private home kitchens, MechChef cannot guarantee the absence of allergens or cross-contamination.</p>
+  </div>
+  <div class="policy-section" id="s8">
+    <h2><span class="sec-num">8</span> Liability</h2>
+    <ul><li>MechChef's liability is limited to the value of the order placed.</li><li>We are not liable for any indirect, consequential, or special damages.</li><li>Nothing in these terms limits our liability for death or personal injury caused by our negligence.</li></ul>
+    <div class="highlight-box"><p>⚠️ Under UK Consumer Rights Act 2015, you have statutory rights which these terms do not affect.</p></div>
+  </div>
+  <div class="policy-section" id="s9">
+    <h2><span class="sec-num">9</span> Intellectual Property</h2>
+    <p>All content on MechChef including logos, branding, and design belongs to MechChef or its licensors. By uploading meal photos, cooks grant MechChef a non-exclusive licence to use those images for marketing purposes.</p>
+  </div>
+  <div class="policy-section" id="s10">
+    <h2><span class="sec-num">10</span> Governing Law</h2>
+    <p>These Terms & Conditions are governed by the laws of England and Wales. Any disputes shall be subject to the exclusive jurisdiction of the courts of England and Wales.</p>
+    <div class="last-updated">Last updated: June 2026 · Questions? Email <a href="mailto:support@mechchef.co.uk">support@mechchef.co.uk</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ COOKIE POLICY ══════════ -->
+<div id="tab-cookie" class="tab-content">
+<div class="policy-body">
+  <div class="policy-section">
+    <h2><span class="sec-num">1</span> What Are Cookies?</h2>
+    <p>Cookies are small text files stored on your device when you visit a website. They help websites remember your preferences and work properly.</p>
+    <div class="info-box"><p>✅ We use only essential cookies by default. Analytics cookies are only placed with your consent.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num">2</span> Cookies We Use</h2>
+    <table class="cookie-table">
+      <thead><tr><th>Cookie Name</th><th>Type</th><th>Purpose</th><th>Duration</th></tr></thead>
+      <tbody>
+        <tr><td><code>sb-access-token</code></td><td><span class="tag tag-essential">Essential</span></td><td>Keeps you logged in to your MechChef account (Supabase Auth)</td><td>Session / 1 hour</td></tr>
+        <tr><td><code>sb-refresh-token</code></td><td><span class="tag tag-essential">Essential</span></td><td>Refreshes your login session automatically</td><td>30 days</td></tr>
+        <tr><td><code>mechchef-location</code></td><td><span class="tag tag-essential">Essential</span></td><td>Remembers your selected delivery area (Harrow / Newham)</td><td>30 days</td></tr>
+        <tr><td><code>mechchef-cart</code></td><td><span class="tag tag-essential">Essential</span></td><td>Stores your basket items while you browse</td><td>Session</td></tr>
+        <tr><td><code>_vercel_analytics</code></td><td><span class="tag tag-analytics">Analytics</span></td><td>Anonymised page view analytics via Vercel (no personal data)</td><td>90 days</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num">3</span> Essential vs Analytics Cookies</h2>
+    <h3>Essential Cookies</h3>
+    <p>These are strictly necessary for MechChef to function. Without them you cannot log in, place orders, or use the platform. Under UK GDPR, we do not need your consent to set these cookies.</p>
+    <h3>Analytics Cookies</h3>
+    <p>We use Vercel Analytics to understand how people use MechChef. This data is anonymised and we cannot identify individual users from it.</p>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num">4</span> Managing Cookies</h2>
+    <ul><li><strong>Chrome:</strong> Settings → Privacy and Security → Cookies</li><li><strong>Firefox:</strong> Settings → Privacy & Security → Cookies and Site Data</li><li><strong>Safari:</strong> Preferences → Privacy → Manage Website Data</li><li><strong>Edge:</strong> Settings → Cookies and Site Permissions</li></ul>
+    <div class="last-updated">Last updated: June 2026 · Questions? Email <a href="mailto:privacy@mechchef.co.uk">privacy@mechchef.co.uk</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ REFUND POLICY ══════════ -->
+<div id="tab-refund" class="tab-content">
+<div class="policy-body">
+  <div class="policy-section">
+    <h2><span class="sec-num amber">1</span> Cancellation by Customer</h2>
+    <h3>Before cook accepts your order</h3>
+    <p>If you cancel before the cook has accepted your order, you will receive a <strong>full refund</strong> including the delivery fee.</p>
+    <h3>Within 15 minutes of placing</h3>
+    <p>You may cancel any order within 15 minutes of placing it for a full refund, even if the cook has accepted, provided cooking has not yet begun.</p>
+    <h3>After cooking has started</h3>
+    <p>Once the cook has marked your order as "Cooking", cancellations are at MechChef's discretion.</p>
+    <div class="highlight-box"><p>⚠️ If you are not home to receive your delivery and have not notified us in advance, we are unable to issue a refund.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num amber">2</span> Cancellation by Cook</h2>
+    <p>If a cook cancels your order for any reason, you will receive a <strong>full refund</strong> including the delivery fee within 5–10 business days.</p>
+    <div class="info-box"><p>✅ Cook cancellations always result in a full refund. We will never penalise customers for a cook cancelling.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num amber">3</span> Refund Scenarios at a Glance</h2>
+    <table class="scenario-table">
+      <thead><tr><th>Scenario</th><th>Refund Outcome</th></tr></thead>
+      <tbody>
+        <tr><td>Customer cancels before cook accepts</td><td class="refund-yes">✅ Full refund</td></tr>
+        <tr><td>Customer cancels within 15 mins of placing</td><td class="refund-yes">✅ Full refund</td></tr>
+        <tr><td>Cook cancels for any reason</td><td class="refund-yes">✅ Full refund</td></tr>
+        <tr><td>Order not delivered due to cook issue</td><td class="refund-yes">✅ Full refund</td></tr>
+        <tr><td>Order incorrect or missing items (reported within 24hrs with photos)</td><td class="refund-maybe">🟡 Partial or full refund at discretion</td></tr>
+        <tr><td>Food quality complaint (reported within 24hrs with photos)</td><td class="refund-maybe">🟡 Partial or full refund at discretion</td></tr>
+        <tr><td>Customer not home, no prior notice</td><td class="refund-no">❌ No refund</td></tr>
+        <tr><td>Customer cancels after cooking has started</td><td class="refund-no">❌ No refund (exceptions at discretion)</td></tr>
+        <tr><td>Customer dislikes the food (subjective taste preference)</td><td class="refund-no">❌ No refund</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num amber">4</span> How to Request a Refund</h2>
+    <ol style="padding-left:20px;margin-bottom:12px">
+      <li style="font-size:14px;color:#3a3a35;margin-bottom:8px"><strong>Contact us within 24 hours</strong> of the issue occurring.</li>
+      <li style="font-size:14px;color:#3a3a35;margin-bottom:8px"><strong>Email <a href="mailto:support@mechchef.co.uk">support@mechchef.co.uk</a></strong> with your order number, description, and photos.</li>
+      <li style="font-size:14px;color:#3a3a35;margin-bottom:8px"><strong>We will respond within 2 business days</strong> with an outcome.</li>
+      <li style="font-size:14px;color:#3a3a35;margin-bottom:8px"><strong>Approved refunds</strong> are processed within 5–10 business days.</li>
+    </ol>
+    <div class="warn-box"><p>⚠️ Refund requests submitted more than 24 hours after delivery without valid reason may not be accepted.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num amber">5</span> Your Statutory Rights</h2>
+    <p>Nothing in this policy affects your statutory rights under UK consumer law, including the Consumer Rights Act 2015 and the Consumer Contracts Regulations 2013.</p>
+    <div class="last-updated">Last updated: June 2026 · Refund queries: <a href="mailto:support@mechchef.co.uk">support@mechchef.co.uk</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ FOOD SAFETY ══════════ -->
+<div id="tab-food-safety" class="tab-content">
+<div class="policy-body">
+  <div class="policy-section">
+    <h2><span class="sec-num">1</span> Our Commitment to Food Safety</h2>
+    <p>MechChef is committed to ensuring the food prepared and delivered through our platform is safe for consumption. We require all cooks on our platform to meet UK food hygiene standards before going live.</p>
+    <div class="info-box"><p>✅ All MechChef cooks must hold a valid Level 2 Food Hygiene Certificate from an accredited UK provider (e.g. Highfield, RSPH, CIEH) before their first order.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num">2</span> UK Legal Compliance</h2>
+    <ul><li><strong>Food Safety Act 1990</strong> — general food safety requirements</li><li><strong>Food Hygiene Regulations 2006</strong> — hygiene standards for food businesses</li><li><strong>UK Food Information Regulations 2014</strong> — allergen labelling requirements</li><li><strong>Natasha's Law (PPDS Regulations, October 2021)</strong> — full ingredient and allergen labelling</li><li><strong>Food Standards Agency (FSA) guidance</strong> — food safety management procedures</li></ul>
+    <div class="warn-box"><p>⚠️ Cooks who prepare food for sale in the UK may be required to register as a food business with their local authority.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num">3</span> The 14 Major Allergens</h2>
+    <p>Under UK law, the following 14 allergens must be declared when present as an ingredient:</p>
+    <div class="allergen-grid">
+      <div class="allergen-pill"><span class="icon">🌾</span>Cereals/Gluten</div>
+      <div class="allergen-pill"><span class="icon">🦐</span>Crustaceans</div>
+      <div class="allergen-pill"><span class="icon">🥚</span>Eggs</div>
+      <div class="allergen-pill"><span class="icon">🐟</span>Fish</div>
+      <div class="allergen-pill"><span class="icon">🥜</span>Peanuts</div>
+      <div class="allergen-pill"><span class="icon">🫘</span>Soybeans</div>
+      <div class="allergen-pill"><span class="icon">🥛</span>Milk</div>
+      <div class="allergen-pill"><span class="icon">🌰</span>Nuts</div>
+      <div class="allergen-pill"><span class="icon">🌿</span>Celery</div>
+      <div class="allergen-pill"><span class="icon">🟡</span>Mustard</div>
+      <div class="allergen-pill"><span class="icon">🌱</span>Sesame</div>
+      <div class="allergen-pill"><span class="icon">🍷</span>Sulphites</div>
+      <div class="allergen-pill"><span class="icon">🐌</span>Lupin</div>
+      <div class="allergen-pill"><span class="icon">🦑</span>Molluscs</div>
+    </div>
+    <div class="highlight-box"><p>⚠️ If you have a severe food allergy, always check the allergen information on each meal listing AND contact the cook directly before ordering.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num">4</span> Natasha's Law</h2>
+    <p>Natasha's Law (October 2021) requires full ingredient and allergen labelling on all pre-packed for direct sale food. For MechChef, every meal listing must display a full ingredient list and highlight allergens in bold.</p>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num">5</span> Food Hygiene Standards for Cooks</h2>
+    <ul><li>Wash hands thoroughly before and during food preparation</li><li>Use separate chopping boards for raw meat, vegetables, and cooked food</li><li>Store food at correct temperatures (below 5°C for chilled, above 63°C for hot food)</li><li>Do not cook when ill with vomiting, diarrhoea, or infectious skin conditions</li><li>Keep kitchen clean and free from pests</li><li>Use food-safe packaging for delivery</li><li>Label all packaged meals with meal name, ingredients, and allergens</li></ul>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num">6</span> Reporting Food Safety Concerns</h2>
+    <ul><li>Email: <a href="mailto:safety@mechchef.co.uk">safety@mechchef.co.uk</a></li><li>In the case of a medical emergency, call 999 immediately.</li><li>Food safety concerns can also be reported to the Food Standards Agency at <a href="https://www.food.gov.uk" target="_blank">food.gov.uk</a>.</li></ul>
+    <div class="last-updated">Last updated: June 2026 · Questions? Email <a href="mailto:safety@mechchef.co.uk">safety@mechchef.co.uk</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ COOK GUIDELINES ══════════ -->
+<div id="tab-cook-guidelines" class="tab-content">
+<div class="policy-body">
+  <div class="policy-section">
+    <h2><span class="sec-num green">1</span> Getting Started</h2>
+    <p>Welcome to MechChef! We connect passionate home cooks with customers who crave real, home-cooked food. Here's how to get set up:</p>
+    <ol class="step-list">
+      <li><div><strong>Create your cook account</strong> — Register at mechchef.vercel.app and select "I'm a Cook" during signup.</div></li>
+      <li><div><strong>Complete your profile</strong> — Add your name, cuisine type, a short bio, and a profile photo.</div></li>
+      <li><div><strong>Upload your Food Hygiene Certificate</strong> — A valid Level 2 certificate is mandatory.</div></li>
+      <li><div><strong>Add your meals</strong> — List your dishes with photos, descriptions, allergens, and pricing (£5–£10).</div></li>
+      <li><div><strong>Set your availability</strong> — Tell customers which days and time slots you cook.</div></li>
+      <li><div><strong>Wait for approval</strong> — Our admin team reviews all new cook accounts within 48 hours.</div></li>
+    </ol>
+    <div class="info-box"><p>✅ Once approved, you're live! Customers in your area can find and order from you immediately.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num green">2</span> Meal Listings</h2>
+    <ul><li><strong>Real photo of your actual food</strong> — This is the most important thing.</li><li><strong>Clear, accurate description</strong> — Ingredients, cooking method, spice level, serving size.</li><li><strong>All allergens declared</strong> — Required by UK law. Do not skip this.</li><li><strong>Honest pricing</strong> — Meals must be priced between £5.00 and £10.00.</li></ul>
+    <div class="warn-box"><p>⚠️ Meal photos must be original photos of food you have actually prepared. Stock images are not allowed and will result in meal removal.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num green">3</span> Managing Orders</h2>
+    <ul><li><strong>Accept or reject within 30 minutes</strong> — If you don't respond, the order is automatically cancelled.</li><li><strong>Update order status</strong> — Mark as Cooking → Ready → Delivered as you progress.</li><li><strong>Never cancel without good reason</strong> — Repeated cancellations affect your rating and may lead to account suspension.</li></ul>
+    <div class="do-dont">
+      <div class="do-box"><h4>✅ Do</h4><ul><li>Accept orders you can definitely fulfil</li><li>Update status in real time</li><li>Package food safely and hygienically</li><li>Label every package with meal name and allergens</li></ul></div>
+      <div class="dont-box"><h4>❌ Don't</h4><ul><li>Accept orders when you're unavailable</li><li>Ignore order notifications</li><li>Cancel last-minute without contacting us</li><li>Ask customers to pay outside the platform</li></ul></div>
+    </div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num green">4</span> Earnings & Payouts</h2>
+    <ul><li>MechChef charges a platform commission on each completed order.</li><li>Payouts are processed weekly to your registered bank account.</li><li>You are an independent contractor, not an employee of MechChef.</li><li><strong>Tax responsibility:</strong> Any income earned through MechChef must be declared to HMRC.</li></ul>
+    <div class="warn-box"><p>⚠️ If your total self-employment income exceeds £1,000 per tax year, you must register as self-employed and complete a Self Assessment tax return.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num green">5</span> Food Business Registration</h2>
+    <p>Under UK law, anyone running a food business — including home cooks selling food regularly — may need to register with their local authority. Registration is <strong>free</strong> and must be done at least 28 days before starting to trade.</p>
+    <ul><li>Find your local authority at: <a href="https://www.food.gov.uk/business-guidance/register-a-food-business" target="_blank">food.gov.uk</a></li></ul>
+    <div class="highlight-box"><p>⚠️ Failure to register when required is a criminal offence.</p></div>
+  </div>
+  <div class="policy-section">
+    <h2><span class="sec-num green">6</span> Account Suspension & Removal</h2>
+    <p>MechChef may suspend or remove a cook account for repeated cancellations, negative feedback, failure to declare allergens, poor food hygiene, or any violation of our Terms & Conditions.</p>
+    <p>Cook support: <a href="mailto:cooks@mechchef.co.uk">cooks@mechchef.co.uk</a></p>
+    <div class="last-updated">Last updated: June 2026 · Cook support: <a href="mailto:cooks@mechchef.co.uk">cooks@mechchef.co.uk</a></div>
+  </div>
+</div>
+</div>
+
+<footer class="policy-footer">
+  <div>© 2026 MechChef · Home Cooked Food, Delivered · Harrow & Newham, London</div>
+</footer>
+
+<script>
+function showTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// URL hash se tab open karo — e.g. legal.html#privacy
+const hash = window.location.hash.replace('#','');
+if(hash) showTab(hash);
+</script>
+
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script></body>
+</html>
