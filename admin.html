@@ -839,6 +839,23 @@
   </div><!-- end content -->
 </div><!-- end main -->
 
+<!-- COOK DOCUMENTS REVIEW MODAL -->
+<div class="admin-modal" id="doc-review-modal">
+  <div class="admin-modal-bg" onclick="closeDocReviewModal()"></div>
+  <div class="admin-modal-box">
+    <div class="admin-modal-hd">
+      <h3>📄 Documents — <span id="doc-review-cook-name">Cook</span></h3>
+      <button style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--muted)" onclick="closeDocReviewModal()">✕</button>
+    </div>
+    <div class="admin-modal-body" id="doc-review-list">
+      <div style="text-align:center;padding:20px;color:var(--muted)">Loading documents…</div>
+    </div>
+    <div class="admin-modal-foot">
+      <button class="btn btn-outline" onclick="closeDocReviewModal()">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- ADD DISH MODAL -->
 <div class="admin-modal" id="add-dish-modal">
   <div class="admin-modal-bg" onclick="closeAddDishModal()"></div>
@@ -1002,6 +1019,7 @@ async function loadWaitlist() {
         </div>
       </div>
       <div class="waitlist-actions">
+        <button class="btn btn-outline" style="font-size:11px;padding:5px 12px" onclick="openDocReviewModal('${c.id}','${(c.full_name||'Cook').replace(/'/g,'')}')"><i class="ti ti-file-text"></i> Docs</button>
         <button class="btn btn-success" style="font-size:11px;padding:5px 12px" onclick="approveCook('${c.id}','${(c.full_name||'').replace(/'/g,'')}')" ><i class="ti ti-check"></i> Approve</button>
         <button class="btn btn-danger" style="font-size:11px;padding:5px 12px" onclick="rejectCook('${c.id}','${(c.full_name||'').replace(/'/g,'')}')" ><i class="ti ti-x"></i> Reject</button>
       </div>
@@ -1023,6 +1041,57 @@ async function rejectCook(id, name) {
   adminToast('❌ ' + name + ' rejected.');
   loadWaitlist();
   updateDashStats();
+}
+
+// ─── COOK DOCUMENT REVIEW (verify real certificates) ───
+let docReviewCookId = null;
+async function openDocReviewModal(cookId, cookName) {
+  docReviewCookId = cookId;
+  document.getElementById('doc-review-cook-name').textContent = cookName;
+  document.getElementById('doc-review-modal').classList.add('on');
+  await loadDocReviewList();
+}
+function closeDocReviewModal() {
+  document.getElementById('doc-review-modal').classList.remove('on');
+  docReviewCookId = null;
+}
+async function loadDocReviewList() {
+  const el = document.getElementById('doc-review-list');
+  el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Loading documents…</div>';
+  const { data, error } = await db.from('cook_documents').select('*').eq('cook_id', docReviewCookId).order('uploaded_at', { ascending: false });
+  if (error) { el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Could not load documents: '+error.message+'</div>'; return; }
+  if (!data || !data.length) { el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">No documents uploaded by this cook yet.</div>'; return; }
+
+  el.innerHTML = data.map(d => {
+    const status = d.status || 'pending';
+    const badge = status === 'verified' ? '<span class="badge badge-green">✅ Verified</span>'
+      : status === 'rejected' ? '<span class="badge badge-red">❌ Rejected</span>'
+      : '<span class="badge badge-yellow">⏳ Pending review</span>';
+    return `<div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <div>
+          <div style="font-weight:600;font-size:13px">📄 ${d.file_name}</div>
+          <div style="font-size:11px;color:var(--muted)">Uploaded ${new Date(d.uploaded_at).toLocaleDateString('en-GB')}</div>
+        </div>
+        ${badge}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="viewCookDoc('${d.file_path}')"><i class="ti ti-eye"></i> View File</button>
+        <button class="btn btn-success" style="font-size:11px;padding:4px 10px" onclick="setDocStatus('${d.id}','verified')">Verify</button>
+        <button class="btn btn-danger" style="font-size:11px;padding:4px 10px" onclick="setDocStatus('${d.id}','rejected')">Reject</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function viewCookDoc(filePath) {
+  const { data, error } = await db.storage.from('documents').createSignedUrl(filePath, 300);
+  if (error) { adminToast('Could not open file: '+error.message); return; }
+  window.open(data.signedUrl, '_blank');
+}
+async function setDocStatus(docId, status) {
+  await db.from('cook_documents').update({ status, reviewed_at: new Date().toISOString() }).eq('id', docId);
+  adminToast(status === 'verified' ? '✅ Document verified' : '❌ Document rejected');
+  await loadDocReviewList();
 }
 
 // ─── COOKS PAGE — REAL SUPABASE ───
@@ -1063,9 +1132,11 @@ async function loadCooksPage() {
       ? '<span class="badge badge-red">❌ Rejected</span>'
       : '<span class="badge badge-yellow">⏳ Pending</span>';
     const actionBtns = c.approval_status !== 'approved'
-      ? `<button class="btn btn-success" style="font-size:11px;padding:4px 10px" onclick="approveCook('${c.id}','${(c.full_name||'').replace(/'/g,'')}')">Approve</button>
+      ? `<button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="openDocReviewModal('${c.id}','${(c.full_name||'Cook').replace(/'/g,'')}')">Docs</button>
+         <button class="btn btn-success" style="font-size:11px;padding:4px 10px" onclick="approveCook('${c.id}','${(c.full_name||'').replace(/'/g,'')}')">Approve</button>
          <button class="btn btn-danger" style="font-size:11px;padding:4px 10px" onclick="rejectCook('${c.id}','${(c.full_name||'').replace(/'/g,'')}')">Reject</button>`
-      : `<button class="btn btn-danger" style="font-size:11px;padding:4px 10px" onclick="rejectCook('${c.id}','${(c.full_name||'').replace(/'/g,'')}')">Suspend</button>`;
+      : `<button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="openDocReviewModal('${c.id}','${(c.full_name||'Cook').replace(/'/g,'')}')">Docs</button>
+         <button class="btn btn-danger" style="font-size:11px;padding:4px 10px" onclick="rejectCook('${c.id}','${(c.full_name||'').replace(/'/g,'')}')">Suspend</button>`;
     return `<tr>
       <td><div class="user-row"><div class="avatar" style="background:${bg};color:${fg}">${initials}</div><div><div class="user-name">${c.full_name||'Unknown'}</div><div class="user-sub">${c.address||'—'}</div></div></div></td>
       <td>${c.cuisine||'—'}</td>
