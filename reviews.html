@@ -210,26 +210,100 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/main.js"></script>
 <script>
-const REVIEWS = [
-  {name:'Sarah M.',loc:'Harrow, London',stars:5,date:'2 days ago',text:"Priya's butter chicken is absolutely incredible. Tastes exactly like my mum's home cooking in India. Arrived piping hot, packaging was perfect. Will 100% order every week!",meal:'🍛 Butter Chicken',cuisine:'Indian',av:'#fce7f3',avt:'SM',avc:'#be185d'},
-  {name:'James K.',loc:'Newham, London',stars:5,date:'4 days ago',text:"Wei's dim sum is genuinely better than any restaurant in Chinatown. Fresh, perfectly folded, the dipping sauce is incredible. Highly recommend the prawn har gow!",meal:'🥟 Dim Sum Basket',cuisine:'Chinese',av:'#dbeafe',avt:'JK',avc:'#1d4ed8'},
-  {name:'Emma T.',loc:'Harrow, London',stars:4,date:'1 week ago',text:"Fatima's biryani is the real deal — saffron-scented, perfectly spiced, generous portions. Only 4 stars because it was 10 mins late but the food made up for it!",meal:'🍚 Chicken Biryani',cuisine:'Pakistani',av:'#dcfce7',avt:'ET',avc:'#166534'},
-  {name:'Daniel R.',loc:'Newham, London',stars:5,date:'1 week ago',text:"Sofia's mezze bowl is the best lunch I've had in years. Fresh, vibrant, filling. The tahini dressing alone is worth the price. Perfect for anyone eating plant-based.",meal:'🥗 Mezze Bowl',cuisine:'Mediterranean',av:'#f3e8ff',avt:'DR',avc:'#7c3aed'},
-  {name:'Layla A.',loc:'Harrow, London',stars:5,date:'2 weeks ago',text:"Amara's jerk chicken transported me straight to Jamaica. The rice and peas were perfect. Love that MechChef supports women home cooks building real businesses.",meal:'🍗 Jerk Chicken',cuisine:'Caribbean',av:'#fef3c7',avt:'LA',avc:'#92400e'},
-  {name:'Marcus B.',loc:'Newham, London',stars:5,date:'2 weeks ago',text:"Emma's Sunday roast is the only one that comes close to my nan's. Proper crispy roasties, fluffy Yorkshire pudding, amazing gravy. Sold out every weekend for good reason!",meal:'🍗 Sunday Roast',cuisine:'British',av:'#fce7f3',avt:'MB',avc:'#be185d'},
-  {name:'Aisha R.',loc:'Harrow, London',stars:5,date:'3 weeks ago',text:"I ordered the Dal Makhani and it brought tears to my eyes — exactly like my grandmother used to make. The garlic naan was fresh and perfectly charred. Incredible.",meal:'🫘 Dal Makhani',cuisine:'Indian',av:'#fff7ed',avt:'AR',avc:'#c2410c'},
-  {name:'Tom H.',loc:'Newham, London',stars:5,date:'3 weeks ago',text:"The lasagne was a game-changer. Thick, meaty, cheesy — proper Italian home cooking. Three times cheaper than a restaurant and ten times better. I've already re-ordered.",meal:'🫕 Lasagne al Forno',cuisine:'Italian',av:'#f0f9ff',avt:'TH',avc:'#0369a1'},
-  {name:'Nadia C.',loc:'Harrow, London',stars:4,date:'1 month ago',text:"The Adana wrap was delicious — the lamb was perfectly seasoned and the flatbread was warm and fresh. Slight delay on delivery but great communication from the cook.",meal:'🥙 Adana Wrap',cuisine:'Turkish',av:'#ecfdf5',avt:'NC',avc:'#059669'},
-  {name:'Kevin O.',loc:'Newham, London',stars:5,date:'1 month ago',text:"Pad Thai was phenomenal — perfect balance of sweet, sour and savoury. The tofu was silky and everything tasted genuinely fresh. Best vegan takeaway I've ever had.",meal:'🍜 Pad Thai',cuisine:'Thai',av:'#eff6ff',avt:'KO',avc:'#2563eb'},
-  {name:'Preethi S.',loc:'Harrow, London',stars:5,date:'1 month ago',text:"The lamb karahi was outstanding. Deep, complex flavours — you could taste every single spice. Portions were huge too. This will be my weekly Friday treat from now on.",meal:'🥩 Lamb Karahi',cuisine:'Pakistani',av:'#fdf2f8',avt:'PS',avc:'#9d174d'},
-  {name:'Leo F.',loc:'Newham, London',stars:5,date:'6 weeks ago',text:"Margherita pizza from a home oven and it was better than most restaurants in London. The dough had that chewy, charred crust you only get from proper high-heat baking.",meal:'🍕 Margherita Pizza',cuisine:'Italian',av:'#f0fdf4',avt:'LF',avc:'#15803d'},
+// ── Seed testimonials (early tester reviews, shown until real ones come in) ──
+const SEED_REVIEWS = [
+  {id:'seed-1',name:'Sarah M.',loc:'Harrow, London',stars:5,date:'2 days ago',text:"Priya's butter chicken is absolutely incredible. Tastes exactly like my mum's home cooking in India. Arrived piping hot, packaging was perfect. Will 100% order every week!",meal:'🍛 Butter Chicken',cuisine:'Indian',av:'#fce7f3',avt:'SM',avc:'#be185d'},
+  {id:'seed-2',name:'James K.',loc:'Newham, London',stars:5,date:'4 days ago',text:"Wei's dim sum is genuinely better than any restaurant in Chinatown. Fresh, perfectly folded, the dipping sauce is incredible. Highly recommend the prawn har gow!",meal:'🥟 Dim Sum Basket',cuisine:'Chinese',av:'#dbeafe',avt:'JK',avc:'#1d4ed8'},
+  {id:'seed-3',name:'Emma T.',loc:'Harrow, London',stars:4,date:'1 week ago',text:"Fatima's biryani is the real deal — saffron-scented, perfectly spiced, generous portions. Only 4 stars because it was 10 mins late but the food made up for it!",meal:'🍚 Chicken Biryani',cuisine:'Pakistani',av:'#dcfce7',avt:'ET',avc:'#166534'},
+  {id:'seed-4',name:'Daniel R.',loc:'Newham, London',stars:5,date:'1 week ago',text:"Sofia's mezze bowl is the best lunch I've had in years. Fresh, vibrant, filling. The tahini dressing alone is worth the price. Perfect for anyone eating plant-based.",meal:'🥗 Mezze Bowl',cuisine:'Mediterranean',av:'#f3e8ff',avt:'DR',avc:'#7c3aed'},
+  {id:'seed-5',name:'Layla A.',loc:'Harrow, London',stars:5,date:'2 weeks ago',text:"Amara's jerk chicken transported me straight to Jamaica. The rice and peas were perfect. Love that MechChef supports women home cooks building real businesses.",meal:'🍗 Jerk Chicken',cuisine:'Caribbean',av:'#fef3c7',avt:'LA',avc:'#92400e'},
+  {id:'seed-6',name:'Marcus B.',loc:'Newham, London',stars:5,date:'2 weeks ago',text:"Emma's Sunday roast is the only one that comes close to my nan's. Proper crispy roasties, fluffy Yorkshire pudding, amazing gravy. Sold out every weekend for good reason!",meal:'🍗 Sunday Roast',cuisine:'British',av:'#fce7f3',avt:'MB',avc:'#be185d'},
+  {id:'seed-7',name:'Aisha R.',loc:'Harrow, London',stars:5,date:'3 weeks ago',text:"I ordered the Dal Makhani and it brought tears to my eyes — exactly like my grandmother used to make. The garlic naan was fresh and perfectly charred. Incredible.",meal:'🫘 Dal Makhani',cuisine:'Indian',av:'#fff7ed',avt:'AR',avc:'#c2410c'},
+  {id:'seed-8',name:'Tom H.',loc:'Newham, London',stars:5,date:'3 weeks ago',text:"The lasagne was a game-changer. Thick, meaty, cheesy — proper Italian home cooking. Three times cheaper than a restaurant and ten times better. I've already re-ordered.",meal:'🫕 Lasagne al Forno',cuisine:'Italian',av:'#f0f9ff',avt:'TH',avc:'#0369a1'},
+  {id:'seed-9',name:'Nadia C.',loc:'Harrow, London',stars:4,date:'1 month ago',text:"The Adana wrap was delicious — the lamb was perfectly seasoned and the flatbread was warm and fresh. Slight delay on delivery but great communication from the cook.",meal:'🥙 Adana Wrap',cuisine:'Turkish',av:'#ecfdf5',avt:'NC',avc:'#059669'},
+  {id:'seed-10',name:'Kevin O.',loc:'Newham, London',stars:5,date:'1 month ago',text:"Pad Thai was phenomenal — perfect balance of sweet, sour and savoury. The tofu was silky and everything tasted genuinely fresh. Best vegan takeaway I've ever had.",meal:'🍜 Pad Thai',cuisine:'Thai',av:'#eff6ff',avt:'KO',avc:'#2563eb'},
+  {id:'seed-11',name:'Preethi S.',loc:'Harrow, London',stars:5,date:'1 month ago',text:"The lamb karahi was outstanding. Deep, complex flavours — you could taste every single spice. Portions were huge too. This will be my weekly Friday treat from now on.",meal:'🥩 Lamb Karahi',cuisine:'Pakistani',av:'#fdf2f8',avt:'PS',avc:'#9d174d'},
+  {id:'seed-12',name:'Leo F.',loc:'Newham, London',stars:5,date:'6 weeks ago',text:"Margherita pizza from a home oven and it was better than most restaurants in London. The dough had that chewy, charred crust you only get from proper high-heat baking.",meal:'🍕 Margherita Pizza',cuisine:'Italian',av:'#f0fdf4',avt:'LF',avc:'#15803d'},
 ];
 
+let REVIEWS = [...SEED_REVIEWS];
 let activeStar = 0, activeCuisine = 'All';
+const seenReviewIds = new Set(SEED_REVIEWS.map(r => r.id));
+
+// ── Avatar palette (cycled by name so it's consistent per reviewer) ──
+const AVATAR_PALETTE = [
+  {av:'#fce7f3',avc:'#be185d'},{av:'#dbeafe',avc:'#1d4ed8'},{av:'#dcfce7',avc:'#166534'},
+  {av:'#f3e8ff',avc:'#7c3aed'},{av:'#fef3c7',avc:'#92400e'},{av:'#fff7ed',avc:'#c2410c'},
+  {av:'#f0f9ff',avc:'#0369a1'},{av:'#ecfdf5',avc:'#059669'},{av:'#eff6ff',avc:'#2563eb'},
+];
+function avatarFor(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+  return AVATAR_PALETTE[hash % AVATAR_PALETTE.length];
+}
+function timeAgo(iso) {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + ' min' + (mins>1?'s':'') + ' ago';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + ' hour' + (hrs>1?'s':'') + ' ago';
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return days + ' day' + (days>1?'s':'') + ' ago';
+  const weeks = Math.floor(days / 7);
+  if (weeks < 5) return weeks + ' week' + (weeks>1?'s':'') + ' ago';
+  const months = Math.floor(days / 30);
+  return months + ' month' + (months>1?'s':'') + ' ago';
+}
+function dbRowToReview(row) {
+  const initials = row.reviewer_name.trim().split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase() || 'U';
+  const colors = avatarFor(row.reviewer_name);
+  return {
+    id: row.id,
+    name: row.reviewer_name,
+    loc: row.location || 'London',
+    stars: row.stars,
+    date: timeAgo(row.created_at),
+    text: row.text,
+    meal: row.meal ? '🍽️ ' + row.meal : '🍽️ MechChef order',
+    cuisine: row.cuisine || 'Other',
+    av: colors.av, avt: initials, avc: colors.avc,
+  };
+}
+
+async function loadLiveReviews() {
+  try {
+    const { data, error } = await db.from('reviews').select('*').order('created_at', { ascending: false }).limit(50);
+    if (error) throw error;
+    if (data && data.length) {
+      const live = data.map(dbRowToReview);
+      live.forEach(r => seenReviewIds.add(r.id));
+      REVIEWS = [...live, ...SEED_REVIEWS];
+      buildCuisineFilter();
+      renderReviews();
+    }
+  } catch (e) { /* table may not exist yet — seed reviews still show */ }
+}
+
+function subscribeToReviews() {
+  try {
+    db.channel('public:reviews')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reviews' }, (payload) => {
+        if (seenReviewIds.has(payload.new.id)) return;
+        seenReviewIds.add(payload.new.id);
+        REVIEWS.unshift(dbRowToReview(payload.new));
+        buildCuisineFilter();
+        renderReviews();
+      })
+      .subscribe();
+  } catch (e) { /* realtime optional */ }
+}
 
 window.addEventListener('DOMContentLoaded', () => {
   buildCuisineFilter();
   renderReviews();
+  loadLiveReviews();
+  subscribeToReviews();
 });
 
 function buildCuisineFilter() {
@@ -288,15 +362,34 @@ async function submitReview() {
   if (!name) { toast('Please enter your name'); return; }
   if (!selectedStar) { toast('Please select a star rating'); return; }
   if (!text) { toast('Please write your review'); return; }
+
+  const btn = document.querySelector('.rev-mbox .btn-red');
+  if (btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
+
   try {
-    await db.from('reviews').insert([{ reviewer_name:name, stars:selectedStar, text, meal:dish, created_at:new Date().toISOString() }]);
-  } catch(e) {}
+    const { data, error } = await db.from('reviews')
+      .insert([{ reviewer_name: name, stars: selectedStar, text, meal: dish }])
+      .select()
+      .single();
+    if (error) throw error;
+    // Show it immediately, no waiting for a refresh
+    seenReviewIds.add(data.id);
+    REVIEWS.unshift(dbRowToReview(data));
+    buildCuisineFilter();
+    renderReviews();
+    toast('🎉 Review submitted! Thank you, ' + name + '!');
+  } catch (e) {
+    toast('⚠️ Could not submit your review — check your connection and try again.');
+    if (btn) { btn.disabled = false; btn.textContent = 'Submit Review →'; }
+    return;
+  }
+
   closeRevModal();
-  toast('🎉 Review submitted! Thank you, ' + name + '!');
   selectedStar = 0;
   document.getElementById('rev-name').value = '';
   document.getElementById('rev-text').value = '';
   document.querySelectorAll('.star-pick span').forEach(s => s.textContent = '☆');
+  if (btn) { btn.disabled = false; btn.textContent = 'Submit Review →'; }
 }
 </script>
 </body>
